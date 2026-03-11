@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Speaker Rankings · Dashboard & Top 10</title>
+    <title>IDBATE COMPETITION · speaker rankings</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -19,83 +19,135 @@
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            padding: 2rem 1rem;
+            padding: 1.5rem;
         }
 
-        .card {
-            max-width: 900px;
+        /* main container with sidebar + main */
+        .app-container {
+            display: flex;
+            max-width: 1200px;
             width: 100%;
+            gap: 1.5rem;
+        }
+
+        /* ---------- SIDEBAR (deep gray + orange) ---------- */
+        .sidebar {
+            flex: 1;
+            max-width: 280px;
+            background: #1e1e2e; /* deep gray */
+            border-radius: 32px;
+            padding: 2rem 1.5rem;
+            color: #e0e0e0;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            height: fit-content;
+        }
+
+        .sidebar h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #f57c00; /* orange */
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar h2 i {
+            font-size: 2rem;
+        }
+
+        .stat-card-side {
+            background: #2d2d3a;
+            border-radius: 24px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            border-left: 6px solid #f57c00;
+        }
+
+        .stat-side-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+        }
+
+        .stat-side-label {
+            color: #f57c00;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.03em;
+        }
+
+        .team-spotlight {
+            background: #2d2d3a;
+            border-radius: 24px;
+            padding: 1.5rem 1rem;
+            margin-top: 2rem;
+        }
+
+        .team-spotlight h3 {
+            color: #f57c00;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .team-member {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1e1e2e;
+            border-radius: 40px;
+            padding: 0.6rem 1rem;
+            margin-bottom: 0.7rem;
+        }
+
+        .team-member .name {
+            font-weight: 600;
+            color: white;
+        }
+
+        .team-member .points {
+            background: #f57c00;
+            color: #1e1e2e;
+            font-weight: 700;
+            padding: 0.3rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+        }
+
+        /* ---------- MAIN CONTENT ---------- */
+        .main-content {
+            flex: 3;
             background: white;
             border-radius: 32px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.05), 0 5px 15px rgba(0,0,0,0.03);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
             padding: 2rem;
         }
 
-        h1 {
+        .main-header h1 {
             font-size: 2.5rem;
             font-weight: 700;
-            color: #1e293b;
-            letter-spacing: -0.02em;
-            margin-bottom: 0.25rem;
+            color: #1e1e2e;
             display: flex;
             align-items: center;
             gap: 0.75rem;
+            margin-bottom: 0.25rem;
         }
 
-        h1 i {
-            color: #f59e0b;
-            font-size: 2rem;
+        .main-header h1 i {
+            color: #f57c00;
+            font-size: 2.5rem;
         }
 
         .subtitle {
             color: #64748b;
             margin-bottom: 2rem;
             font-size: 1rem;
-            border-left: 4px solid #f59e0b;
+            border-left: 4px solid #f57c00;
             padding-left: 1rem;
-        }
-
-        /* Dashboard cards */
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: #f8fafc;
-            border-radius: 24px;
-            padding: 1.2rem 1rem;
-            border: 1px solid #e2e8f0;
-            text-align: center;
-            transition: 0.2s;
-        }
-
-        .stat-card:hover {
-            border-color: #f59e0b;
-            box-shadow: 0 4px 12px rgba(245,158,11,0.1);
-        }
-
-        .stat-value {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: #1e293b;
-            line-height: 1.2;
-        }
-
-        .stat-label {
-            color: #64748b;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-            font-weight: 600;
-        }
-
-        .stat-icon {
-            color: #f59e0b;
-            font-size: 1.4rem;
-            margin-bottom: 0.3rem;
         }
 
         /* Input section */
@@ -140,7 +192,7 @@
 
         .input-field input:focus {
             outline: none;
-            border-color: #f59e0b;
+            border-color: #f57c00;
             box-shadow: 0 0 0 3px rgba(245,158,11,0.2);
         }
 
@@ -150,7 +202,7 @@
 
         .add-btn {
             flex: 0 0 auto;
-            background: #f59e0b;
+            background: #f57c00;
             color: white;
             border: none;
             border-radius: 40px;
@@ -175,6 +227,13 @@
             transform: scale(0.97);
         }
 
+        .info-note {
+            font-size:0.85rem; color:#64748b; margin-top:0.75rem;
+        }
+        .info-note i {
+            color: #f57c00;
+        }
+
         /* Top 10 section */
         .top10-section {
             background: #f8fafc;
@@ -194,11 +253,11 @@
         .top10-header h3 {
             font-size: 1.3rem;
             font-weight: 700;
-            color: #0f172a;
+            color: #1e1e2e;
         }
 
         .top10-header i {
-            color: #f59e0b;
+            color: #f57c00;
             font-size: 1.5rem;
         }
 
@@ -220,7 +279,7 @@
 
         .top10-rank {
             font-weight: 800;
-            color: #f59e0b;
+            color: #f57c00;
             font-size: 1.2rem;
             min-width: 2rem;
         }
@@ -235,14 +294,14 @@
 
         .top10-points {
             font-weight: 700;
-            color: #1e293b;
+            color: #1e1e2e;
             background: #f1f5f9;
             padding: 0.3rem 0.8rem;
             border-radius: 40px;
             font-size: 0.9rem;
         }
 
-        /* Leaderboard table */
+        /* Full leaderboard */
         .leaderboard-header {
             display: flex;
             justify-content: space-between;
@@ -253,7 +312,7 @@
         .leaderboard-header h2 {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #0f172a;
+            color: #1e1e2e;
         }
 
         .reset-btn {
@@ -272,8 +331,8 @@
         }
 
         .reset-btn:hover {
-            border-color: #f59e0b;
-            color: #f59e0b;
+            border-color: #f57c00;
+            color: #f57c00;
             background: #fff7ed;
         }
 
@@ -313,7 +372,7 @@
 
         .rank {
             font-weight: 800;
-            color: #f59e0b;
+            color: #f57c00;
             width: 60px;
         }
 
@@ -323,7 +382,7 @@
 
         .points {
             font-weight: 700;
-            color: #0f172a;
+            color: #1e1e2e;
         }
 
         .actions {
@@ -354,88 +413,122 @@
             font-style: italic;
         }
 
-        @media (max-width: 600px) {
-            .card { padding: 1.5rem; }
-            .input-row { flex-direction: column; align-items: stretch; }
-            .add-btn { justify-content: center; }
-            .top10-grid { grid-template-columns: 1fr; }
+        @media (max-width: 800px) {
+            .app-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                max-width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1>
-            <i class="fa-solid fa-ranking-star"></i> Speaker Rankings
-        </h1>
-        <div class="subtitle">
-            Dashboard · Top 10 · Full leaderboard — you control the points.
-        </div>
+    <div class="app-container">
+        <!-- LEFT SIDEBAR (deep gray + orange) -->
+        <aside class="sidebar">
+            <h2>
+                <i class="fa-regular fa-chart-bar"></i> DASHBOARD
+            </h2>
 
-        <!-- DASHBOARD STATS -->
-        <div class="dashboard" id="dashboardStats">
-            <!-- filled by JS -->
-        </div>
+            <!-- stats cards -->
+            <div class="stat-card-side" id="sidebarStats">
+                <!-- filled by JS -->
+            </div>
 
-        <!-- Add speaker form (user mentions name and points) -->
-        <div class="input-section">
-            <div class="input-row">
-                <div class="input-field">
-                    <label><i class="fa-regular fa-user"></i> Speaker name</label>
-                    <input type="text" id="speakerName" placeholder="e.g., Jane Doe" autocomplete="off">
+            <!-- TEAM SPOTLIGHT (static team of three) -->
+            <div class="team-spotlight">
+                <h3><i class="fa-regular fa-users"></i> Team Phoenix</h3>
+                <div class="team-member">
+                    <span class="name">Alex Rivera</span>
+                    <span class="points">89.5</span>
                 </div>
-                <div class="input-field points-field">
-                    <label><i class="fa-regular fa-star"></i> Points</label>
-                    <input type="number" id="speakerPoints" placeholder="0" min="0" step="0.1" value="0">
+                <div class="team-member">
+                    <span class="name">Jordan Lee</span>
+                    <span class="points">88.0</span>
                 </div>
-                <button class="add-btn" id="addBtn">
-                    <i class="fa-solid fa-plus"></i> Add / Update
+                <div class="team-member">
+                    <span class="name">Casey Kim</span>
+                    <span class="points">85.2</span>
+                </div>
+                <p style="color:#aaa; font-size:0.8rem; margin-top:0.8rem;">
+                    <i class="fa-regular fa-circle-check" style="color:#f57c00;"></i> Max per speaker: 90
+                </p>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <div class="main-header">
+                <h1>
+                    <i class="fa-regular fa-microphone"></i> IDBATE COMPETITION
+                </h1>
+                <div class="subtitle">
+                    Add speakers (max 90 points) · Top 10 · Full leaderboard
+                </div>
+            </div>
+
+            <!-- Add speaker form -->
+            <div class="input-section">
+                <div class="input-row">
+                    <div class="input-field">
+                        <label><i class="fa-regular fa-user"></i> Speaker name</label>
+                        <input type="text" id="speakerName" placeholder="e.g., Jane Doe" autocomplete="off">
+                    </div>
+                    <div class="input-field points-field">
+                        <label><i class="fa-regular fa-star"></i> Points (≤90)</label>
+                        <input type="number" id="speakerPoints" placeholder="0" min="0" max="90" step="0.1" value="0">
+                    </div>
+                    <button class="add-btn" id="addBtn">
+                        <i class="fa-solid fa-plus"></i> Add / Update
+                    </button>
+                </div>
+                <div class="info-note">
+                    <i class="fa-regular fa-circle-info"></i> Max 90 points per speaker. If name exists, points are updated.
+                </div>
+            </div>
+
+            <!-- TOP 10 LIST -->
+            <div class="top10-section">
+                <div class="top10-header">
+                    <i class="fa-solid fa-trophy"></i>
+                    <h3>Top 10 speakers</h3>
+                </div>
+                <div class="top10-grid" id="top10Grid">
+                    <!-- dynamic -->
+                </div>
+            </div>
+
+            <!-- FULL LEADERBOARD -->
+            <div class="leaderboard-header">
+                <h2><i class="fa-regular fa-list"></i> All speakers</h2>
+                <button class="reset-btn" id="resetBtn">
+                    <i class="fa-regular fa-trash-can"></i> Reset all
                 </button>
             </div>
-            <p style="font-size:0.85rem; color:#64748b; margin-top:0.75rem;">
-                <i class="fa-regular fa-circle-info"></i> If name exists, points are updated.
-            </p>
-        </div>
 
-        <!-- TOP 10 LIST -->
-        <div class="top10-section" id="top10Section">
-            <div class="top10-header">
-                <i class="fa-solid fa-trophy"></i>
-                <h3>Top 10 speakers</h3>
+            <div class="table-container" id="tableContainer">
+                <!-- Dynamic table injected via JS -->
             </div>
-            <div class="top10-grid" id="top10Grid">
-                <!-- dynamic -->
-            </div>
-        </div>
-
-        <!-- FULL LEADERBOARD -->
-        <div class="leaderboard-header">
-            <h2><i class="fa-regular fa-list"></i> All speakers</h2>
-            <button class="reset-btn" id="resetBtn">
-                <i class="fa-regular fa-trash-can"></i> Reset all
-            </button>
-        </div>
-
-        <div class="table-container" id="tableContainer">
-            <!-- Dynamic table injected via JS -->
-        </div>
+        </main>
     </div>
 
     <script>
         (function() {
-            const STORAGE_KEY = 'speakerRankings';
+            const STORAGE_KEY = 'idbate_speakers';
 
-            // Default data (empty now – user starts fresh, but you can keep defaults)
+            // Default data (some with points ≤90)
             let speakers = [
-                { id: '1', name: 'Alex Rivera', points: 92.5 },
+                { id: '1', name: 'Alex Rivera', points: 89.5 },
                 { id: '2', name: 'Jordan Lee', points: 88.0 },
                 { id: '3', name: 'Taylor Smith', points: 76.8 },
-                { id: '4', name: 'Casey Kim', points: 95.2 },
+                { id: '4', name: 'Casey Kim', points: 85.2 },
                 { id: '5', name: 'Morgan Chase', points: 81.3 },
                 { id: '6', name: 'Riley Parker', points: 67.5 },
                 { id: '7', name: 'Jamie Chen', points: 89.4 },
                 { id: '8', name: 'Sam Johnson', points: 73.2 },
                 { id: '9', name: 'Chris Evans', points: 84.7 },
-                { id: '10', name: 'Pat Smith', points: 91.0 },
+                { id: '10', name: 'Pat Smith', points: 90.0 },
                 { id: '11', name: 'Terry Gale', points: 62.3 }
             ];
 
@@ -472,40 +565,35 @@
                 });
             }
 
-            // Update dashboard stats
-            function renderDashboard() {
+            // Update sidebar stats
+            function renderSidebarStats() {
                 const totalSpeakers = speakers.length;
                 const totalPoints = speakers.reduce((sum, s) => sum + s.points, 0);
                 const avgPoints = totalSpeakers ? (totalPoints / totalSpeakers).toFixed(1) : 0;
                 const maxPoints = speakers.length ? Math.max(...speakers.map(s => s.points)) : 0;
                 const minPoints = speakers.length ? Math.min(...speakers.map(s => s.points)) : 0;
 
-                const dashboard = document.getElementById('dashboardStats');
-                dashboard.innerHTML = `
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fa-regular fa-user"></i></div>
-                        <div class="stat-value">${totalSpeakers}</div>
-                        <div class="stat-label">Speakers</div>
+                const sidebarStats = document.getElementById('sidebarStats');
+                sidebarStats.innerHTML = `
+                    <div style="margin-bottom:1rem;">
+                        <div class="stat-side-value">${totalSpeakers}</div>
+                        <div class="stat-side-label">Total speakers</div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fa-regular fa-star"></i></div>
-                        <div class="stat-value">${totalPoints.toFixed(1)}</div>
-                        <div class="stat-label">Total points</div>
+                    <div style="margin-bottom:1rem;">
+                        <div class="stat-side-value">${totalPoints.toFixed(1)}</div>
+                        <div class="stat-side-label">Total points</div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fa-regular fa-chart-line"></i></div>
-                        <div class="stat-value">${avgPoints}</div>
-                        <div class="stat-label">Average</div>
+                    <div style="margin-bottom:1rem;">
+                        <div class="stat-side-value">${avgPoints}</div>
+                        <div class="stat-side-label">Average</div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fa-regular fa-crown"></i></div>
-                        <div class="stat-value">${maxPoints.toFixed(1)}</div>
-                        <div class="stat-label">Highest</div>
+                    <div style="margin-bottom:1rem;">
+                        <div class="stat-side-value">${maxPoints.toFixed(1)}</div>
+                        <div class="stat-side-label">Highest</div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fa-regular fa-arrow-down"></i></div>
-                        <div class="stat-value">${minPoints.toFixed(1)}</div>
-                        <div class="stat-label">Lowest</div>
+                    <div>
+                        <div class="stat-side-value">${minPoints.toFixed(1)}</div>
+                        <div class="stat-side-label">Lowest</div>
                     </div>
                 `;
             }
@@ -573,12 +661,12 @@
 
             // Re-render everything
             function renderAll() {
-                renderDashboard();
+                renderSidebarStats();
                 renderTop10();
                 renderFullTable();
             }
 
-            // Add or update speaker
+            // Add or update speaker (with max 90 validation)
             function addOrUpdateSpeaker(name, points) {
                 if (!name.trim()) {
                     alert('Please enter a speaker name.');
@@ -587,6 +675,10 @@
                 const numPoints = parseFloat(points);
                 if (isNaN(numPoints) || numPoints < 0) {
                     alert('Points must be a non-negative number.');
+                    return false;
+                }
+                if (numPoints > 90) {
+                    alert('Maximum points allowed is 90.');
                     return false;
                 }
 
@@ -632,10 +724,10 @@
                 }
             }
 
-            // Initial load\
-            
+            // Initial load
             loadSpeakers();
             renderAll();
+
             // Event listeners
             document.getElementById('addBtn').addEventListener('click', function() {
                 const name = document.getElementById('speakerName').value;
