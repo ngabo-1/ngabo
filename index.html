@@ -538,6 +538,78 @@
                 max-width: 100%;
             }
         }
+
+        /* ---------- CUSTOM MODAL STYLES ---------- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(3px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .modal-box {
+            background: #1e1e2e;
+            border-radius: 32px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            border: 2px solid #f57c00;
+            color: #e0e0e0;
+        }
+        .modal-box h3 {
+            color: #f57c00;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        .modal-box p {
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+        .modal-box input {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            background: #2d2d3a;
+            border: 2px solid #40405c;
+            border-radius: 40px;
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .modal-box input:focus {
+            outline: none;
+            border-color: #f57c00;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: flex-end;
+        }
+        .modal-btn {
+            padding: 0.7rem 1.5rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: 0.2s;
+        }
+        .modal-btn.confirm {
+            background: #f57c00;
+            color: #1e1e2e;
+        }
+        .modal-btn.cancel {
+            background: #2d2d3a;
+            color: #e0e0e0;
+            border: 1px solid #40405c;
+        }
+        .modal-btn.confirm:hover { background: #ff9500; }
+        .modal-btn.cancel:hover { background: #3d3d4d; }
     </style>
 </head>
 <body>
@@ -600,9 +672,133 @@
         </main>
     </div>
 
+    <!-- CUSTOM MODAL (hidden by default) -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-box" id="modalBox">
+            <h3 id="modalTitle">Title</h3>
+            <p id="modalMessage">Message</p>
+            <input type="text" id="modalInput" placeholder="Enter value" style="display: none;">
+            <div class="modal-actions">
+                <button class="modal-btn cancel" id="modalCancel">Cancel</button>
+                <button class="modal-btn confirm" id="modalConfirm">OK</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         (function() {
-            // Storage keys
+            // ---------- CUSTOM MODAL IMPLEMENTATION ----------
+            const overlay = document.getElementById('modalOverlay');
+            const modalBox = document.getElementById('modalBox');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalMessage = document.getElementById('modalMessage');
+            const modalInput = document.getElementById('modalInput');
+            const modalCancel = document.getElementById('modalCancel');
+            const modalConfirm = document.getElementById('modalConfirm');
+
+            let currentResolve = null;
+            let currentReject = null;
+
+            function hideModal() {
+                overlay.style.display = 'none';
+                modalInput.style.display = 'none';
+                modalInput.value = '';
+                currentResolve = null;
+                currentReject = null;
+            }
+
+            // alert
+            window.modalAlert = function(message, title = 'Notice') {
+                return new Promise((resolve) => {
+                    modalTitle.innerText = title;
+                    modalMessage.innerText = message;
+                    modalInput.style.display = 'none';
+                    modalCancel.style.display = 'none';
+                    modalConfirm.innerText = 'OK';
+                    overlay.style.display = 'flex';
+
+                    const onConfirm = () => {
+                        hideModal();
+                        modalConfirm.removeEventListener('click', onConfirm);
+                        resolve();
+                    };
+                    modalConfirm.addEventListener('click', onConfirm, { once: true });
+                });
+            };
+
+            // confirm
+            window.modalConfirm = function(message, title = 'Confirm') {
+                return new Promise((resolve) => {
+                    modalTitle.innerText = title;
+                    modalMessage.innerText = message;
+                    modalInput.style.display = 'none';
+                    modalCancel.style.display = 'inline-block';
+                    modalConfirm.innerText = 'Yes';
+                    modalCancel.innerText = 'Cancel';
+                    overlay.style.display = 'flex';
+
+                    const onConfirm = () => {
+                        hideModal();
+                        modalConfirm.removeEventListener('click', onConfirm);
+                        modalCancel.removeEventListener('click', onCancel);
+                        resolve(true);
+                    };
+                    const onCancel = () => {
+                        hideModal();
+                        modalConfirm.removeEventListener('click', onConfirm);
+                        modalCancel.removeEventListener('click', onCancel);
+                        resolve(false);
+                    };
+                    modalConfirm.addEventListener('click', onConfirm, { once: true });
+                    modalCancel.addEventListener('click', onCancel, { once: true });
+                });
+            };
+
+            // prompt
+            window.modalPrompt = function(message, defaultValue = '', title = 'Input') {
+                return new Promise((resolve) => {
+                    modalTitle.innerText = title;
+                    modalMessage.innerText = message;
+                    modalInput.style.display = 'block';
+                    modalInput.value = defaultValue;
+                    modalCancel.style.display = 'inline-block';
+                    modalConfirm.innerText = 'Submit';
+                    modalCancel.innerText = 'Cancel';
+                    overlay.style.display = 'flex';
+                    modalInput.focus();
+
+                    const onConfirm = () => {
+                        const val = modalInput.value;
+                        hideModal();
+                        modalConfirm.removeEventListener('click', onConfirm);
+                        modalCancel.removeEventListener('click', onCancel);
+                        resolve(val);
+                    };
+                    const onCancel = () => {
+                        hideModal();
+                        modalConfirm.removeEventListener('click', onConfirm);
+                        modalCancel.removeEventListener('click', onCancel);
+                        resolve(null);
+                    };
+                    modalConfirm.addEventListener('click', onConfirm, { once: true });
+                    modalCancel.addEventListener('click', onCancel, { once: true });
+                    modalInput.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            onConfirm();
+                        }
+                    });
+                });
+            };
+
+            // Close modal when clicking overlay (optional, but we'll disable to prevent accidental close)
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    // optionally close, but better to require explicit action
+                }
+            });
+
+            // ---------- STORAGE KEYS ----------
             const SPEAKERS_KEY = 'idbate_speakers';
             const TEAMS_KEY = 'idbate_teams';
 
@@ -717,10 +913,10 @@
             }
 
             // Global functions for team actions (to be used in onclick)
-            window.editTeam = function(teamId) {
+            window.editTeam = async function(teamId) {
                 const team = teams.find(t => t.id === teamId);
                 if (!team) return;
-                const newName = prompt('Edit team name:', team.name);
+                const newName = await modalPrompt('Edit team name:', team.name, 'Edit team');
                 if (newName && newName.trim()) {
                     team.name = newName.trim();
                     saveTeams();
@@ -728,49 +924,55 @@
                 }
             };
 
-            window.deleteTeam = function(teamId) {
-                if (confirm('Delete this team and all its members?')) {
+            window.deleteTeam = async function(teamId) {
+                const confirmed = await modalConfirm('Delete this team and all its members?', 'Confirm deletion');
+                if (confirmed) {
                     teams = teams.filter(t => t.id !== teamId);
                     saveTeams();
                     renderTeams();
                 }
             };
 
-            window.editMember = function(teamId, memberIdx) {
+            window.editMember = async function(teamId, memberIdx) {
                 const team = teams.find(t => t.id === teamId);
                 if (!team) return;
                 const member = team.members[memberIdx];
-                const newName = prompt('Edit member name:', member.name);
+                const newName = await modalPrompt('Edit member name:', member.name, 'Edit member');
                 if (newName && newName.trim()) member.name = newName.trim();
-                const newPoints = prompt('Edit points (max 90):', member.points);
+                const newPoints = await modalPrompt('Edit points (max 90):', member.points, 'Edit points');
                 if (newPoints !== null) {
                     const pts = parseFloat(newPoints);
                     if (!isNaN(pts) && pts >= 0 && pts <= 90) {
                         member.points = pts;
-                    } else alert('Points must be 0-90');
+                    } else {
+                        await modalAlert('Points must be 0-90', 'Invalid input');
+                    }
                 }
                 saveTeams();
                 renderTeams();
             };
 
-            window.deleteMember = function(teamId, memberIdx) {
+            window.deleteMember = async function(teamId, memberIdx) {
                 const team = teams.find(t => t.id === teamId);
                 if (team) {
-                    team.members.splice(memberIdx, 1);
-                    saveTeams();
-                    renderTeams();
+                    const confirmed = await modalConfirm('Remove this member?', 'Confirm');
+                    if (confirmed) {
+                        team.members.splice(memberIdx, 1);
+                        saveTeams();
+                        renderTeams();
+                    }
                 }
             };
 
-            window.addMemberPrompt = function(teamId) {
+            window.addMemberPrompt = async function(teamId) {
                 const team = teams.find(t => t.id === teamId);
                 if (!team) return;
-                const name = prompt('Enter member name:');
+                const name = await modalPrompt('Enter member name:', '', 'New member');
                 if (!name || !name.trim()) return;
-                const points = prompt('Enter points (max 90):', '0');
+                const points = await modalPrompt('Enter points (max 90):', '0', 'Points');
                 const pts = parseFloat(points);
                 if (isNaN(pts) || pts < 0 || pts > 90) {
-                    alert('Points must be 0-90');
+                    await modalAlert('Points must be 0-90', 'Invalid');
                     return;
                 }
                 team.members.push({ name: name.trim(), points: pts });
@@ -779,8 +981,8 @@
             };
 
             // Add new team
-            document.getElementById('addTeamBtn').addEventListener('click', function() {
-                const teamName = prompt('Enter new team name:');
+            document.getElementById('addTeamBtn').addEventListener('click', async function() {
+                const teamName = await modalPrompt('Enter new team name:', '', 'New team');
                 if (!teamName || !teamName.trim()) return;
                 teams.push({
                     id: Date.now() + '-' + Math.random().toString(36).substr(2, 5),
@@ -862,18 +1064,24 @@
                 }
             };
 
-            window.deleteSpeaker = function(id) {
-                speakers = speakers.filter(s => s.id !== id);
-                saveSpeakers();
-                renderAll();
+            window.deleteSpeaker = async function(id) {
+                const confirmed = await modalConfirm('Delete this speaker?', 'Confirm deletion');
+                if (confirmed) {
+                    speakers = speakers.filter(s => s.id !== id);
+                    saveSpeakers();
+                    renderAll();
+                }
             };
 
             // Add/update speaker
-            function addOrUpdateSpeaker(name, points) {
-                if (!name.trim()) { alert('Enter name'); return false; }
+            async function addOrUpdateSpeaker(name, points) {
+                if (!name.trim()) {
+                    await modalAlert('Please enter a speaker name.', 'Missing name');
+                    return false;
+                }
                 const numPoints = parseFloat(points);
                 if (isNaN(numPoints) || numPoints < 0 || numPoints > 90) {
-                    alert('Points must be 0-90');
+                    await modalAlert('Points must be 0-90.', 'Invalid points');
                     return false;
                 }
                 const existing = speakers.findIndex(s => s.name.toLowerCase() === name.trim().toLowerCase());
@@ -892,8 +1100,9 @@
             }
 
             // Reset all speakers
-            function resetAll() {
-                if (confirm('Delete all speakers?')) {
+            async function resetAll() {
+                const confirmed = await modalConfirm('Delete all speakers? This cannot be undone.', 'Reset confirmation');
+                if (confirmed) {
                     speakers = [];
                     saveSpeakers();
                     renderAll();
@@ -910,10 +1119,10 @@
             }
 
             // Event listeners
-            document.getElementById('addBtn').addEventListener('click', function() {
+            document.getElementById('addBtn').addEventListener('click', async function() {
                 const name = document.getElementById('speakerName').value;
                 const points = document.getElementById('speakerPoints').value;
-                if (addOrUpdateSpeaker(name, points)) {
+                if (await addOrUpdateSpeaker(name, points)) {
                     document.getElementById('speakerName').value = '';
                     document.getElementById('speakerPoints').value = '0';
                 }
