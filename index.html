@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IDBATE · teams & top 3</title>
+    <title>IDBATE · full competition dashboard</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -24,7 +24,7 @@
 
         .app-container {
             display: flex;
-            max-width: 1300px;
+            max-width: 1400px;
             width: 100%;
             gap: 1.5rem;
         }
@@ -32,7 +32,7 @@
         /* ---------- SIDEBAR (deep gray + orange) ---------- */
         .sidebar {
             flex: 1;
-            max-width: 320px;
+            max-width: 340px;
             background: #1e1e2e;
             border-radius: 32px;
             padding: 2rem 1.5rem;
@@ -53,6 +53,49 @@
 
         .sidebar h2 i {
             font-size: 2rem;
+        }
+
+        /* Dashboard mini podium */
+        .podium-mini {
+            background: #2d2d3a;
+            border-radius: 24px;
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+            border-left: 6px solid #f57c00;
+        }
+        .podium-mini h4 {
+            color: #f57c00;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .podium-mini-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1e1e2e;
+            border-radius: 40px;
+            padding: 0.5rem 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .podium-mini-item .rank {
+            font-weight: 800;
+            color: #f57c00;
+            width: 2rem;
+        }
+        .podium-mini-item .name {
+            flex: 1;
+            font-weight: 500;
+        }
+        .podium-mini-item .points {
+            background: #f57c00;
+            color: #1e1e2e;
+            font-weight: 700;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
         }
 
         .stat-card-side {
@@ -116,33 +159,50 @@
             background: #ff9500;
         }
 
+        /* Redesigned team cards */
         .team-card {
             background: #2d2d3a;
-            border-radius: 24px;
+            border-radius: 28px;
             padding: 1.2rem;
             margin-bottom: 1.2rem;
+            border: 2px solid transparent;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            transition: 0.2s;
+        }
+        .team-card:hover {
+            border-color: #f57c00;
         }
 
         .team-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.8rem;
+            margin-bottom: 1rem;
         }
 
         .team-name {
             font-weight: 700;
             color: white;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
+            background: #1e1e2e;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            border-left: 4px solid #f57c00;
         }
 
         .team-actions button {
             background: none;
             border: none;
             color: #f57c00;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             margin-left: 0.5rem;
             cursor: pointer;
+        }
+
+        .team-members {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
         }
 
         .team-member-row {
@@ -151,13 +211,20 @@
             align-items: center;
             background: #1e1e2e;
             border-radius: 40px;
-            padding: 0.5rem 1rem;
-            margin-bottom: 0.5rem;
+            padding: 0.6rem 1rem;
+            border: 1px solid #40405c;
         }
 
         .team-member-row .name {
             font-weight: 500;
             color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .team-member-row .name i {
+            color: #f57c00;
+            font-size: 0.9rem;
         }
 
         .team-member-row .points {
@@ -171,15 +238,33 @@
 
         .member-edit {
             display: flex;
-            gap: 0.3rem;
+            gap: 0.4rem;
         }
-
         .member-edit button {
             background: none;
             border: none;
             color: #f57c00;
             font-size: 1rem;
             cursor: pointer;
+        }
+        .add-member-btn {
+            background: #f57c00;
+            border: none;
+            border-radius: 40px;
+            color: #1e1e2e;
+            padding: 0.6rem 1rem;
+            margin-top: 0.8rem;
+            width: 100%;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            transition: 0.2s;
+        }
+        .add-member-btn:hover {
+            background: #ff9500;
         }
 
         /* ---------- MAIN CONTENT ---------- */
@@ -213,68 +298,37 @@
             padding-left: 1rem;
         }
 
-        /* Top 3 podium */
-        .top3-section {
-            background: #f8fafc;
-            border-radius: 32px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            border: 1px solid #e2e8f0;
-        }
-
-        .top3-header {
+        /* Tab navigation */
+        .tab-bar {
             display: flex;
-            align-items: center;
             gap: 0.5rem;
-            margin-bottom: 1.2rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
         }
-
-        .top3-header h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #1e1e2e;
-        }
-
-        .top3-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-        }
-
-        .podium-item {
-            background: white;
-            border-radius: 30px;
-            padding: 1.2rem;
-            text-align: center;
-            border: 2px solid #e2e8f0;
-            position: relative;
-        }
-
-        .podium-item.first {
-            border-color: #f57c00;
-            background: #fff7ed;
-        }
-
-        .podium-rank {
-            font-size: 2rem;
-            font-weight: 800;
-            color: #f57c00;
-            margin-bottom: 0.5rem;
-        }
-
-        .podium-name {
-            font-weight: 700;
-            font-size: 1.2rem;
-            color: #1e1e2e;
-        }
-
-        .podium-points {
+        .tab {
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
             font-weight: 600;
-            color: #64748b;
-            margin-top: 0.3rem;
+            cursor: pointer;
+            transition: 0.2s;
+            background: #f1f5f9;
+            color: #475569;
+        }
+        .tab.active {
+            background: #f57c00;
+            color: #1e1e2e;
         }
 
-        /* rest unchanged (input, top10, table) */
+        /* Rankings view (existing) */
+        .rankings-view {
+            display: block;
+        }
+        .progress-view {
+            display: none;
+        }
+
+        /* Input section (unchanged) */
         .input-section {
             background: #f8fafc;
             border-radius: 24px;
@@ -337,7 +391,7 @@
             align-items: center;
             gap: 0.5rem;
             cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
+            transition: background 0.2s;
             box-shadow: 0 8px 20px rgba(245,158,11,0.3);
             height: 54px;
             white-space: nowrap;
@@ -347,17 +401,68 @@
             background: #e07c00;
         }
 
-        .add-btn:active {
-            transform: scale(0.97);
+        /* Top 3 podium (original) */
+        .top3-section {
+            background: #f8fafc;
+            border-radius: 32px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid #e2e8f0;
         }
 
-        .info-note {
-            font-size:0.85rem; color:#64748b; margin-top:0.75rem;
+        .top3-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.2rem;
         }
-        .info-note i {
+
+        .top3-header h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e1e2e;
+        }
+
+        .top3-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .podium-item {
+            background: white;
+            border-radius: 30px;
+            padding: 1.2rem;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+            position: relative;
+        }
+
+        .podium-item.first {
+            border-color: #f57c00;
+            background: #fff7ed;
+        }
+
+        .podium-rank {
+            font-size: 2rem;
+            font-weight: 800;
             color: #f57c00;
+            margin-bottom: 0.5rem;
         }
 
+        .podium-name {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #1e1e2e;
+        }
+
+        .podium-points {
+            font-weight: 600;
+            color: #64748b;
+            margin-top: 0.3rem;
+        }
+
+        /* Top 10 */
         .top10-section {
             background: #f8fafc;
             border-radius: 24px;
@@ -419,6 +524,7 @@
             font-size: 0.9rem;
         }
 
+        /* Full table */
         .leaderboard-header {
             display: flex;
             justify-content: space-between;
@@ -483,69 +589,80 @@
             color: #1e293b;
         }
 
-        tr:last-child td {
-            border-bottom: none;
-        }
-
         .rank {
             font-weight: 800;
             color: #f57c00;
             width: 60px;
         }
 
-        .name {
-            font-weight: 600;
-        }
-
-        .points {
-            font-weight: 700;
-            color: #1e1e2e;
-        }
-
         .actions {
             display: flex;
             gap: 0.8rem;
-            align-items: center;
         }
-
         .edit-btn, .delete-btn {
             background: none;
             border: none;
             font-size: 1.2rem;
             cursor: pointer;
-            transition: color 0.2s;
-            padding: 0.3rem;
         }
-
         .edit-btn { color: #3b82f6; }
-        .edit-btn:hover { color: #1e4f8a; }
-
         .delete-btn { color: #ef4444; }
-        .delete-btn:hover { color: #b91c1c; }
 
-        .empty-state {
+        /* ---------- COMPETITION PROGRESS VIEW ---------- */
+        .bracket-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+        }
+        .round-card {
+            background: #f8fafc;
+            border-radius: 24px;
+            padding: 1.2rem;
+            flex: 1 1 160px;
+            border: 2px solid #e2e8f0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.02);
+        }
+        .round-card h4 {
+            color: #f57c00;
+            font-weight: 700;
+            margin-bottom: 1rem;
             text-align: center;
-            padding: 3rem 1rem;
-            color: #94a3b8;
-            font-style: italic;
+            font-size: 1.2rem;
+            border-bottom: 2px dashed #f57c00;
+            padding-bottom: 0.3rem;
+        }
+        .round-speakers {
+            list-style: none;
+        }
+        .round-speakers li {
+            background: white;
+            border-radius: 40px;
+            padding: 0.5rem 1rem;
+            margin-bottom: 0.6rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #e2e8f0;
+            font-size: 0.9rem;
+        }
+        .round-speakers .speaker-name {
+            font-weight: 600;
+        }
+        .round-speakers .speaker-points {
+            background: #f57c00;
+            color: #1e1e2e;
+            font-weight: 700;
+            padding: 0.2rem 0.6rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
         }
 
-        @media (max-width: 900px) {
-            .app-container {
-                flex-direction: column;
-            }
-            .sidebar {
-                max-width: 100%;
-            }
-        }
-
-        /* ---------- CUSTOM MODAL STYLES ---------- */
+        /* Modal (unchanged) */
         .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.6);
             backdrop-filter: blur(3px);
             display: none;
@@ -570,7 +687,6 @@
         }
         .modal-box p {
             margin-bottom: 1.5rem;
-            line-height: 1.5;
         }
         .modal-box input {
             width: 100%;
@@ -581,10 +697,6 @@
             color: white;
             font-size: 1rem;
             margin-bottom: 1.5rem;
-        }
-        .modal-box input:focus {
-            outline: none;
-            border-color: #f57c00;
         }
         .modal-actions {
             display: flex;
@@ -597,7 +709,6 @@
             font-weight: 600;
             cursor: pointer;
             border: none;
-            transition: 0.2s;
         }
         .modal-btn.confirm {
             background: #f57c00;
@@ -608,8 +719,11 @@
             color: #e0e0e0;
             border: 1px solid #40405c;
         }
-        .modal-btn.confirm:hover { background: #ff9500; }
-        .modal-btn.cancel:hover { background: #3d3d4d; }
+
+        @media (max-width: 1000px) {
+            .app-container { flex-direction: column; }
+            .sidebar { max-width: 100%; }
+        }
     </style>
 </head>
 <body>
@@ -617,6 +731,12 @@
         <!-- SIDEBAR with dashboard + teams -->
         <aside class="sidebar">
             <h2><i class="fa-regular fa-chart-bar"></i> DASHBOARD</h2>
+
+            <!-- Mini podium for top 3 -->
+            <div class="podium-mini" id="miniPodium">
+                <!-- filled by JS -->
+            </div>
+
             <div class="stat-card-side" id="sidebarStats"></div>
 
             <div class="teams-section">
@@ -632,47 +752,68 @@
         <main class="main-content">
             <div class="main-header">
                 <h1><i class="fa-regular fa-microphone"></i> IDBATE COMPETITION</h1>
-                <div class="subtitle">Add speakers (max 90 pts) · Top 3 podium · Top 10 · Full leaderboard</div>
+                <div class="subtitle">Manage speakers, teams, and follow the competition progress</div>
             </div>
 
-            <!-- Add speaker form -->
-            <div class="input-section">
-                <div class="input-row">
-                    <div class="input-field">
-                        <label><i class="fa-regular fa-user"></i> Speaker name</label>
-                        <input type="text" id="speakerName" placeholder="e.g., Jane Doe" autocomplete="off">
+            <!-- Tab bar -->
+            <div class="tab-bar">
+                <div class="tab active" id="tabRankings">🏆 Rankings</div>
+                <div class="tab" id="tabProgress">📊 Progress</div>
+            </div>
+
+            <!-- RANKINGS VIEW (existing) -->
+            <div class="rankings-view" id="rankingsView">
+                <!-- Add speaker form -->
+                <div class="input-section">
+                    <div class="input-row">
+                        <div class="input-field">
+                            <label><i class="fa-regular fa-user"></i> Speaker name</label>
+                            <input type="text" id="speakerName" placeholder="e.g., Jane Doe" autocomplete="off">
+                        </div>
+                        <div class="input-field points-field">
+                            <label><i class="fa-regular fa-star"></i> Points (≤90)</label>
+                            <input type="number" id="speakerPoints" placeholder="0" min="0" max="90" step="0.1" value="0">
+                        </div>
+                        <button class="add-btn" id="addBtn"><i class="fa-solid fa-plus"></i> Add / Update</button>
                     </div>
-                    <div class="input-field points-field">
-                        <label><i class="fa-regular fa-star"></i> Points (≤90)</label>
-                        <input type="number" id="speakerPoints" placeholder="0" min="0" max="90" step="0.1" value="0">
-                    </div>
-                    <button class="add-btn" id="addBtn"><i class="fa-solid fa-plus"></i> Add / Update</button>
+                    <div class="info-note"><i class="fa-regular fa-circle-info"></i> Max 90 points. If name exists, points updated.</div>
                 </div>
-                <div class="info-note"><i class="fa-regular fa-circle-info"></i> Max 90 points. If name exists, points updated.</div>
+
+                <!-- TOP 3 PODIUM -->
+                <div class="top3-section">
+                    <div class="top3-header"><i class="fa-solid fa-crown" style="color:#f57c00;"></i><h3>Top 3 speakers</h3></div>
+                    <div class="top3-grid" id="top3Grid"></div>
+                </div>
+
+                <!-- TOP 10 LIST -->
+                <div class="top10-section">
+                    <div class="top10-header"><i class="fa-solid fa-trophy"></i><h3>Top 10 speakers</h3></div>
+                    <div class="top10-grid" id="top10Grid"></div>
+                </div>
+
+                <!-- FULL LEADERBOARD -->
+                <div class="leaderboard-header">
+                    <h2><i class="fa-regular fa-list"></i> All speakers</h2>
+                    <button class="reset-btn" id="resetBtn"><i class="fa-regular fa-trash-can"></i> Reset all</button>
+                </div>
+                <div class="table-container" id="tableContainer"></div>
             </div>
 
-            <!-- TOP 3 PODIUM -->
-            <div class="top3-section">
-                <div class="top3-header"><i class="fa-solid fa-crown" style="color:#f57c00;"></i><h3>Top 3 speakers</h3></div>
-                <div class="top3-grid" id="top3Grid"></div>
+            <!-- PROGRESS VIEW (competition bracket) -->
+            <div class="progress-view" id="progressView">
+                <h2 style="margin-bottom:1.5rem; color:#1e1e2e;"><i class="fa-regular fa-diagram-project"></i> Competition progress</h2>
+                <div class="bracket-container" id="bracketContainer">
+                    <!-- dynamically filled -->
+                </div>
+                <p style="color:#64748b; margin-top:2rem; text-align:center;">
+                    <i class="fa-regular fa-circle-info"></i> Rounds are populated based on current rankings. 
+                    Preliminary rounds include all speakers; Octa‑final = top 16, Quarter = top 8, Semi = top 4, Final = top 2.
+                </p>
             </div>
-
-            <!-- TOP 10 LIST -->
-            <div class="top10-section">
-                <div class="top10-header"><i class="fa-solid fa-trophy"></i><h3>Top 10 speakers</h3></div>
-                <div class="top10-grid" id="top10Grid"></div>
-            </div>
-
-            <!-- FULL LEADERBOARD -->
-            <div class="leaderboard-header">
-                <h2><i class="fa-regular fa-list"></i> All speakers</h2>
-                <button class="reset-btn" id="resetBtn"><i class="fa-regular fa-trash-can"></i> Reset all</button>
-            </div>
-            <div class="table-container" id="tableContainer"></div>
         </main>
     </div>
 
-    <!-- CUSTOM MODAL (hidden by default) -->
+    <!-- CUSTOM MODAL -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-box" id="modalBox">
             <h3 id="modalTitle">Title</h3>
@@ -687,48 +828,35 @@
 
     <script>
         (function() {
-            // ---------- CUSTOM MODAL IMPLEMENTATION ----------
+            // ---------- CUSTOM MODAL ----------
             const overlay = document.getElementById('modalOverlay');
-            const modalBox = document.getElementById('modalBox');
+            const modalInput = document.getElementById('modalInput');
             const modalTitle = document.getElementById('modalTitle');
             const modalMessage = document.getElementById('modalMessage');
-            const modalInput = document.getElementById('modalInput');
             const modalCancel = document.getElementById('modalCancel');
             const modalConfirm = document.getElementById('modalConfirm');
-
-            let currentResolve = null;
-            let currentReject = null;
 
             function hideModal() {
                 overlay.style.display = 'none';
                 modalInput.style.display = 'none';
                 modalInput.value = '';
-                currentResolve = null;
-                currentReject = null;
             }
 
-            // alert
-            window.modalAlert = function(message, title = 'Notice') {
-                return new Promise((resolve) => {
+            window.modalAlert = function(message, title='Notice') {
+                return new Promise(resolve => {
                     modalTitle.innerText = title;
                     modalMessage.innerText = message;
                     modalInput.style.display = 'none';
                     modalCancel.style.display = 'none';
                     modalConfirm.innerText = 'OK';
                     overlay.style.display = 'flex';
-
-                    const onConfirm = () => {
-                        hideModal();
-                        modalConfirm.removeEventListener('click', onConfirm);
-                        resolve();
-                    };
+                    const onConfirm = () => { hideModal(); resolve(); };
                     modalConfirm.addEventListener('click', onConfirm, { once: true });
                 });
             };
 
-            // confirm
-            window.modalConfirm = function(message, title = 'Confirm') {
-                return new Promise((resolve) => {
+            window.modalConfirm = function(message, title='Confirm') {
+                return new Promise(resolve => {
                     modalTitle.innerText = title;
                     modalMessage.innerText = message;
                     modalInput.style.display = 'none';
@@ -736,73 +864,35 @@
                     modalConfirm.innerText = 'Yes';
                     modalCancel.innerText = 'Cancel';
                     overlay.style.display = 'flex';
-
-                    const onConfirm = () => {
-                        hideModal();
-                        modalConfirm.removeEventListener('click', onConfirm);
-                        modalCancel.removeEventListener('click', onCancel);
-                        resolve(true);
-                    };
-                    const onCancel = () => {
-                        hideModal();
-                        modalConfirm.removeEventListener('click', onConfirm);
-                        modalCancel.removeEventListener('click', onCancel);
-                        resolve(false);
-                    };
+                    const onConfirm = () => { hideModal(); resolve(true); };
+                    const onCancel = () => { hideModal(); resolve(false); };
                     modalConfirm.addEventListener('click', onConfirm, { once: true });
                     modalCancel.addEventListener('click', onCancel, { once: true });
                 });
             };
 
-            // prompt
-            window.modalPrompt = function(message, defaultValue = '', title = 'Input') {
-                return new Promise((resolve) => {
+            window.modalPrompt = function(message, defaultValue='', title='Input') {
+                return new Promise(resolve => {
                     modalTitle.innerText = title;
                     modalMessage.innerText = message;
                     modalInput.style.display = 'block';
                     modalInput.value = defaultValue;
                     modalCancel.style.display = 'inline-block';
                     modalConfirm.innerText = 'Submit';
-                    modalCancel.innerText = 'Cancel';
                     overlay.style.display = 'flex';
                     modalInput.focus();
-
-                    const onConfirm = () => {
-                        const val = modalInput.value;
-                        hideModal();
-                        modalConfirm.removeEventListener('click', onConfirm);
-                        modalCancel.removeEventListener('click', onCancel);
-                        resolve(val);
-                    };
-                    const onCancel = () => {
-                        hideModal();
-                        modalConfirm.removeEventListener('click', onConfirm);
-                        modalCancel.removeEventListener('click', onCancel);
-                        resolve(null);
-                    };
+                    const onConfirm = () => { const val = modalInput.value; hideModal(); resolve(val); };
+                    const onCancel = () => { hideModal(); resolve(null); };
                     modalConfirm.addEventListener('click', onConfirm, { once: true });
                     modalCancel.addEventListener('click', onCancel, { once: true });
-                    modalInput.addEventListener('keypress', (e) => {
-                        if (e.key === 'Enter') {
-                            e.preventDefault();
-                            onConfirm();
-                        }
-                    });
+                    modalInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') onConfirm(); });
                 });
             };
 
-            // Close modal when clicking overlay (optional, but we'll disable to prevent accidental close)
-            overlay.addEventListener('click', (e) => {
-                if (e.target === overlay) {
-                    // optionally close, but better to require explicit action
-                }
-            });
-
-            // ---------- STORAGE KEYS ----------
+            // ---------- STORAGE ----------
             const SPEAKERS_KEY = 'idbate_speakers';
             const TEAMS_KEY = 'idbate_teams';
 
-            // ---------- DEFAULT DATA ----------
             let speakers = [
                 { id: '1', name: 'Alex Rivera', points: 89.5 },
                 { id: '2', name: 'Jordan Lee', points: 88.0 },
@@ -825,67 +915,68 @@
                 ]}
             ];
 
-            // Load from localStorage
             function loadData() {
                 const storedSpeakers = localStorage.getItem(SPEAKERS_KEY);
-                if (storedSpeakers) {
-                    try { speakers = JSON.parse(storedSpeakers); } catch(e){}
-                } else {
-                    localStorage.setItem(SPEAKERS_KEY, JSON.stringify(speakers));
-                }
-
+                if (storedSpeakers) { try { speakers = JSON.parse(storedSpeakers); } catch(e){} }
+                else { localStorage.setItem(SPEAKERS_KEY, JSON.stringify(speakers)); }
                 const storedTeams = localStorage.getItem(TEAMS_KEY);
-                if (storedTeams) {
-                    try { teams = JSON.parse(storedTeams); } catch(e){}
-                } else {
-                    localStorage.setItem(TEAMS_KEY, JSON.stringify(teams));
-                }
+                if (storedTeams) { try { teams = JSON.parse(storedTeams); } catch(e){} }
+                else { localStorage.setItem(TEAMS_KEY, JSON.stringify(teams)); }
             }
             loadData();
 
-            function saveSpeakers() {
-                localStorage.setItem(SPEAKERS_KEY, JSON.stringify(speakers));
-            }
-            function saveTeams() {
-                localStorage.setItem(TEAMS_KEY, JSON.stringify(teams));
-            }
+            function saveSpeakers() { localStorage.setItem(SPEAKERS_KEY, JSON.stringify(speakers)); }
+            function saveTeams() { localStorage.setItem(TEAMS_KEY, JSON.stringify(teams)); }
 
-            // Escape helper
             function escapeHtml(unsafe) {
-                return unsafe.replace(/[&<>"]/g, function(m) {
-                    if (m === '&') return '&amp;';
-                    if (m === '<') return '&lt;';
-                    if (m === '>') return '&gt;';
-                    if (m === '"') return '&quot;';
-                    return m;
+                return unsafe.replace(/[&<>"]/g, m => {
+                    if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; if (m === '"') return '&quot;'; return m;
                 });
             }
 
-            // Render sidebar stats
-            function renderSidebarStats() {
-                const totalSpeakers = speakers.length;
-                const totalPoints = speakers.reduce((sum, s) => sum + s.points, 0);
-                const avgPoints = totalSpeakers ? (totalPoints / totalSpeakers).toFixed(1) : 0;
-                const maxPoints = speakers.length ? Math.max(...speakers.map(s => s.points)) : 0;
-                const minPoints = speakers.length ? Math.min(...speakers.map(s => s.points)) : 0;
+            // ---------- RENDER MINI PODIUM IN SIDEBAR ----------
+            function renderMiniPodium() {
+                const sorted = [...speakers].sort((a,b) => b.points - a.points);
+                const top3 = sorted.slice(0,3);
+                const container = document.getElementById('miniPodium');
+                if (top3.length === 0) {
+                    container.innerHTML = '<h4><i class="fa-solid fa-crown"></i> Top 3</h4><p style="color:#aaa;">No speakers</p>';
+                    return;
+                }
+                let html = '<h4><i class="fa-solid fa-crown"></i> Top 3</h4>';
+                top3.forEach((s, idx) => {
+                    html += `<div class="podium-mini-item">
+                        <span class="rank">#${idx+1}</span>
+                        <span class="name">${escapeHtml(s.name)}</span>
+                        <span class="points">${s.points.toFixed(1)}</span>
+                    </div>`;
+                });
+                container.innerHTML = html;
+            }
 
+            // ---------- RENDER SIDEBAR STATS ----------
+            function renderSidebarStats() {
+                const total = speakers.length;
+                const totalPoints = speakers.reduce((sum,s) => sum + s.points, 0);
+                const avg = total ? (totalPoints/total).toFixed(1) : 0;
+                const max = speakers.length ? Math.max(...speakers.map(s=>s.points)) : 0;
+                const min = speakers.length ? Math.min(...speakers.map(s=>s.points)) : 0;
                 document.getElementById('sidebarStats').innerHTML = `
-                    <div style="margin-bottom:1rem;"><div class="stat-side-value">${totalSpeakers}</div><div class="stat-side-label">Total speakers</div></div>
-                    <div style="margin-bottom:1rem;"><div class="stat-side-value">${totalPoints.toFixed(1)}</div><div class="stat-side-label">Total points</div></div>
-                    <div style="margin-bottom:1rem;"><div class="stat-side-value">${avgPoints}</div><div class="stat-side-label">Average</div></div>
-                    <div style="margin-bottom:1rem;"><div class="stat-side-value">${maxPoints.toFixed(1)}</div><div class="stat-side-label">Highest</div></div>
-                    <div><div class="stat-side-value">${minPoints.toFixed(1)}</div><div class="stat-side-label">Lowest</div></div>
+                    <div style="margin-bottom:1rem;"><div class="stat-side-value">${total}</div><div class="stat-side-label">Speakers</div></div>
+                    <div style="margin-bottom:1rem;"><div class="stat-side-value">${totalPoints.toFixed(1)}</div><div class="stat-side-label">Total pts</div></div>
+                    <div style="margin-bottom:1rem;"><div class="stat-side-value">${avg}</div><div class="stat-side-label">Average</div></div>
+                    <div style="margin-bottom:1rem;"><div class="stat-side-value">${max.toFixed(1)}</div><div class="stat-side-label">Highest</div></div>
+                    <div><div class="stat-side-value">${min.toFixed(1)}</div><div class="stat-side-label">Lowest</div></div>
                 `;
             }
 
-            // Render teams in sidebar
+            // ---------- RENDER TEAMS (redesigned) ----------
             function renderTeams() {
                 const container = document.getElementById('teamsContainer');
                 if (teams.length === 0) {
                     container.innerHTML = '<p style="color:#aaa; text-align:center;">No teams yet. Click + to add.</p>';
                     return;
                 }
-
                 let html = '';
                 teams.forEach(team => {
                     html += `<div class="team-card" data-team-id="${team.id}">
@@ -895,116 +986,85 @@
                                 <button onclick="editTeam('${team.id}')" title="Edit team"><i class="fa-regular fa-pen-to-square"></i></button>
                                 <button onclick="deleteTeam('${team.id}')" title="Delete team"><i class="fa-regular fa-trash-can"></i></button>
                             </div>
-                        </div>`;
+                        </div>
+                        <div class="team-members">`;
                     team.members.forEach((member, idx) => {
                         html += `<div class="team-member-row">
-                            <span class="name">${escapeHtml(member.name)}</span>
+                            <span class="name"><i class="fa-regular fa-user"></i> ${escapeHtml(member.name)}</span>
                             <span class="points">${member.points.toFixed(1)}</span>
                             <div class="member-edit">
-                                <button onclick="editMember('${team.id}', ${idx})" title="Edit member"><i class="fa-regular fa-pen-to-square"></i></button>
-                                <button onclick="deleteMember('${team.id}', ${idx})" title="Delete member"><i class="fa-regular fa-trash-can"></i></button>
+                                <button onclick="editMember('${team.id}', ${idx})" title="Edit"><i class="fa-regular fa-pen-to-square"></i></button>
+                                <button onclick="deleteMember('${team.id}', ${idx})" title="Delete"><i class="fa-regular fa-trash-can"></i></button>
                             </div>
                         </div>`;
                     });
-                    html += `<button class="add-member-btn" style="background:#f57c00; border:none; border-radius:30px; color:#1e1e2e; padding:0.4rem 1rem; margin-top:0.5rem; width:100%; font-weight:600; cursor:pointer;" onclick="addMemberPrompt('${team.id}')">+ Add member</button>`;
-                    html += `</div>`;
+                    html += `</div>
+                        <button class="add-member-btn" onclick="addMemberPrompt('${team.id}')"><i class="fa-solid fa-plus"></i> Add member</button>
+                    </div>`;
                 });
                 container.innerHTML = html;
             }
 
-            // Global functions for team actions (to be used in onclick)
+            // Team action globals
             window.editTeam = async function(teamId) {
-                const team = teams.find(t => t.id === teamId);
+                const team = teams.find(t=>t.id===teamId);
                 if (!team) return;
                 const newName = await modalPrompt('Edit team name:', team.name, 'Edit team');
-                if (newName && newName.trim()) {
-                    team.name = newName.trim();
-                    saveTeams();
-                    renderTeams();
-                }
+                if (newName && newName.trim()) { team.name = newName.trim(); saveTeams(); renderTeams(); }
             };
-
             window.deleteTeam = async function(teamId) {
-                const confirmed = await modalConfirm('Delete this team and all its members?', 'Confirm deletion');
-                if (confirmed) {
-                    teams = teams.filter(t => t.id !== teamId);
-                    saveTeams();
-                    renderTeams();
+                if (await modalConfirm('Delete this team and all members?','Confirm')) {
+                    teams = teams.filter(t=>t.id!==teamId);
+                    saveTeams(); renderTeams();
                 }
             };
-
-            window.editMember = async function(teamId, memberIdx) {
-                const team = teams.find(t => t.id === teamId);
+            window.editMember = async function(teamId, idx) {
+                const team = teams.find(t=>t.id===teamId);
                 if (!team) return;
-                const member = team.members[memberIdx];
+                const member = team.members[idx];
                 const newName = await modalPrompt('Edit member name:', member.name, 'Edit member');
                 if (newName && newName.trim()) member.name = newName.trim();
                 const newPoints = await modalPrompt('Edit points (max 90):', member.points, 'Edit points');
                 if (newPoints !== null) {
                     const pts = parseFloat(newPoints);
-                    if (!isNaN(pts) && pts >= 0 && pts <= 90) {
-                        member.points = pts;
-                    } else {
-                        await modalAlert('Points must be 0-90', 'Invalid input');
-                    }
+                    if (!isNaN(pts) && pts>=0 && pts<=90) member.points = pts;
+                    else await modalAlert('Points must be 0-90','Invalid');
                 }
-                saveTeams();
-                renderTeams();
+                saveTeams(); renderTeams();
             };
-
-            window.deleteMember = async function(teamId, memberIdx) {
-                const team = teams.find(t => t.id === teamId);
-                if (team) {
-                    const confirmed = await modalConfirm('Remove this member?', 'Confirm');
-                    if (confirmed) {
-                        team.members.splice(memberIdx, 1);
-                        saveTeams();
-                        renderTeams();
-                    }
+            window.deleteMember = async function(teamId, idx) {
+                const team = teams.find(t=>t.id===teamId);
+                if (team && (await modalConfirm('Remove this member?','Confirm'))) {
+                    team.members.splice(idx,1);
+                    saveTeams(); renderTeams();
                 }
             };
-
             window.addMemberPrompt = async function(teamId) {
-                const team = teams.find(t => t.id === teamId);
+                const team = teams.find(t=>t.id===teamId);
                 if (!team) return;
-                const name = await modalPrompt('Enter member name:', '', 'New member');
+                const name = await modalPrompt('Enter member name:','','New member');
                 if (!name || !name.trim()) return;
-                const points = await modalPrompt('Enter points (max 90):', '0', 'Points');
+                const points = await modalPrompt('Enter points (max 90):','0','Points');
                 const pts = parseFloat(points);
-                if (isNaN(pts) || pts < 0 || pts > 90) {
-                    await modalAlert('Points must be 0-90', 'Invalid');
-                    return;
-                }
+                if (isNaN(pts) || pts<0 || pts>90) { await modalAlert('Points must be 0-90','Invalid'); return; }
                 team.members.push({ name: name.trim(), points: pts });
-                saveTeams();
-                renderTeams();
+                saveTeams(); renderTeams();
             };
-
-            // Add new team
             document.getElementById('addTeamBtn').addEventListener('click', async function() {
-                const teamName = await modalPrompt('Enter new team name:', '', 'New team');
+                const teamName = await modalPrompt('Enter new team name:','','New team');
                 if (!teamName || !teamName.trim()) return;
-                teams.push({
-                    id: Date.now() + '-' + Math.random().toString(36).substr(2, 5),
-                    name: teamName.trim(),
-                    members: []
-                });
-                saveTeams();
-                renderTeams();
+                teams.push({ id: Date.now()+'-'+Math.random().toString(36).substr(2,5), name: teamName.trim(), members: [] });
+                saveTeams(); renderTeams();
             });
 
-            // Render Top 3
+            // ---------- RANKINGS VIEW RENDERS ----------
             function renderTop3() {
-                const sorted = [...speakers].sort((a,b) => b.points - a.points);
-                const top3 = sorted.slice(0, 3);
+                const sorted = [...speakers].sort((a,b)=>b.points-a.points);
+                const top3 = sorted.slice(0,3);
                 const grid = document.getElementById('top3Grid');
-                if (top3.length === 0) {
-                    grid.innerHTML = '<p style="color:#94a3b8;">No speakers yet.</p>';
-                    return;
-                }
-                grid.innerHTML = top3.map((s, idx) => {
-                    let rankClass = '';
-                    if (idx === 0) rankClass = 'first';
+                if (!top3.length) { grid.innerHTML = '<p style="color:#94a3b8;">No speakers</p>'; return; }
+                grid.innerHTML = top3.map((s,idx) => {
+                    let rankClass = idx===0 ? 'first' : '';
                     return `<div class="podium-item ${rankClass}">
                         <div class="podium-rank">#${idx+1}</div>
                         <div class="podium-name">${escapeHtml(s.name)}</div>
@@ -1012,124 +1072,160 @@
                     </div>`;
                 }).join('');
             }
-
-            // Render Top 10
             function renderTop10() {
-                const sorted = [...speakers].sort((a,b) => b.points - a.points);
-                const top10 = sorted.slice(0, 10);
+                const sorted = [...speakers].sort((a,b)=>b.points-a.points);
+                const top10 = sorted.slice(0,10);
                 const grid = document.getElementById('top10Grid');
-                if (top10.length === 0) {
-                    grid.innerHTML = '<p style="color:#94a3b8;">No speakers yet.</p>';
-                    return;
-                }
-                grid.innerHTML = top10.map((s, idx) => {
-                    return `<div class="top10-item">
+                if (!top10.length) { grid.innerHTML = '<p style="color:#94a3b8;">No speakers</p>'; return; }
+                grid.innerHTML = top10.map((s,idx) => `
+                    <div class="top10-item">
                         <span class="top10-rank">#${idx+1}</span>
                         <span class="top10-name">${escapeHtml(s.name)}</span>
                         <span class="top10-points">${s.points.toFixed(1)}</span>
-                    </div>`;
-                }).join('');
+                    </div>
+                `).join('');
             }
-
-            // Render full table
             function renderFullTable() {
-                const sorted = [...speakers].sort((a,b) => b.points - a.points);
+                const sorted = [...speakers].sort((a,b)=>b.points-a.points);
                 const container = document.getElementById('tableContainer');
-                if (sorted.length === 0) {
-                    container.innerHTML = `<div class="empty-state"><i class="fa-regular fa-face-smile"></i> No speakers yet. Add one above!</div>`;
+                if (!sorted.length) {
+                    container.innerHTML = '<div class="empty-state"><i class="fa-regular fa-face-smile"></i> No speakers yet. Add one above!</div>';
                     return;
                 }
                 let html = `<table><thead><tr><th>Rank</th><th>Speaker</th><th>Points</th><th>Actions</th></tr></thead><tbody>`;
-                sorted.forEach((speaker, index) => {
-                    html += `<tr data-id="${speaker.id}">
-                        <td class="rank">#${index+1}</td>
-                        <td class="name">${escapeHtml(speaker.name)}</td>
-                        <td class="points">${speaker.points.toFixed(1)}</td>
+                sorted.forEach((s, idx) => {
+                    html += `<tr>
+                        <td class="rank">#${idx+1}</td>
+                        <td class="name">${escapeHtml(s.name)}</td>
+                        <td class="points">${s.points.toFixed(1)}</td>
                         <td class="actions">
-                            <button class="edit-btn" onclick="editSpeaker('${speaker.id}')" title="Edit"><i class="fa-regular fa-pen-to-square"></i></button>
-                            <button class="delete-btn" onclick="deleteSpeaker('${speaker.id}')" title="Delete"><i class="fa-regular fa-trash-can"></i></button>
+                            <button class="edit-btn" onclick="editSpeaker('${s.id}')"><i class="fa-regular fa-pen-to-square"></i></button>
+                            <button class="delete-btn" onclick="deleteSpeaker('${s.id}')"><i class="fa-regular fa-trash-can"></i></button>
                         </td>
                     </tr>`;
                 });
-                html += `</tbody></table>`;
+                html += '</tbody></table>';
                 container.innerHTML = html;
             }
-
-            // Global speaker functions
             window.editSpeaker = function(id) {
-                const speaker = speakers.find(s => s.id === id);
-                if (speaker) {
-                    document.getElementById('speakerName').value = speaker.name;
-                    document.getElementById('speakerPoints').value = speaker.points;
-                }
+                const sp = speakers.find(s=>s.id===id);
+                if (sp) { document.getElementById('speakerName').value = sp.name; document.getElementById('speakerPoints').value = sp.points; }
             };
-
             window.deleteSpeaker = async function(id) {
-                const confirmed = await modalConfirm('Delete this speaker?', 'Confirm deletion');
-                if (confirmed) {
-                    speakers = speakers.filter(s => s.id !== id);
-                    saveSpeakers();
-                    renderAll();
+                if (await modalConfirm('Delete this speaker?','Confirm')) {
+                    speakers = speakers.filter(s=>s.id!==id);
+                    saveSpeakers(); renderAll();
                 }
             };
-
-            // Add/update speaker
             async function addOrUpdateSpeaker(name, points) {
-                if (!name.trim()) {
-                    await modalAlert('Please enter a speaker name.', 'Missing name');
-                    return false;
-                }
-                const numPoints = parseFloat(points);
-                if (isNaN(numPoints) || numPoints < 0 || numPoints > 90) {
-                    await modalAlert('Points must be 0-90.', 'Invalid points');
-                    return false;
-                }
+                if (!name.trim()) { await modalAlert('Enter name'); return false; }
+                const num = parseFloat(points);
+                if (isNaN(num) || num<0 || num>90) { await modalAlert('Points 0-90'); return false; }
                 const existing = speakers.findIndex(s => s.name.toLowerCase() === name.trim().toLowerCase());
-                if (existing !== -1) {
-                    speakers[existing].points = numPoints;
-                } else {
-                    speakers.push({
-                        id: Date.now() + '-' + Math.random().toString(36).substr(2,9),
-                        name: name.trim(),
-                        points: numPoints
-                    });
-                }
-                saveSpeakers();
-                renderAll();
-                return true;
+                if (existing !== -1) speakers[existing].points = num;
+                else speakers.push({ id: Date.now()+'-'+Math.random().toString(36).substr(2,9), name: name.trim(), points: num });
+                saveSpeakers(); renderAll(); return true;
             }
-
-            // Reset all speakers
             async function resetAll() {
-                const confirmed = await modalConfirm('Delete all speakers? This cannot be undone.', 'Reset confirmation');
-                if (confirmed) {
-                    speakers = [];
-                    saveSpeakers();
-                    renderAll();
-                }
+                if (await modalConfirm('Delete all speakers?','Reset')) { speakers = []; saveSpeakers(); renderAll(); }
             }
 
-            // Render everything
+            // ---------- PROGRESS VIEW (bracket) ----------
+            function renderProgress() {
+                const sorted = [...speakers].sort((a,b)=>b.points-a.points);
+                const total = sorted.length;
+                const prelim = sorted; // all in prelim rounds (we'll split into 3 groups)
+                const prelimGroups = [[], [], []];
+                sorted.forEach((s, idx) => {
+                    prelimGroups[idx % 3].push(s); // distribute evenly
+                });
+                const octa = sorted.slice(0, Math.min(16, total));
+                const quarter = sorted.slice(0, Math.min(8, total));
+                const semi = sorted.slice(0, Math.min(4, total));
+                const final = sorted.slice(0, Math.min(2, total));
+
+                const bracket = document.getElementById('bracketContainer');
+                let html = '';
+
+                // Preliminary rounds (3)
+                for (let i=0; i<3; i++) {
+                    html += `<div class="round-card"><h4>Preliminary ${i+1}</h4><ul class="round-speakers">`;
+                    prelimGroups[i].forEach(s => {
+                        html += `<li><span class="speaker-name">${escapeHtml(s.name)}</span> <span class="speaker-points">${s.points.toFixed(1)}</span></li>`;
+                    });
+                    if (prelimGroups[i].length === 0) html += '<li style="color:#aaa;">—</li>';
+                    html += '</ul></div>';
+                }
+
+                // Octa-final
+                html += `<div class="round-card"><h4>Octa‑final</h4><ul class="round-speakers">`;
+                octa.forEach(s => html += `<li><span class="speaker-name">${escapeHtml(s.name)}</span> <span class="speaker-points">${s.points.toFixed(1)}</span></li>`);
+                if (!octa.length) html += '<li>—</li>';
+                html += '</ul></div>';
+
+                // Quarter-final
+                html += `<div class="round-card"><h4>Quarter‑final</h4><ul class="round-speakers">`;
+                quarter.forEach(s => html += `<li><span class="speaker-name">${escapeHtml(s.name)}</span> <span class="speaker-points">${s.points.toFixed(1)}</span></li>`);
+                if (!quarter.length) html += '<li>—</li>';
+                html += '</ul></div>';
+
+                // Semi-final
+                html += `<div class="round-card"><h4>Semi‑final</h4><ul class="round-speakers">`;
+                semi.forEach(s => html += `<li><span class="speaker-name">${escapeHtml(s.name)}</span> <span class="speaker-points">${s.points.toFixed(1)}</span></li>`);
+                if (!semi.length) html += '<li>—</li>';
+                html += '</ul></div>';
+
+                // Final
+                html += `<div class="round-card"><h4>Final</h4><ul class="round-speakers">`;
+                final.forEach(s => html += `<li><span class="speaker-name">${escapeHtml(s.name)}</span> <span class="speaker-points">${s.points.toFixed(1)}</span></li>`);
+                if (!final.length) html += '<li>—</li>';
+                html += '</ul></div>';
+
+                bracket.innerHTML = html;
+            }
+
+            // ---------- RENDER ALL ----------
             function renderAll() {
+                renderMiniPodium();
                 renderSidebarStats();
                 renderTeams();
                 renderTop3();
                 renderTop10();
                 renderFullTable();
+                renderProgress(); // always update progress view
             }
 
-            // Event listeners
+            // ---------- TAB SWITCHING ----------
+            const tabRankings = document.getElementById('tabRankings');
+            const tabProgress = document.getElementById('tabProgress');
+            const rankingsView = document.getElementById('rankingsView');
+            const progressView = document.getElementById('progressView');
+
+            tabRankings.addEventListener('click', () => {
+                tabRankings.classList.add('active');
+                tabProgress.classList.remove('active');
+                rankingsView.style.display = 'block';
+                progressView.style.display = 'none';
+            });
+            tabProgress.addEventListener('click', () => {
+                tabProgress.classList.add('active');
+                tabRankings.classList.remove('active');
+                rankingsView.style.display = 'none';
+                progressView.style.display = 'block';
+                renderProgress(); // refresh when opened
+            });
+
+            // ---------- EVENT LISTENERS ----------
             document.getElementById('addBtn').addEventListener('click', async function() {
                 const name = document.getElementById('speakerName').value;
-                const points = document.getElementById('speakerPoints').value;
-                if (await addOrUpdateSpeaker(name, points)) {
+                const pts = document.getElementById('speakerPoints').value;
+                if (await addOrUpdateSpeaker(name, pts)) {
                     document.getElementById('speakerName').value = '';
                     document.getElementById('speakerPoints').value = '0';
                 }
             });
-
-            document.getElementById('speakerName').addEventListener('keypress', e => e.key === 'Enter' && document.getElementById('addBtn').click());
-            document.getElementById('speakerPoints').addEventListener('keypress', e => e.key === 'Enter' && document.getElementById('addBtn').click());
+            document.getElementById('speakerName').addEventListener('keypress', e => e.key==='Enter' && document.getElementById('addBtn').click());
+            document.getElementById('speakerPoints').addEventListener('keypress', e => e.key==='Enter' && document.getElementById('addBtn').click());
             document.getElementById('resetBtn').addEventListener('click', resetAll);
 
             // Initial render
