@@ -3,824 +3,662 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N-gram · social sequence</title>
-    <!-- Font Awesome 6 -->
+    <title>Speaker Rankings · Dashboard & Top 10</title>
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: #0a0a12;
-            color: #ffffff;
-            line-height: 1.6;
+            background: #f4f7fb;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 2rem 1rem;
         }
 
-        /* Navigation */
-        .navbar {
-            background: #12121c;
-            padding: 1rem 5%;
-            position: fixed;
+        .card {
+            max-width: 900px;
             width: 100%;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 2px solid #f45b2c30;
-            backdrop-filter: blur(10px);
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo-icon {
-            background: linear-gradient(145deg, #f45b2c, #ff7b4a);
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: white;
-        }
-
-        .logo-text {
-            font-size: 24px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #f45b2c, #ff8a5c);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: #ffb8a0;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: #f45b2c;
-        }
-
-        .nav-links a.active {
-            color: #f45b2c;
-            border-bottom: 2px solid #f45b2c;
-        }
-
-        .btn-primary {
-            background: #f45b2c;
-            color: white !important;
-            padding: 0.8rem 1.8rem;
-            border-radius: 40px;
-            font-weight: 700;
-        }
-
-        .btn-primary:hover {
-            background: #ff6f3c;
-            color: white !important;
-        }
-
-        /* Main Content */
-        .main-content {
-            margin-top: 80px;
-            min-height: calc(100vh - 80px);
-        }
-
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, #0f0f1a, #1a1a2a);
-            padding: 4rem 5%;
-            text-align: center;
-            border-bottom: 1px solid #f45b2c40;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #ffffff, #ffb8a0);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .hero p {
-            font-size: 1.3rem;
-            color: #ffb8a0;
-            max-width: 600px;
-            margin: 0 auto 2rem;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-        }
-
-        .btn-large {
-            padding: 1rem 2.5rem;
-            font-size: 1.1rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 700;
-        }
-
-        .btn-orange {
-            background: #f45b2c;
-            color: white;
-        }
-
-        .btn-outline {
-            border: 2px solid #f45b2c;
-            color: #ffb8a0;
-        }
-
-        /* Features Section */
-        .features {
-            padding: 4rem 5%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 3rem;
-            color: white;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .feature-card {
-            background: #12121c;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05), 0 5px 15px rgba(0,0,0,0.03);
             padding: 2rem;
-            border-radius: 30px;
-            border: 1px solid #f45b2c40;
-            text-align: center;
-            transition: transform 0.3s;
         }
 
-        .feature-card:hover {
-            transform: translateY(-5px);
-            border-color: #f45b2c;
-        }
-
-        .feature-icon {
-            font-size: 3rem;
-            color: #f45b2c;
-            margin-bottom: 1rem;
-        }
-
-        .feature-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .feature-card p {
-            color: #ffb8a0;
-        }
-
-        /* App Demo Section */
-        .app-demo {
-            background: #0f0f1a;
-            padding: 4rem 5%;
-        }
-
-        .demo-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-        }
-
-        .demo-content h2 {
+        h1 {
             font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
 
-        .demo-content p {
-            color: #ffb8a0;
-            font-size: 1.2rem;
+        h1 i {
+            color: #f59e0b;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+            border-left: 4px solid #f59e0b;
+            padding-left: 1rem;
+        }
+
+        /* Dashboard cards */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
             margin-bottom: 2rem;
         }
 
-        .demo-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-        }
-
-        .stat {
+        .stat-card {
+            background: #f8fafc;
+            border-radius: 24px;
+            padding: 1.2rem 1rem;
+            border: 1px solid #e2e8f0;
             text-align: center;
+            transition: 0.2s;
         }
 
-        .stat-number {
-            font-size: 2rem;
+        .stat-card:hover {
+            border-color: #f59e0b;
+            box-shadow: 0 4px 12px rgba(245,158,11,0.1);
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
             font-weight: 800;
-            color: #f45b2c;
+            color: #1e293b;
+            line-height: 1.2;
         }
 
         .stat-label {
-            color: #ffb8a0;
+            color: #64748b;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            font-weight: 600;
         }
 
-        .demo-preview {
-            background: #12121c;
-            border-radius: 40px;
-            padding: 2rem;
-            border: 2px solid #f45b2c40;
-            box-shadow: 0 20px 40px rgba(244, 91, 44, 0.2);
+        .stat-icon {
+            color: #f59e0b;
+            font-size: 1.4rem;
+            margin-bottom: 0.3rem;
         }
 
-        .preview-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 1.5rem;
-        }
-
-        .preview-post {
-            background: #1a1a2a;
-            border-radius: 20px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .preview-post-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .preview-avatar {
-            width: 40px;
-            height: 40px;
-            background: #f45b2c40;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* CTA Section */
-        .cta {
-            background: linear-gradient(135deg, #f45b2c20, #0f0f1a);
-            padding: 4rem 5%;
-            text-align: center;
-        }
-
-        .cta h2 {
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-        }
-
-        .cta p {
-            color: #ffb8a0;
-            font-size: 1.2rem;
+        /* Input section */
+        .input-section {
+            background: #f8fafc;
+            border-radius: 24px;
+            padding: 1.5rem;
             margin-bottom: 2rem;
+            border: 1px solid #e2e8f0;
         }
 
-        .cta-buttons {
+        .input-row {
             display: flex;
-            gap: 1rem;
-            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: flex-end;
         }
 
-        /* Footer */
-        .footer {
-            background: #0a0a12;
-            padding: 3rem 5%;
-            border-top: 1px solid #f45b2c30;
+        .input-field {
+            flex: 2 1 200px;
         }
 
-        .footer-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
+        .input-field label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: #475569;
+            margin-bottom: 0.3rem;
         }
 
-        .footer-column h4 {
-            color: #f45b2c;
+        .input-field input {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 40px;
+            font-size: 1rem;
+            background: white;
+            transition: 0.2s;
+        }
+
+        .input-field input:focus {
+            outline: none;
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 3px rgba(245,158,11,0.2);
+        }
+
+        .points-field {
+            flex: 1 1 120px;
+        }
+
+        .add-btn {
+            flex: 0 0 auto;
+            background: #f59e0b;
+            color: white;
+            border: none;
+            border-radius: 40px;
+            padding: 0.9rem 2rem;
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 8px 20px rgba(245,158,11,0.3);
+            height: 54px;
+            white-space: nowrap;
+        }
+
+        .add-btn:hover {
+            background: #e07c00;
+        }
+
+        .add-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* Top 10 section */
+        .top10-section {
+            background: #f8fafc;
+            border-radius: 24px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .top10-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             margin-bottom: 1rem;
         }
 
-        .footer-column a {
-            display: block;
-            color: #ffb8a0;
-            text-decoration: none;
-            margin-bottom: 0.5rem;
+        .top10-header h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0f172a;
         }
 
-        .footer-column a:hover {
-            color: #f45b2c;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .social-links a {
+        .top10-header i {
+            color: #f59e0b;
             font-size: 1.5rem;
         }
 
-        .copyright {
-            text-align: center;
-            margin-top: 3rem;
-            color: #666;
+        .top10-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.8rem;
         }
 
-        /* Auth Pages */
-        .auth-container {
-            min-height: 100vh;
+        .top10-item {
+            background: white;
+            border-radius: 40px;
+            padding: 0.8rem 1.2rem;
             display: flex;
             align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #0a0a12, #1a1a2a);
-            padding: 2rem;
+            gap: 0.8rem;
+            border: 1px solid #e2e8f0;
         }
 
-        .auth-card {
-            background: #12121c;
-            padding: 3rem;
-            border-radius: 40px;
-            border: 2px solid #f45b2c40;
-            max-width: 400px;
-            width: 100%;
+        .top10-rank {
+            font-weight: 800;
+            color: #f59e0b;
+            font-size: 1.2rem;
+            min-width: 2rem;
         }
 
-        .auth-card h2 {
-            font-size: 2rem;
-            margin-bottom: 2rem;
-            text-align: center;
+        .top10-name {
+            flex: 1;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #ffb8a0;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 1rem;
-            background: #1a1a2a;
-            border: 2px solid #333;
-            border-radius: 30px;
-            color: white;
-            font-size: 1rem;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #f45b2c;
-        }
-
-        .auth-button {
-            width: 100%;
-            padding: 1rem;
-            background: #f45b2c;
-            color: white;
-            border: none;
-            border-radius: 30px;
-            font-size: 1.1rem;
+        .top10-points {
             font-weight: 700;
-            cursor: pointer;
-            margin-top: 1rem;
+            color: #1e293b;
+            background: #f1f5f9;
+            padding: 0.3rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
         }
 
-        .auth-link {
+        /* Leaderboard table */
+        .leaderboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .leaderboard-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .reset-btn {
+            background: none;
+            border: 2px solid #e2e8f0;
+            color: #64748b;
+            border-radius: 40px;
+            padding: 0.5rem 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .reset-btn:hover {
+            border-color: #f59e0b;
+            color: #f59e0b;
+            background: #fff7ed;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 20px;
+            border: 1px solid #edf2f7;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #334155;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            padding: 1rem 1rem;
+            text-align: left;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        td {
+            padding: 1rem 1rem;
+            border-bottom: 1px solid #edf2f7;
+            color: #1e293b;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .rank {
+            font-weight: 800;
+            color: #f59e0b;
+            width: 60px;
+        }
+
+        .name {
+            font-weight: 600;
+        }
+
+        .points {
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .actions {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+
+        .edit-btn, .delete-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 0.3rem;
+        }
+
+        .edit-btn { color: #3b82f6; }
+        .edit-btn:hover { color: #1e4f8a; }
+
+        .delete-btn { color: #ef4444; }
+        .delete-btn:hover { color: #b91c1c; }
+
+        .empty-state {
             text-align: center;
-            margin-top: 1.5rem;
+            padding: 3rem 1rem;
+            color: #94a3b8;
+            font-style: italic;
         }
 
-        .auth-link a {
-            color: #f45b2c;
-            text-decoration: none;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .demo-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .cta h2 {
-                font-size: 2rem;
-            }
-            
-            .cta-buttons {
-                flex-direction: column;
-            }
-            
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Mobile Menu */
-        .mobile-menu-btn {
-            display: none;
-            font-size: 2rem;
-            color: #f45b2c;
-            cursor: pointer;
-        }
-
-        @media (max-width: 768px) {
-            .mobile-menu-btn {
-                display: block;
-            }
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.6s ease forwards;
+        @media (max-width: 600px) {
+            .card { padding: 1.5rem; }
+            .input-row { flex-direction: column; align-items: stretch; }
+            .add-btn { justify-content: center; }
+            .top10-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">
-                <div class="logo-icon"><i class="fa-solid fa-diagram-predecessor"></i></div>
-                <span class="logo-text">n-gram</span>
-            </div>
-            <div class="nav-links">
-                <a href="#" class="active">Home</a>
-                <a href="#features">Features</a>
-                <a href="#about">About</a>
-                <a href="#pricing">Pricing</a>
-                <a href="javascript:void(0)" onclick="showLogin()">Login</a>
-                <a href="javascript:void(0)" onclick="showSignup()" class="btn-primary">Sign Up</a>
-            </div>
-            <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
-                <i class="fa-solid fa-bars"></i>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Content Area - Dynamic Pages -->
-    <div class="main-content" id="mainContent">
-        <!-- Home Page -->
-        <div id="homePage">
-            <!-- Hero Section -->
-            <section class="hero">
-                <h1>Capture Life's Sequences</h1>
-                <p>Share your moments, build your story with N-gram - the social platform for authentic connections</p>
-                <div class="hero-buttons">
-                    <a href="javascript:void(0)" onclick="showSignup()" class="btn-large btn-orange">Get Started</a>
-                    <a href="#features" class="btn-large btn-outline">Learn More</a>
-                </div>
-            </section>
-
-            <!-- Features Section -->
-            <section class="features" id="features">
-                <h2 class="section-title">Why Choose N-gram?</h2>
-                <div class="features-grid">
-                    <div class="feature-card fade-in">
-                        <div class="feature-icon"><i class="fa-regular fa-images"></i></div>
-                        <h3>N-gram Stories</h3>
-                        <p>Create sequences of moments that tell your complete story, not just single photos</p>
-                    </div>
-                    <div class="feature-card fade-in">
-                        <div class="feature-icon"><i class="fa-regular fa-comments"></i></div>
-                        <h3>Direct Grams</h3>
-                        <p>Private messaging with context - share moments in conversation</p>
-                    </div>
-                    <div class="feature-card fade-in">
-                        <div class="feature-icon"><i class="fa-regular fa-location-dot"></i></div>
-                        <h3>Find Friends</h3>
-                        <p>Discover people near you and connect with contacts from your phone</p>
-                    </div>
-                    <div class="feature-card fade-in">
-                        <div class="feature-icon"><i class="fa-regular fa-lock"></i></div>
-                        <h3>Privacy First</h3>
-                        <p>Granular control over who sees your content with sequence-level privacy</p>
-                    </div>
-                    <div class="feature-card fade-in">
-                        <div class="feature-icon"><i class="fa-regular fa-diagram-project"></i></div>
-                        <h3>Collaborative Chains</h3>
-                        <p>Link moments with friends to create shared N-grams</p>
-                    </div>
-                    <div class="feature-card fade-in">
-                        <div class="feature-icon"><i class="fa-regular fa-music"></i></div>
-                        <h3>Context Cards</h3>
-                        <p>Add songs, places, and mood to every moment</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- App Demo Section -->
-            <section class="app-demo">
-                <div class="demo-container">
-                    <div class="demo-content">
-                        <h2>See N-gram in Action</h2>
-                        <p>Experience a new way of sharing your life's sequences. Every moment tells a story, every sequence builds a narrative.</p>
-                        <div class="demo-stats">
-                            <div class="stat">
-                                <div class="stat-number">10M+</div>
-                                <div class="stat-label">Active Users</div>
-                            </div>
-                            <div class="stat">
-                                <div class="stat-number">50M+</div>
-                                <div class="stat-label">Daily Grams</div>
-                            </div>
-                            <div class="stat">
-                                <div class="stat-number">4.8★</div>
-                                <div class="stat-label">App Rating</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="demo-preview">
-                        <div class="preview-header">
-                            <span><i class="fa-regular fa-circle-user"></i> @alex_ngram</span>
-                            <span style="color:#f45b2c;">2h ago</span>
-                        </div>
-                        <div class="preview-post">
-                            <div class="preview-post-header">
-                                <div class="preview-avatar">🌊</div>
-                                <div><strong>Morning surf</strong></div>
-                            </div>
-                            <div style="font-size: 3rem; text-align: center; padding: 1rem;">🏄‍♂️🌊☀️</div>
-                            <div style="display: flex; gap: 2rem; justify-content: center; color: #ffb8a0;">
-                                <span><i class="fa-regular fa-heart"></i> 234</span>
-                                <span><i class="fa-regular fa-comment"></i> 18</span>
-                            </div>
-                        </div>
-                        <div style="background: #1a1a2a; border-radius: 30px; padding: 0.8rem; text-align: center; color: #f45b2c;">
-                            <i class="fa-regular fa-diagram-project"></i> Part of "Coast Life" N-gram
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- CTA Section -->
-            <section class="cta">
-                <h2>Ready to Start Your Sequence?</h2>
-                <p>Join millions of users sharing their stories in a more meaningful way</p>
-                <div class="cta-buttons">
-                    <a href="javascript:void(0)" onclick="showSignup()" class="btn-large btn-orange">Create Account</a>
-                    <a href="javascript:void(0)" onclick="showLogin()" class="btn-large btn-outline">Sign In</a>
-                </div>
-            </section>
+    <div class="card">
+        <h1>
+            <i class="fa-solid fa-ranking-star"></i> Speaker Rankings
+        </h1>
+        <div class="subtitle">
+            Dashboard · Top 10 · Full leaderboard — you control the points.
         </div>
 
-        <!-- Login Page (hidden by default) -->
-        <div id="loginPage" style="display: none;">
-            <div class="auth-container">
-                <div class="auth-card">
-                    <h2>Welcome Back</h2>
-                    <form onsubmit="handleLogin(event)">
-                        <div class="form-group">
-                            <label>Email or Username</label>
-                            <input type="text" id="loginEmail" placeholder="Enter your email">
-                        </div>
-                        <div class="form-group">
-                            <label>Password</label>
-                            <input type="password" id="loginPassword" placeholder="Enter your password">
-                        </div>
-                        <button type="submit" class="auth-button">Sign In</button>
-                        <div class="auth-link">
-                            <a href="javascript:void(0)" onclick="showSignup()">Don't have an account? Sign up</a>
-                        </div>
-                    </form>
+        <!-- DASHBOARD STATS -->
+        <div class="dashboard" id="dashboardStats">
+            <!-- filled by JS -->
+        </div>
+
+        <!-- Add speaker form (user mentions name and points) -->
+        <div class="input-section">
+            <div class="input-row">
+                <div class="input-field">
+                    <label><i class="fa-regular fa-user"></i> Speaker name</label>
+                    <input type="text" id="speakerName" placeholder="e.g., Jane Doe" autocomplete="off">
                 </div>
+                <div class="input-field points-field">
+                    <label><i class="fa-regular fa-star"></i> Points</label>
+                    <input type="number" id="speakerPoints" placeholder="0" min="0" step="0.1" value="0">
+                </div>
+                <button class="add-btn" id="addBtn">
+                    <i class="fa-solid fa-plus"></i> Add / Update
+                </button>
+            </div>
+            <p style="font-size:0.85rem; color:#64748b; margin-top:0.75rem;">
+                <i class="fa-regular fa-circle-info"></i> If name exists, points are updated.
+            </p>
+        </div>
+
+        <!-- TOP 10 LIST -->
+        <div class="top10-section" id="top10Section">
+            <div class="top10-header">
+                <i class="fa-solid fa-trophy"></i>
+                <h3>Top 10 speakers</h3>
+            </div>
+            <div class="top10-grid" id="top10Grid">
+                <!-- dynamic -->
             </div>
         </div>
 
-        <!-- Signup Page (hidden by default) -->
-        <div id="signupPage" style="display: none;">
-            <div class="auth-container">
-                <div class="auth-card">
-                    <h2>Create Account</h2>
-                    <form onsubmit="handleSignup(event)">
-                        <div class="form-group">
-                            <label>Full Name</label>
-                            <input type="text" id="signupName" placeholder="Enter your name">
-                        </div>
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" id="signupEmail" placeholder="Enter your email">
-                        </div>
-                        <div class="form-group">
-                            <label>Username</label>
-                            <input type="text" id="signupUsername" placeholder="Choose a username">
-                        </div>
-                        <div class="form-group">
-                            <label>Password</label>
-                            <input type="password" id="signupPassword" placeholder="Create a password">
-                        </div>
-                        <button type="submit" class="auth-button">Sign Up</button>
-                        <div class="auth-link">
-                            <a href="javascript:void(0)" onclick="showLogin()">Already have an account? Sign in</a>
-                        </div>
-                    </form>
-                </div>
-            </div>
+        <!-- FULL LEADERBOARD -->
+        <div class="leaderboard-header">
+            <h2><i class="fa-regular fa-list"></i> All speakers</h2>
+            <button class="reset-btn" id="resetBtn">
+                <i class="fa-regular fa-trash-can"></i> Reset all
+            </button>
+        </div>
+
+        <div class="table-container" id="tableContainer">
+            <!-- Dynamic table injected via JS -->
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-column">
-                <h4>N-gram</h4>
-                <a href="#">About Us</a>
-                <a href="#">Careers</a>
-                <a href="#">Press</a>
-                <a href="#">Blog</a>
-            </div>
-            <div class="footer-column">
-                <h4>Features</h4>
-                <a href="#">N-grams</a>
-                <a href="#">Direct Grams</a>
-                <a href="#">Discover</a>
-                <a href="#">Highlights</a>
-            </div>
-            <div class="footer-column">
-                <h4>Support</h4>
-                <a href="#">Help Center</a>
-                <a href="#">Privacy Policy</a>
-                <a href="#">Terms of Service</a>
-                <a href="#">Community Guidelines</a>
-            </div>
-            <div class="footer-column">
-                <h4>Follow Us</h4>
-                <div class="social-links">
-                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
-                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="#"><i class="fa-brands fa-facebook"></i></a>
-                    <a href="#"><i class="fa-brands fa-tiktok"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="copyright">
-            © 2026 N-gram. All rights reserved. Life is a sequence.
-        </div>
-    </footer>
-
     <script>
-        // Page navigation
-        function showHome() {
-            document.getElementById('homePage').style.display = 'block';
-            document.getElementById('loginPage').style.display = 'none';
-            document.getElementById('signupPage').style.display = 'none';
-            updateActiveNav('home');
-        }
+        (function() {
+            const STORAGE_KEY = 'speakerRankings';
 
-        function showLogin() {
-            document.getElementById('homePage').style.display = 'none';
-            document.getElementById('loginPage').style.display = 'block';
-            document.getElementById('signupPage').style.display = 'none';
-            updateActiveNav('login');
-        }
+            // Default data (empty now – user starts fresh, but you can keep defaults)
+            let speakers = [
+                { id: '1', name: 'Alex Rivera', points: 92.5 },
+                { id: '2', name: 'Jordan Lee', points: 88.0 },
+                { id: '3', name: 'Taylor Smith', points: 76.8 },
+                { id: '4', name: 'Casey Kim', points: 95.2 },
+                { id: '5', name: 'Morgan Chase', points: 81.3 },
+                { id: '6', name: 'Riley Parker', points: 67.5 },
+                { id: '7', name: 'Jamie Chen', points: 89.4 },
+                { id: '8', name: 'Sam Johnson', points: 73.2 },
+                { id: '9', name: 'Chris Evans', points: 84.7 },
+                { id: '10', name: 'Pat Smith', points: 91.0 },
+                { id: '11', name: 'Terry Gale', points: 62.3 }
+            ];
 
-        function showSignup() {
-            document.getElementById('homePage').style.display = 'none';
-            document.getElementById('loginPage').style.display = 'none';
-            document.getElementById('signupPage').style.display = 'block';
-            updateActiveNav('signup');
-        }
-
-        function updateActiveNav(page) {
-            const navLinks = document.querySelectorAll('.nav-links a');
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (page === 'home' && link.textContent === 'Home') link.classList.add('active');
-                if (page === 'login' && link.textContent === 'Login') link.classList.add('active');
-                if (page === 'signup' && link.textContent === 'Sign Up') link.classList.add('active');
-            });
-        }
-
-        // Handle form submissions
-        function handleLogin(event) {
-            event.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            
-            if (email && password) {
-                alert('✅ Demo: Login successful! Redirecting to app...');
-                // In a real app, you would redirect to the dashboard
-                window.location.href = '/app';
-            } else {
-                alert('Please fill in all fields');
+            // Load from localStorage
+            function loadSpeakers() {
+                const stored = localStorage.getItem(STORAGE_KEY);
+                if (stored) {
+                    try {
+                        speakers = JSON.parse(stored);
+                        speakers = speakers.filter(s => s && typeof s === 'object').map(s => {
+                            if (!s.id) s.id = Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+                            return s;
+                        });
+                    } catch (e) {
+                        console.warn('Failed to load, using defaults');
+                    }
+                } else {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(speakers));
+                }
             }
-        }
 
-        function handleSignup(event) {
-            event.preventDefault();
-            const name = document.getElementById('signupName').value;
-            const email = document.getElementById('signupEmail').value;
-            const username = document.getElementById('signupUsername').value;
-            const password = document.getElementById('signupPassword').value;
-            
-            if (name && email && username && password) {
-                alert('✅ Demo: Account created! Please check your email to verify.');
-                showLogin();
-            } else {
-                alert('Please fill in all fields');
+            function saveSpeakers() {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(speakers));
             }
-        }
 
-        // Mobile menu toggle
-        function toggleMobileMenu() {
-            const navLinks = document.querySelector('.nav-links');
-            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-        }
+            // Escape helper
+            function escapeHtml(unsafe) {
+                return unsafe.replace(/[&<>"]/g, function(m) {
+                    if (m === '&') return '&amp;';
+                    if (m === '<') return '&lt;';
+                    if (m === '>') return '&gt;';
+                    if (m === '"') return '&quot;';
+                    return m;
+                });
+            }
 
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
+            // Update dashboard stats
+            function renderDashboard() {
+                const totalSpeakers = speakers.length;
+                const totalPoints = speakers.reduce((sum, s) => sum + s.points, 0);
+                const avgPoints = totalSpeakers ? (totalPoints / totalSpeakers).toFixed(1) : 0;
+                const maxPoints = speakers.length ? Math.max(...speakers.map(s => s.points)) : 0;
+                const minPoints = speakers.length ? Math.min(...speakers.map(s => s.points)) : 0;
+
+                const dashboard = document.getElementById('dashboardStats');
+                dashboard.innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fa-regular fa-user"></i></div>
+                        <div class="stat-value">${totalSpeakers}</div>
+                        <div class="stat-label">Speakers</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fa-regular fa-star"></i></div>
+                        <div class="stat-value">${totalPoints.toFixed(1)}</div>
+                        <div class="stat-label">Total points</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fa-regular fa-chart-line"></i></div>
+                        <div class="stat-value">${avgPoints}</div>
+                        <div class="stat-label">Average</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fa-regular fa-crown"></i></div>
+                        <div class="stat-value">${maxPoints.toFixed(1)}</div>
+                        <div class="stat-label">Highest</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fa-regular fa-arrow-down"></i></div>
+                        <div class="stat-value">${minPoints.toFixed(1)}</div>
+                        <div class="stat-label">Lowest</div>
+                    </div>
+                `;
+            }
+
+            // Render Top 10
+            function renderTop10() {
+                const sorted = [...speakers].sort((a, b) => b.points - a.points);
+                const top10 = sorted.slice(0, 10);
+                const grid = document.getElementById('top10Grid');
+
+                if (top10.length === 0) {
+                    grid.innerHTML = `<p style="color:#94a3b8; text-align:center;">No speakers yet.</p>`;
+                    return;
+                }
+
+                grid.innerHTML = top10.map((speaker, idx) => {
+                    const rank = idx + 1;
+                    return `
+                        <div class="top10-item">
+                            <span class="top10-rank">#${rank}</span>
+                            <span class="top10-name">${escapeHtml(speaker.name)}</span>
+                            <span class="top10-points">${speaker.points.toFixed(1)}</span>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Render full table
+            function renderFullTable() {
+                const sorted = [...speakers].sort((a, b) => b.points - a.points);
+                const container = document.getElementById('tableContainer');
+
+                if (sorted.length === 0) {
+                    container.innerHTML = `<div class="empty-state"><i class="fa-regular fa-face-smile"></i> No speakers yet. Add one above!</div>`;
+                    return;
+                }
+
+                let html = `<table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Speaker</th>
+                            <th>Points</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+
+                sorted.forEach((speaker, index) => {
+                    const rank = index + 1;
+                    html += `<tr data-id="${speaker.id}">
+                        <td class="rank">#${rank}</td>
+                        <td class="name">${escapeHtml(speaker.name)}</td>
+                        <td class="points">${speaker.points.toFixed(1)}</td>
+                        <td class="actions">
+                            <button class="edit-btn" onclick="editSpeaker('${speaker.id}')" title="Edit"><i class="fa-regular fa-pen-to-square"></i></button>
+                            <button class="delete-btn" onclick="deleteSpeaker('${speaker.id}')" title="Delete"><i class="fa-regular fa-trash-can"></i></button>
+                        </td>
+                    </tr>`;
+                });
+
+                html += `</tbody></table>`;
+                container.innerHTML = html;
+            }
+
+            // Re-render everything
+            function renderAll() {
+                renderDashboard();
+                renderTop10();
+                renderFullTable();
+            }
+
+            // Add or update speaker
+            function addOrUpdateSpeaker(name, points) {
+                if (!name.trim()) {
+                    alert('Please enter a speaker name.');
+                    return false;
+                }
+                const numPoints = parseFloat(points);
+                if (isNaN(numPoints) || numPoints < 0) {
+                    alert('Points must be a non-negative number.');
+                    return false;
+                }
+
+                const existingIndex = speakers.findIndex(s => s.name.toLowerCase() === name.trim().toLowerCase());
+                if (existingIndex !== -1) {
+                    speakers[existingIndex].points = numPoints;
+                } else {
+                    speakers.push({
+                        id: Date.now() + '-' + Math.random().toString(36).substr(2, 9),
+                        name: name.trim(),
+                        points: numPoints
+                    });
+                }
+                saveSpeakers();
+                renderAll();
+                return true;
+            }
+
+            // Delete speaker
+            window.deleteSpeaker = function(id) {
+                speakers = speakers.filter(s => s.id !== id);
+                saveSpeakers();
+                renderAll();
+            };
+
+            // Edit speaker (populate form)
+            window.editSpeaker = function(id) {
+                const speaker = speakers.find(s => s.id === id);
+                if (!speaker) return;
+                document.getElementById('speakerName').value = speaker.name;
+                document.getElementById('speakerPoints').value = speaker.points;
+                document.getElementById('speakerName').focus();
+            };
+
+            // Reset all
+            function resetAll() {
+                if (confirm('Are you sure? This will delete all speakers.')) {
+                    speakers = [];
+                    saveSpeakers();
+                    renderAll();
+                    document.getElementById('speakerName').value = '';
+                    document.getElementById('speakerPoints').value = '0';
+                }
+            }
+
+            // Initial load\
+            
+            loadSpeakers();
+            renderAll();
+            // Event listeners
+            document.getElementById('addBtn').addEventListener('click', function() {
+                const name = document.getElementById('speakerName').value;
+                const points = document.getElementById('speakerPoints').value;
+                if (addOrUpdateSpeaker(name, points)) {
+                    document.getElementById('speakerName').value = '';
+                    document.getElementById('speakerPoints').value = '0';
                 }
             });
-        });
 
-        // Intersection Observer for fade-in animations
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
+            document.getElementById('speakerName').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') document.getElementById('addBtn').click();
             });
-        });
+            document.getElementById('speakerPoints').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') document.getElementById('addBtn').click();
+            });
 
-        document.querySelectorAll('.fade-in').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
-            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(el);
-        });
+            document.getElementById('resetBtn').addEventListener('click', resetAll);
 
-        // Initialize
-        showHome();
-
-        // Handle browser back/forward
-        window.addEventListener('popstate', function() {
-            showHome();
-        });
-
-        // Demo app redirection
-        if (window.location.pathname === '/app') {
-            window.location.href = 'https://ngram-demo.netlify.app'; // Replace with actual app URL
-        }
+            // Expose functions globally
+            window.editSpeaker = editSpeaker;
+            window.deleteSpeaker = deleteSpeaker;
+        })();
     </script>
 </body>
 </html>
