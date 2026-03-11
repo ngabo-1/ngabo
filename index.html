@@ -1,2 +1,826 @@
-helo
-fuck u
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N-gram · social sequence</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a12;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: #12121c;
+            padding: 1rem 5%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid #f45b2c30;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            background: linear-gradient(145deg, #f45b2c, #ff7b4a);
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f45b2c, #ff8a5c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #ffb8a0;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #f45b2c;
+        }
+
+        .nav-links a.active {
+            color: #f45b2c;
+            border-bottom: 2px solid #f45b2c;
+        }
+
+        .btn-primary {
+            background: #f45b2c;
+            color: white !important;
+            padding: 0.8rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 700;
+        }
+
+        .btn-primary:hover {
+            background: #ff6f3c;
+            color: white !important;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #0f0f1a, #1a1a2a);
+            padding: 4rem 5%;
+            text-align: center;
+            border-bottom: 1px solid #f45b2c40;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff, #ffb8a0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #ffb8a0;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn-large {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .btn-orange {
+            background: #f45b2c;
+            color: white;
+        }
+
+        .btn-outline {
+            border: 2px solid #f45b2c;
+            color: #ffb8a0;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 4rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 3rem;
+            color: white;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: #12121c;
+            padding: 2rem;
+            border-radius: 30px;
+            border: 1px solid #f45b2c40;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: #f45b2c;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: #f45b2c;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: #ffb8a0;
+        }
+
+        /* App Demo Section */
+        .app-demo {
+            background: #0f0f1a;
+            padding: 4rem 5%;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .demo-content h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+        }
+
+        .demo-content p {
+            color: #ffb8a0;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .demo-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #f45b2c;
+        }
+
+        .stat-label {
+            color: #ffb8a0;
+        }
+
+        .demo-preview {
+            background: #12121c;
+            border-radius: 40px;
+            padding: 2rem;
+            border: 2px solid #f45b2c40;
+            box-shadow: 0 20px 40px rgba(244, 91, 44, 0.2);
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .preview-post {
+            background: #1a1a2a;
+            border-radius: 20px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .preview-post-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .preview-avatar {
+            width: 40px;
+            height: 40px;
+            background: #f45b2c40;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* CTA Section */
+        .cta {
+            background: linear-gradient(135deg, #f45b2c20, #0f0f1a);
+            padding: 4rem 5%;
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .cta p {
+            color: #ffb8a0;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        /* Footer */
+        .footer {
+            background: #0a0a12;
+            padding: 3rem 5%;
+            border-top: 1px solid #f45b2c30;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-column h4 {
+            color: #f45b2c;
+            margin-bottom: 1rem;
+        }
+
+        .footer-column a {
+            display: block;
+            color: #ffb8a0;
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-column a:hover {
+            color: #f45b2c;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            font-size: 1.5rem;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            color: #666;
+        }
+
+        /* Auth Pages */
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0a0a12, #1a1a2a);
+            padding: 2rem;
+        }
+
+        .auth-card {
+            background: #12121c;
+            padding: 3rem;
+            border-radius: 40px;
+            border: 2px solid #f45b2c40;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .auth-card h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #ffb8a0;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            background: #1a1a2a;
+            border: 2px solid #333;
+            border-radius: 30px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #f45b2c;
+        }
+
+        .auth-button {
+            width: 100%;
+            padding: 1rem;
+            background: #f45b2c;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .auth-link {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .auth-link a {
+            color: #f45b2c;
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .demo-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta h2 {
+                font-size: 2rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            font-size: 2rem;
+            color: #f45b2c;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-icon"><i class="fa-solid fa-diagram-predecessor"></i></div>
+                <span class="logo-text">n-gram</span>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="active">Home</a>
+                <a href="#features">Features</a>
+                <a href="#about">About</a>
+                <a href="#pricing">Pricing</a>
+                <a href="javascript:void(0)" onclick="showLogin()">Login</a>
+                <a href="javascript:void(0)" onclick="showSignup()" class="btn-primary">Sign Up</a>
+            </div>
+            <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area - Dynamic Pages -->
+    <div class="main-content" id="mainContent">
+        <!-- Home Page -->
+        <div id="homePage">
+            <!-- Hero Section -->
+            <section class="hero">
+                <h1>Capture Life's Sequences</h1>
+                <p>Share your moments, build your story with N-gram - the social platform for authentic connections</p>
+                <div class="hero-buttons">
+                    <a href="javascript:void(0)" onclick="showSignup()" class="btn-large btn-orange">Get Started</a>
+                    <a href="#features" class="btn-large btn-outline">Learn More</a>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section class="features" id="features">
+                <h2 class="section-title">Why Choose N-gram?</h2>
+                <div class="features-grid">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon"><i class="fa-regular fa-images"></i></div>
+                        <h3>N-gram Stories</h3>
+                        <p>Create sequences of moments that tell your complete story, not just single photos</p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon"><i class="fa-regular fa-comments"></i></div>
+                        <h3>Direct Grams</h3>
+                        <p>Private messaging with context - share moments in conversation</p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon"><i class="fa-regular fa-location-dot"></i></div>
+                        <h3>Find Friends</h3>
+                        <p>Discover people near you and connect with contacts from your phone</p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon"><i class="fa-regular fa-lock"></i></div>
+                        <h3>Privacy First</h3>
+                        <p>Granular control over who sees your content with sequence-level privacy</p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon"><i class="fa-regular fa-diagram-project"></i></div>
+                        <h3>Collaborative Chains</h3>
+                        <p>Link moments with friends to create shared N-grams</p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon"><i class="fa-regular fa-music"></i></div>
+                        <h3>Context Cards</h3>
+                        <p>Add songs, places, and mood to every moment</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- App Demo Section -->
+            <section class="app-demo">
+                <div class="demo-container">
+                    <div class="demo-content">
+                        <h2>See N-gram in Action</h2>
+                        <p>Experience a new way of sharing your life's sequences. Every moment tells a story, every sequence builds a narrative.</p>
+                        <div class="demo-stats">
+                            <div class="stat">
+                                <div class="stat-number">10M+</div>
+                                <div class="stat-label">Active Users</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">50M+</div>
+                                <div class="stat-label">Daily Grams</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">4.8★</div>
+                                <div class="stat-label">App Rating</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="demo-preview">
+                        <div class="preview-header">
+                            <span><i class="fa-regular fa-circle-user"></i> @alex_ngram</span>
+                            <span style="color:#f45b2c;">2h ago</span>
+                        </div>
+                        <div class="preview-post">
+                            <div class="preview-post-header">
+                                <div class="preview-avatar">🌊</div>
+                                <div><strong>Morning surf</strong></div>
+                            </div>
+                            <div style="font-size: 3rem; text-align: center; padding: 1rem;">🏄‍♂️🌊☀️</div>
+                            <div style="display: flex; gap: 2rem; justify-content: center; color: #ffb8a0;">
+                                <span><i class="fa-regular fa-heart"></i> 234</span>
+                                <span><i class="fa-regular fa-comment"></i> 18</span>
+                            </div>
+                        </div>
+                        <div style="background: #1a1a2a; border-radius: 30px; padding: 0.8rem; text-align: center; color: #f45b2c;">
+                            <i class="fa-regular fa-diagram-project"></i> Part of "Coast Life" N-gram
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CTA Section -->
+            <section class="cta">
+                <h2>Ready to Start Your Sequence?</h2>
+                <p>Join millions of users sharing their stories in a more meaningful way</p>
+                <div class="cta-buttons">
+                    <a href="javascript:void(0)" onclick="showSignup()" class="btn-large btn-orange">Create Account</a>
+                    <a href="javascript:void(0)" onclick="showLogin()" class="btn-large btn-outline">Sign In</a>
+                </div>
+            </section>
+        </div>
+
+        <!-- Login Page (hidden by default) -->
+        <div id="loginPage" style="display: none;">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <h2>Welcome Back</h2>
+                    <form onsubmit="handleLogin(event)">
+                        <div class="form-group">
+                            <label>Email or Username</label>
+                            <input type="text" id="loginEmail" placeholder="Enter your email">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="loginPassword" placeholder="Enter your password">
+                        </div>
+                        <button type="submit" class="auth-button">Sign In</button>
+                        <div class="auth-link">
+                            <a href="javascript:void(0)" onclick="showSignup()">Don't have an account? Sign up</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Signup Page (hidden by default) -->
+        <div id="signupPage" style="display: none;">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <h2>Create Account</h2>
+                    <form onsubmit="handleSignup(event)">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="signupName" placeholder="Enter your name">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="signupEmail" placeholder="Enter your email">
+                        </div>
+                        <div class="form-group">
+                            <label>Username</label>
+                            <input type="text" id="signupUsername" placeholder="Choose a username">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="signupPassword" placeholder="Create a password">
+                        </div>
+                        <button type="submit" class="auth-button">Sign Up</button>
+                        <div class="auth-link">
+                            <a href="javascript:void(0)" onclick="showLogin()">Already have an account? Sign in</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h4>N-gram</h4>
+                <a href="#">About Us</a>
+                <a href="#">Careers</a>
+                <a href="#">Press</a>
+                <a href="#">Blog</a>
+            </div>
+            <div class="footer-column">
+                <h4>Features</h4>
+                <a href="#">N-grams</a>
+                <a href="#">Direct Grams</a>
+                <a href="#">Discover</a>
+                <a href="#">Highlights</a>
+            </div>
+            <div class="footer-column">
+                <h4>Support</h4>
+                <a href="#">Help Center</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Community Guidelines</a>
+            </div>
+            <div class="footer-column">
+                <h4>Follow Us</h4>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            © 2026 N-gram. All rights reserved. Life is a sequence.
+        </div>
+    </footer>
+
+    <script>
+        // Page navigation
+        function showHome() {
+            document.getElementById('homePage').style.display = 'block';
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('signupPage').style.display = 'none';
+            updateActiveNav('home');
+        }
+
+        function showLogin() {
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('loginPage').style.display = 'block';
+            document.getElementById('signupPage').style.display = 'none';
+            updateActiveNav('login');
+        }
+
+        function showSignup() {
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('signupPage').style.display = 'block';
+            updateActiveNav('signup');
+        }
+
+        function updateActiveNav(page) {
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (page === 'home' && link.textContent === 'Home') link.classList.add('active');
+                if (page === 'login' && link.textContent === 'Login') link.classList.add('active');
+                if (page === 'signup' && link.textContent === 'Sign Up') link.classList.add('active');
+            });
+        }
+
+        // Handle form submissions
+        function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (email && password) {
+                alert('✅ Demo: Login successful! Redirecting to app...');
+                // In a real app, you would redirect to the dashboard
+                window.location.href = '/app';
+            } else {
+                alert('Please fill in all fields');
+            }
+        }
+
+        function handleSignup(event) {
+            event.preventDefault();
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const username = document.getElementById('signupUsername').value;
+            const password = document.getElementById('signupPassword').value;
+            
+            if (name && email && username && password) {
+                alert('✅ Demo: Account created! Please check your email to verify.');
+                showLogin();
+            } else {
+                alert('Please fill in all fields');
+            }
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Initialize
+        showHome();
+
+        // Handle browser back/forward
+        window.addEventListener('popstate', function() {
+            showHome();
+        });
+
+        // Demo app redirection
+        if (window.location.pathname === '/app') {
+            window.location.href = 'https://ngram-demo.netlify.app'; // Replace with actual app URL
+        }
+    </script>
+</body>
+</html>
