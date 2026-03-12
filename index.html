@@ -3,16 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IDBATE · full control</title>
-    <!-- Base URL -->
+    <title>IDBATE · three‑member teams</title>
     <base href="/">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Canonical -->
     <link rel="canonical" href="https://idbate.com">
-    <!-- Open Graph -->
     <meta property="og:title" content="IDBATE Competition Hub">
-    <meta property="og:description" content="Full competition management – you decide the rounds">
+    <meta property="og:description" content="Three‑member teams, full control">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://idbate.com">
     <style>
@@ -63,10 +59,6 @@
         .sidebar.collapsed .stat-card-side,
         .sidebar.collapsed .teams-section {
             display: none;
-        }
-
-        .sidebar.collapsed h2 i {
-            margin-right: 0;
         }
 
         .sidebar .toggle-btn {
@@ -209,7 +201,7 @@
             background: #ff9500;
         }
 
-        /* Redesigned team cards */
+        /* Team cards with three fixed slots */
         .team-card {
             background: #2d2d3a;
             border-radius: 28px;
@@ -255,66 +247,43 @@
             gap: 0.6rem;
         }
 
-        .team-member-row {
+        /* Three fixed slots */
+        .member-slot {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 0.5rem;
             background: #1e1e2e;
             border-radius: 40px;
-            padding: 0.6rem 1rem;
+            padding: 0.5rem 1rem;
             border: 1px solid #40405c;
         }
-
-        .team-member-row .name {
-            font-weight: 500;
-            color: #e0e0e0;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-        .team-member-row .name i {
+        .member-slot .slot-number {
             color: #f57c00;
+            font-weight: 700;
+            min-width: 2rem;
             font-size: 0.9rem;
         }
-
-        .team-member-row .points {
+        .member-slot .name {
+            flex: 2;
+            font-weight: 500;
+            color: #e0e0e0;
+        }
+        .member-slot .points {
             background: #f57c00;
             color: #1e1e2e;
             font-weight: 700;
             padding: 0.2rem 0.8rem;
             border-radius: 40px;
             font-size: 0.85rem;
+            min-width: 4rem;
+            text-align: center;
         }
-
-        .member-edit {
-            display: flex;
-            gap: 0.4rem;
-        }
-        .member-edit button {
+        .member-slot .edit-slot {
             background: none;
             border: none;
             color: #f57c00;
             font-size: 1rem;
             cursor: pointer;
-        }
-        .add-member-btn {
-            background: #f57c00;
-            border: none;
-            border-radius: 40px;
-            color: #1e1e2e;
-            padding: 0.6rem 1rem;
-            margin-top: 0.8rem;
-            width: 100%;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.4rem;
-            transition: 0.2s;
-        }
-        .add-member-btn:hover {
-            background: #ff9500;
         }
 
         /* ---------- MAIN CONTENT ---------- */
@@ -324,7 +293,6 @@
             border-radius: 32px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.05);
             padding: 2rem;
-            transition: all 0.3s ease;
         }
 
         .main-header h1 {
@@ -349,7 +317,6 @@
             padding-left: 1rem;
         }
 
-        /* Tab navigation */
         .tab-bar {
             display: flex;
             gap: 0.5rem;
@@ -371,15 +338,9 @@
             color: #1e1e2e;
         }
 
-        /* Rankings view */
-        .rankings-view {
-            display: block;
-        }
-        .progress-view {
-            display: none;
-        }
+        .rankings-view { display: block; }
+        .progress-view { display: none; }
 
-        /* Input section */
         .input-section {
             background: #f8fafc;
             border-radius: 24px;
@@ -416,7 +377,6 @@
             border-radius: 40px;
             font-size: 1rem;
             background: white;
-            transition: 0.2s;
         }
 
         .input-field input:focus {
@@ -425,9 +385,7 @@
             box-shadow: 0 0 0 3px rgba(245,158,11,0.2);
         }
 
-        .points-field {
-            flex: 1 1 120px;
-        }
+        .points-field { flex: 1 1 120px; }
 
         .add-btn {
             flex: 0 0 auto;
@@ -442,25 +400,19 @@
             align-items: center;
             gap: 0.5rem;
             cursor: pointer;
-            transition: background 0.2s;
             box-shadow: 0 8px 20px rgba(245,158,11,0.3);
             height: 54px;
             white-space: nowrap;
         }
 
-        .add-btn:hover {
-            background: #e07c00;
-        }
+        .add-btn:hover { background: #e07c00; }
 
         .info-note {
             font-size:0.85rem; color:#64748b; margin-top:0.75rem;
         }
-        .info-note i {
-            color: #f57c00;
-        }
+        .info-note i { color: #f57c00; }
 
-        /* Top 3 podium */
-        .top3-section {
+        .top3-section, .top10-section {
             background: #f8fafc;
             border-radius: 32px;
             padding: 1.5rem;
@@ -468,14 +420,13 @@
             border: 1px solid #e2e8f0;
         }
 
-        .top3-header {
+        .top3-header, .top10-header {
             display: flex;
             align-items: center;
             gap: 0.5rem;
             margin-bottom: 1.2rem;
         }
-
-        .top3-header h3 {
+        .top3-header h3, .top10-header h3 {
             font-size: 1.5rem;
             font-weight: 700;
             color: #1e1e2e;
@@ -494,59 +445,16 @@
             text-align: center;
             border: 2px solid #e2e8f0;
         }
-
-        .podium-item.first {
-            border-color: #f57c00;
-            background: #fff7ed;
-        }
-
-        .podium-rank {
-            font-size: 2rem;
-            font-weight: 800;
-            color: #f57c00;
-            margin-bottom: 0.5rem;
-        }
-
-        .podium-name {
-            font-weight: 700;
-            font-size: 1.2rem;
-            color: #1e1e2e;
-        }
-
-        .podium-points {
-            font-weight: 600;
-            color: #64748b;
-            margin-top: 0.3rem;
-        }
-
-        /* Top 10 */
-        .top10-section {
-            background: #f8fafc;
-            border-radius: 24px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            border: 1px solid #e2e8f0;
-        }
-
-        .top10-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .top10-header h3 {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #1e1e2e;
-        }
+        .podium-item.first { border-color: #f57c00; background: #fff7ed; }
+        .podium-rank { font-size: 2rem; font-weight: 800; color: #f57c00; }
+        .podium-name { font-weight: 700; font-size: 1.2rem; }
+        .podium-points { font-weight: 600; color: #64748b; }
 
         .top10-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 0.8rem;
         }
-
         .top10-item {
             background: white;
             border-radius: 40px;
@@ -556,45 +464,22 @@
             gap: 0.8rem;
             border: 1px solid #e2e8f0;
         }
-
-        .top10-rank {
-            font-weight: 800;
-            color: #f57c00;
-            font-size: 1.2rem;
-            min-width: 2rem;
-        }
-
-        .top10-name {
-            flex: 1;
-            font-weight: 600;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
+        .top10-rank { font-weight: 800; color: #f57c00; min-width: 2rem; }
+        .top10-name { flex: 1; font-weight: 600; }
         .top10-points {
-            font-weight: 700;
-            color: #1e1e2e;
             background: #f1f5f9;
             padding: 0.3rem 0.8rem;
             border-radius: 40px;
-            font-size: 0.9rem;
+            font-weight: 700;
         }
 
-        /* Full table */
         .leaderboard-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
         }
-
-        .leaderboard-header h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #1e1e2e;
-        }
-
+        .leaderboard-header h2 { font-size: 1.5rem; font-weight: 700; color: #1e1e2e; }
         .reset-btn {
             background: none;
             border: 2px solid #e2e8f0;
@@ -604,58 +489,34 @@
             font-weight: 600;
             cursor: pointer;
             transition: 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
         }
-
-        .reset-btn:hover {
-            border-color: #f57c00;
-            color: #f57c00;
-            background: #fff7ed;
-        }
+        .reset-btn:hover { border-color: #f57c00; color: #f57c00; background: #fff7ed; }
 
         .table-container {
             overflow-x: auto;
             border-radius: 20px;
             border: 1px solid #edf2f7;
         }
-
         table {
             width: 100%;
             border-collapse: collapse;
             background: white;
         }
-
         th {
             background: #f8fafc;
             color: #334155;
             font-weight: 600;
             font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-            padding: 1rem 1rem;
+            padding: 1rem;
             text-align: left;
             border-bottom: 2px solid #e2e8f0;
         }
-
         td {
-            padding: 1rem 1rem;
+            padding: 1rem;
             border-bottom: 1px solid #edf2f7;
-            color: #1e293b;
         }
-
-        .rank {
-            font-weight: 800;
-            color: #f57c00;
-            width: 60px;
-        }
-
-        .actions {
-            display: flex;
-            gap: 0.8rem;
-        }
+        .rank { font-weight: 800; color: #f57c00; }
+        .actions { display: flex; gap: 0.8rem; }
         .edit-btn, .delete-btn {
             background: none;
             border: none;
@@ -665,12 +526,11 @@
         .edit-btn { color: #3b82f6; }
         .delete-btn { color: #ef4444; }
 
-        /* ---------- COMPETITION PROGRESS VIEW (manual assignment) ---------- */
+        /* Round cards */
         .bracket-container {
             display: flex;
             flex-wrap: wrap;
             gap: 1.5rem;
-            justify-content: flex-start;
             margin-top: 1.5rem;
         }
         .round-card {
@@ -680,20 +540,16 @@
             width: calc(33.33% - 1rem);
             min-width: 250px;
             border: 2px solid #e2e8f0;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.02);
-            margin-bottom: 1rem;
         }
         .round-card h4 {
             color: #f57c00;
             font-weight: 700;
             margin-bottom: 1rem;
             text-align: center;
-            font-size: 1.2rem;
             border-bottom: 2px dashed #f57c00;
             padding-bottom: 0.3rem;
             display: flex;
             justify-content: space-between;
-            align-items: center;
         }
         .round-card h4 button {
             background: none;
@@ -704,7 +560,6 @@
         }
         .round-speakers {
             list-style: none;
-            min-height: 60px;
         }
         .round-speakers li {
             background: white;
@@ -715,44 +570,26 @@
             justify-content: space-between;
             align-items: center;
             border: 1px solid #e2e8f0;
-            font-size: 0.9rem;
-        }
-        .round-speakers .speaker-name {
-            font-weight: 600;
-        }
-        .round-speakers .speaker-points {
-            background: #f57c00;
-            color: #1e1e2e;
-            font-weight: 700;
-            padding: 0.2rem 0.6rem;
-            border-radius: 30px;
-            font-size: 0.8rem;
         }
         .remove-speaker-btn {
             background: none;
             border: none;
             color: #ef4444;
-            font-size: 1rem;
             cursor: pointer;
-            margin-left: 0.3rem;
-        }
-        .add-to-round-btn {
-            background: #f57c00;
-            border: none;
-            border-radius: 40px;
-            color: #1e1e2e;
-            padding: 0.4rem 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 0.5rem;
-            transition: 0.2s;
-        }
-        .add-to-round-btn:hover {
-            background: #ff9500;
         }
 
-        /* Modal */
+        .url-bar {
+            background: #f1f5f9;
+            border-radius: 40px;
+            padding: 0.4rem 1rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            font-size: 0.85rem;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* Team modal with three slots */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -767,37 +604,56 @@
             background: #1e1e2e;
             border-radius: 32px;
             padding: 2rem;
-            max-width: 400px;
+            max-width: 500px;
             width: 90%;
             box-shadow: 0 25px 50px rgba(0,0,0,0.5);
             border: 2px solid #f57c00;
             color: #e0e0e0;
+            max-height: 80vh;
+            overflow-y: auto;
         }
         .modal-box h3 {
             color: #f57c00;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             font-size: 1.5rem;
         }
-        .modal-box p {
-            margin-bottom: 1.5rem;
+        .modal-box label {
+            display: block;
+            margin-top: 1rem;
+            margin-bottom: 0.3rem;
+            font-weight: 600;
+            color: #f57c00;
         }
-        .modal-box select, .modal-box input {
+        .modal-box input {
             width: 100%;
-            padding: 0.9rem 1.2rem;
+            padding: 0.8rem 1.2rem;
             background: #2d2d3a;
             border: 2px solid #40405c;
             border-radius: 40px;
             color: white;
             font-size: 1rem;
-            margin-bottom: 1.5rem;
         }
-        .modal-box select option {
-            background: #2d2d3a;
+        .modal-box input:focus {
+            outline: none;
+            border-color: #f57c00;
+        }
+        .modal-row {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+            align-items: center;
+        }
+        .modal-row .member-name {
+            flex: 3;
+        }
+        .modal-row .member-points {
+            flex: 1;
         }
         .modal-actions {
             display: flex;
             gap: 0.8rem;
             justify-content: flex-end;
+            margin-top: 2rem;
         }
         .modal-btn {
             padding: 0.7rem 1.5rem;
@@ -816,21 +672,6 @@
             border: 1px solid #40405c;
         }
 
-        .url-bar {
-            background: #f1f5f9;
-            border-radius: 40px;
-            padding: 0.4rem 1rem;
-            margin-bottom: 1rem;
-            display: inline-block;
-            font-size: 0.85rem;
-            color: #475569;
-            border: 1px solid #e2e8f0;
-        }
-        .url-bar i {
-            color: #f57c00;
-            margin-right: 0.3rem;
-        }
-
         @media (max-width: 1000px) {
             .app-container { flex-direction: column; }
             .sidebar { max-width: 100%; }
@@ -840,23 +681,19 @@
 </head>
 <body>
     <div class="app-container">
-        <!-- SIDEBAR (collapsible) -->
+        <!-- SIDEBAR -->
         <aside class="sidebar" id="sidebar">
             <div class="toggle-btn" id="toggleSidebar">
                 <i class="fa-solid fa-chevron-left" id="toggleIcon"></i>
             </div>
             <h2><i class="fa-regular fa-chart-bar"></i> <span>DASHBOARD</span></h2>
 
-            <!-- Mini podium for top 3 -->
-            <div class="podium-mini" id="miniPodium">
-                <!-- filled by JS -->
-            </div>
-
+            <div class="podium-mini" id="miniPodium"></div>
             <div class="stat-card-side" id="sidebarStats"></div>
 
             <div class="teams-section">
                 <div class="teams-header">
-                    <h3><i class="fa-regular fa-users"></i> <span>TEAMS</span></h3>
+                    <h3><i class="fa-regular fa-users"></i> <span>TEAMS (max 3)</span></h3>
                     <button class="add-team-btn" id="addTeamBtn" title="Add new team"><i class="fa-solid fa-plus"></i></button>
                 </div>
                 <div id="teamsContainer"></div>
@@ -866,12 +703,12 @@
         <!-- MAIN CONTENT -->
         <main class="main-content">
             <div class="url-bar">
-                <i class="fa-regular fa-link"></i> https://idbate.com | You're in control
+                <i class="fa-regular fa-link"></i> https://idbate.com | Three‑member teams
             </div>
 
             <div class="main-header">
                 <h1><i class="fa-regular fa-microphone"></i> IDBATE COMPETITION</h1>
-                <div class="subtitle">Add speakers, form teams, and assign them to rounds manually</div>
+                <div class="subtitle">Add speakers, form teams (max 3 members), and assign them to rounds</div>
             </div>
 
             <div class="tab-bar">
@@ -879,21 +716,20 @@
                 <div class="tab" id="tabProgress">📊 Round Assignments</div>
             </div>
 
-            <!-- RANKINGS VIEW (speaker management) -->
+            <!-- RANKINGS VIEW -->
             <div class="rankings-view" id="rankingsView">
                 <div class="input-section">
                     <div class="input-row">
                         <div class="input-field">
-                            <label><i class="fa-regular fa-user"></i> Speaker name</label>
-                            <input type="text" id="speakerName" placeholder="e.g., Jane Doe" autocomplete="off">
+                            <label>Speaker name</label>
+                            <input type="text" id="speakerName" placeholder="e.g., Jane Doe">
                         </div>
                         <div class="input-field points-field">
-                            <label><i class="fa-regular fa-star"></i> Points (≤90)</label>
+                            <label>Points (≤90)</label>
                             <input type="number" id="speakerPoints" placeholder="0" min="0" max="90" step="0.1" value="0">
                         </div>
                         <button class="add-btn" id="addBtn"><i class="fa-solid fa-plus"></i> Add / Update</button>
                     </div>
-                    <div class="info-note"><i class="fa-regular fa-circle-info"></i> Max 90 points. If name exists, points updated.</div>
                 </div>
 
                 <div class="top3-section">
@@ -913,17 +749,49 @@
                 <div class="table-container" id="tableContainer"></div>
             </div>
 
-            <!-- PROGRESS VIEW (manual round assignment) -->
+            <!-- PROGRESS VIEW -->
             <div class="progress-view" id="progressView">
-                <h2 style="margin-bottom:1.5rem; color:#1e1e2e;"><i class="fa-regular fa-diagram-project"></i> Assign speakers to rounds</h2>
-                <div class="bracket-container" id="bracketContainer">
-                    <!-- dynamically filled -->
-                </div>
+                <h2 style="margin-bottom:1.5rem;"><i class="fa-regular fa-diagram-project"></i> Assign speakers to rounds</h2>
+                <div class="bracket-container" id="bracketContainer"></div>
             </div>
         </main>
     </div>
 
-    <!-- CUSTOM MODAL -->
+    <!-- TEAM MODAL (three fixed slots) -->
+    <div class="modal-overlay" id="teamModal">
+        <div class="modal-box">
+            <h3 id="teamModalTitle">Add Team</h3>
+            <form id="teamForm">
+                <label>Team Name</label>
+                <input type="text" id="teamNameInput" placeholder="e.g., Team Phoenix" required>
+
+                <label style="margin-top:1.5rem;">Member 1 (optional)</label>
+                <div class="modal-row">
+                    <input type="text" id="member1Name" class="member-name" placeholder="Name">
+                    <input type="number" id="member1Points" class="member-points" placeholder="Points" min="0" max="90" step="0.1" value="0">
+                </div>
+
+                <label>Member 2 (optional)</label>
+                <div class="modal-row">
+                    <input type="text" id="member2Name" class="member-name" placeholder="Name">
+                    <input type="number" id="member2Points" class="member-points" placeholder="Points" min="0" max="90" step="0.1" value="0">
+                </div>
+
+                <label>Member 3 (optional)</label>
+                <div class="modal-row">
+                    <input type="text" id="member3Name" class="member-name" placeholder="Name">
+                    <input type="number" id="member3Points" class="member-points" placeholder="Points" min="0" max="90" step="0.1" value="0">
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="modal-btn cancel" id="teamModalCancel">Cancel</button>
+                    <button type="submit" class="modal-btn confirm" id="teamModalConfirm">Save Team</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- OLD GENERIC MODAL (kept for alerts/selects) -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-box" id="modalBox">
             <h3 id="modalTitle">Title</h3>
@@ -939,7 +807,7 @@
 
     <script>
         (function() {
-            // ---------- CUSTOM MODAL (extended for select) ----------
+            // ---------- CUSTOM MODAL (generic, for alerts/selects) ----------
             const overlay = document.getElementById('modalOverlay');
             const modalInput = document.getElementById('modalInput');
             const modalSelect = document.getElementById('modalSelect');
@@ -956,7 +824,6 @@
                 modalSelect.innerHTML = '';
             }
 
-            // alert
             window.modalAlert = function(message, title='Notice') {
                 return new Promise(resolve => {
                     modalTitle.innerText = title;
@@ -971,7 +838,6 @@
                 });
             };
 
-            // confirm
             window.modalConfirm = function(message, title='Confirm') {
                 return new Promise(resolve => {
                     modalTitle.innerText = title;
@@ -989,7 +855,6 @@
                 });
             };
 
-            // prompt (text input)
             window.modalPrompt = function(message, defaultValue='', title='Input') {
                 return new Promise(resolve => {
                     modalTitle.innerText = title;
@@ -1009,7 +874,6 @@
                 });
             };
 
-            // select prompt
             window.modalSelectPrompt = function(message, options, title='Select') {
                 return new Promise(resolve => {
                     modalTitle.innerText = title;
@@ -1038,23 +902,13 @@
             const TEAMS_KEY = 'idbate_teams';
             const ROUNDS_KEY = 'idbate_rounds';
 
-            // ---------- INITIAL DATA (empty speakers, no defaults) ----------
-            let speakers = [];  // no default speakers
-
-            let teams = [];     // empty teams
-
-            // Round assignments: each round stores an array of speaker IDs
+            let speakers = [];
+            let teams = [];
             let roundAssignments = {
-                prelim1: [],
-                prelim2: [],
-                prelim3: [],
-                octa: [],
-                quarter: [],
-                semi: [],
-                final: []
+                prelim1: [], prelim2: [], prelim3: [],
+                octa: [], quarter: [], semi: [], final: []
             };
 
-            // Load from localStorage
             function loadData() {
                 const storedSpeakers = localStorage.getItem(SPEAKERS_KEY);
                 if (storedSpeakers) { try { speakers = JSON.parse(storedSpeakers); } catch(e){} }
@@ -1116,16 +970,122 @@
                 `;
             }
 
-            // ---------- RENDER TEAMS ----------
+            // ---------- TEAM MODAL (three slots) ----------
+            const teamModal = document.getElementById('teamModal');
+            const teamModalTitle = document.getElementById('teamModalTitle');
+            const teamForm = document.getElementById('teamForm');
+            const teamNameInput = document.getElementById('teamNameInput');
+            const m1Name = document.getElementById('member1Name');
+            const m1Points = document.getElementById('member1Points');
+            const m2Name = document.getElementById('member2Name');
+            const m2Points = document.getElementById('member2Points');
+            const m3Name = document.getElementById('member3Name');
+            const m3Points = document.getElementById('member3Points');
+            const teamModalCancel = document.getElementById('teamModalCancel');
+
+            let currentTeamId = null; // null for add, set for edit
+
+            function hideTeamModal() {
+                teamModal.style.display = 'none';
+                teamForm.reset();
+                currentTeamId = null;
+            }
+
+            function showTeamModal(title, teamData = null) {
+                teamModalTitle.innerText = title;
+                if (teamData) {
+                    // editing
+                    teamNameInput.value = teamData.name || '';
+                    const members = teamData.members || [];
+                    m1Name.value = members[0]?.name || '';
+                    m1Points.value = members[0]?.points || 0;
+                    m2Name.value = members[1]?.name || '';
+                    m2Points.value = members[1]?.points || 0;
+                    m3Name.value = members[2]?.name || '';
+                    m3Points.value = members[2]?.points || 0;
+                    currentTeamId = teamData.id;
+                } else {
+                    // adding
+                    teamNameInput.value = '';
+                    m1Name.value = ''; m1Points.value = 0;
+                    m2Name.value = ''; m2Points.value = 0;
+                    m3Name.value = ''; m3Points.value = 0;
+                    currentTeamId = null;
+                }
+                teamModal.style.display = 'flex';
+            }
+
+            teamForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const teamName = teamNameInput.value.trim();
+                if (!teamName) {
+                    modalAlert('Team name is required', 'Missing');
+                    return;
+                }
+
+                // Build members array from non-empty names
+                const members = [];
+                if (m1Name.value.trim()) {
+                    const pts = parseFloat(m1Points.value) || 0;
+                    if (pts < 0 || pts > 90) { modalAlert('Points for member 1 must be 0‑90'); return; }
+                    members.push({ name: m1Name.value.trim(), points: pts });
+                }
+                if (m2Name.value.trim()) {
+                    const pts = parseFloat(m2Points.value) || 0;
+                    if (pts < 0 || pts > 90) { modalAlert('Points for member 2 must be 0‑90'); return; }
+                    members.push({ name: m2Name.value.trim(), points: pts });
+                }
+                if (m3Name.value.trim()) {
+                    const pts = parseFloat(m3Points.value) || 0;
+                    if (pts < 0 || pts > 90) { modalAlert('Points for member 3 must be 0‑90'); return; }
+                    members.push({ name: m3Name.value.trim(), points: pts });
+                }
+
+                if (currentTeamId) {
+                    // Edit existing team
+                    const team = teams.find(t => t.id === currentTeamId);
+                    if (team) {
+                        team.name = teamName;
+                        team.members = members;
+                    }
+                } else {
+                    // Add new team
+                    teams.push({
+                        id: Date.now() + '-' + Math.random().toString(36).substr(2,5),
+                        name: teamName,
+                        members: members
+                    });
+                }
+                saveTeams();
+                renderTeams();
+                hideTeamModal();
+            });
+
+            teamModalCancel.addEventListener('click', hideTeamModal);
+            teamModal.addEventListener('click', (e) => { if (e.target === teamModal) hideTeamModal(); });
+
+            // ---------- RENDER TEAMS (three fixed slots) ----------
             function renderTeams() {
                 const container = document.getElementById('teamsContainer');
                 if (teams.length === 0) {
                     container.innerHTML = '<p style="color:#aaa; text-align:center;">No teams yet. Click + to add.</p>';
                     return;
                 }
+
                 let html = '';
                 teams.forEach(team => {
-                    html += `<div class="team-card" data-team-id="${team.id}">
+                    const members = team.members || [];
+                    // ensure we have up to 3 slots
+                    const slots = [];
+                    for (let i = 0; i < 3; i++) {
+                        if (i < members.length) {
+                            slots.push(members[i]);
+                        } else {
+                            slots.push(null);
+                        }
+                    }
+
+                    html += `<div class="team-card">
                         <div class="team-header">
                             <span class="team-name">${escapeHtml(team.name)}</span>
                             <div class="team-actions">
@@ -1134,76 +1094,49 @@
                             </div>
                         </div>
                         <div class="team-members">`;
-                    team.members.forEach((member, idx) => {
-                        html += `<div class="team-member-row">
-                            <span class="name"><i class="fa-regular fa-user"></i> ${escapeHtml(member.name)}</span>
-                            <span class="points">${member.points.toFixed(1)}</span>
-                            <div class="member-edit">
-                                <button onclick="editMember('${team.id}', ${idx})" title="Edit"><i class="fa-regular fa-pen-to-square"></i></button>
-                                <button onclick="deleteMember('${team.id}', ${idx})" title="Delete"><i class="fa-regular fa-trash-can"></i></button>
-                            </div>
-                        </div>`;
+
+                    slots.forEach((member, idx) => {
+                        if (member) {
+                            html += `<div class="member-slot">
+                                <span class="slot-number">#${idx+1}</span>
+                                <span class="name">${escapeHtml(member.name)}</span>
+                                <span class="points">${member.points.toFixed(1)}</span>
+                                <button class="edit-slot" onclick="editTeam('${team.id}')" title="Edit member"><i class="fa-regular fa-pen-to-square"></i></button>
+                            </div>`;
+                        } else {
+                            html += `<div class="member-slot" style="opacity:0.6;">
+                                <span class="slot-number">#${idx+1}</span>
+                                <span class="name">— empty —</span>
+                                <span class="points">—</span>
+                                <button class="edit-slot" onclick="editTeam('${team.id}')" title="Add member"><i class="fa-regular fa-plus"></i></button>
+                            </div>`;
+                        }
                     });
-                    html += `</div>
-                        <button class="add-member-btn" onclick="addMemberPrompt('${team.id}')"><i class="fa-solid fa-plus"></i> Add member</button>
-                    </div>`;
+
+                    html += `</div></div>`;
                 });
                 container.innerHTML = html;
             }
 
-            // Team action globals
-            window.editTeam = async function(teamId) {
-                const team = teams.find(t=>t.id===teamId);
-                if (!team) return;
-                const newName = await modalPrompt('Edit team name:', team.name, 'Edit team');
-                if (newName && newName.trim()) { team.name = newName.trim(); saveTeams(); renderTeams(); }
+            // Team actions
+            window.editTeam = function(teamId) {
+                const team = teams.find(t => t.id === teamId);
+                if (team) showTeamModal('Edit Team', team);
             };
+
             window.deleteTeam = async function(teamId) {
-                if (await modalConfirm('Delete this team and all members?','Confirm')) {
-                    teams = teams.filter(t=>t.id!==teamId);
-                    saveTeams(); renderTeams();
+                if (await modalConfirm('Delete this team?', 'Confirm')) {
+                    teams = teams.filter(t => t.id !== teamId);
+                    saveTeams();
+                    renderTeams();
                 }
             };
-            window.editMember = async function(teamId, idx) {
-                const team = teams.find(t=>t.id===teamId);
-                if (!team) return;
-                const member = team.members[idx];
-                const newName = await modalPrompt('Edit member name:', member.name, 'Edit member');
-                if (newName && newName.trim()) member.name = newName.trim();
-                const newPoints = await modalPrompt('Edit points (max 90):', member.points, 'Edit points');
-                if (newPoints !== null) {
-                    const pts = parseFloat(newPoints);
-                    if (!isNaN(pts) && pts>=0 && pts<=90) member.points = pts;
-                    else await modalAlert('Points must be 0-90','Invalid');
-                }
-                saveTeams(); renderTeams();
-            };
-            window.deleteMember = async function(teamId, idx) {
-                const team = teams.find(t=>t.id===teamId);
-                if (team && (await modalConfirm('Remove this member?','Confirm'))) {
-                    team.members.splice(idx,1);
-                    saveTeams(); renderTeams();
-                }
-            };
-            window.addMemberPrompt = async function(teamId) {
-                const team = teams.find(t=>t.id===teamId);
-                if (!team) return;
-                const name = await modalPrompt('Enter member name:','','New member');
-                if (!name || !name.trim()) return;
-                const points = await modalPrompt('Enter points (max 90):','0','Points');
-                const pts = parseFloat(points);
-                if (isNaN(pts) || pts<0 || pts>90) { await modalAlert('Points must be 0-90','Invalid'); return; }
-                team.members.push({ name: name.trim(), points: pts });
-                saveTeams(); renderTeams();
-            };
-            document.getElementById('addTeamBtn').addEventListener('click', async function() {
-                const teamName = await modalPrompt('Enter new team name:','','New team');
-                if (!teamName || !teamName.trim()) return;
-                teams.push({ id: Date.now()+'-'+Math.random().toString(36).substr(2,5), name: teamName.trim(), members: [] });
-                saveTeams(); renderTeams();
+
+            document.getElementById('addTeamBtn').addEventListener('click', () => {
+                showTeamModal('Add New Team');
             });
 
-            // ---------- RANKINGS VIEW RENDERS ----------
+            // ---------- RANKINGS VIEW ----------
             function renderTop3() {
                 const sorted = [...speakers].sort((a,b)=>b.points-a.points);
                 const top3 = sorted.slice(0,3);
@@ -1218,6 +1151,7 @@
                     </div>`;
                 }).join('');
             }
+
             function renderTop10() {
                 const sorted = [...speakers].sort((a,b)=>b.points-a.points);
                 const top10 = sorted.slice(0,10);
@@ -1231,6 +1165,7 @@
                     </div>
                 `).join('');
             }
+
             function renderFullTable() {
                 const sorted = [...speakers].sort((a,b)=>b.points-a.points);
                 const container = document.getElementById('tableContainer');
@@ -1242,8 +1177,8 @@
                 sorted.forEach((s, idx) => {
                     html += `<tr>
                         <td class="rank">#${idx+1}</td>
-                        <td class="name">${escapeHtml(s.name)}</td>
-                        <td class="points">${s.points.toFixed(1)}</td>
+                        <td>${escapeHtml(s.name)}</td>
+                        <td>${s.points.toFixed(1)}</td>
                         <td class="actions">
                             <button class="edit-btn" onclick="editSpeaker('${s.id}')"><i class="fa-regular fa-pen-to-square"></i></button>
                             <button class="delete-btn" onclick="deleteSpeaker('${s.id}')"><i class="fa-regular fa-trash-can"></i></button>
@@ -1253,13 +1188,14 @@
                 html += '</tbody></table>';
                 container.innerHTML = html;
             }
+
             window.editSpeaker = function(id) {
                 const sp = speakers.find(s=>s.id===id);
                 if (sp) { document.getElementById('speakerName').value = sp.name; document.getElementById('speakerPoints').value = sp.points; }
             };
+
             window.deleteSpeaker = async function(id) {
                 if (await modalConfirm('Delete this speaker?','Confirm')) {
-                    // Remove from all round assignments
                     for (let round in roundAssignments) {
                         roundAssignments[round] = roundAssignments[round].filter(sId => sId !== id);
                     }
@@ -1267,6 +1203,7 @@
                     saveSpeakers(); saveRounds(); renderAll();
                 }
             };
+
             async function addOrUpdateSpeaker(name, points) {
                 if (!name.trim()) { await modalAlert('Enter name'); return false; }
                 const num = parseFloat(points);
@@ -1279,6 +1216,7 @@
                 }
                 saveSpeakers(); renderAll(); return true;
             }
+
             async function resetAll() {
                 if (await modalConfirm('Delete all speakers and round assignments?','Reset')) {
                     speakers = [];
@@ -1306,7 +1244,7 @@
                     const assignedSpeakers = assignedSpeakerIds.map(id => speakers.find(s => s.id === id)).filter(s => s);
                     html += `<div class="round-card">
                         <h4>${r.name} <button onclick="addToRound('${r.key}')" title="Add speaker"><i class="fa-solid fa-plus"></i></button></h4>
-                        <ul class="round-speakers" id="round-${r.key}">`;
+                        <ul class="round-speakers">`;
                     if (assignedSpeakers.length === 0) {
                         html += '<li style="color:#aaa; justify-content:center;">— empty —</li>';
                     } else {
@@ -1323,7 +1261,6 @@
                 bracket.innerHTML = html;
             }
 
-            // Add speaker to round
             window.addToRound = async function(roundKey) {
                 if (speakers.length === 0) {
                     await modalAlert('No speakers available. Add speakers first.', 'Cannot add');
@@ -1343,7 +1280,6 @@
                 }
             };
 
-            // Remove speaker from round
             window.removeFromRound = async function(roundKey, speakerId) {
                 if (await modalConfirm('Remove this speaker from the round?', 'Confirm')) {
                     roundAssignments[roundKey] = roundAssignments[roundKey].filter(id => id !== speakerId);
@@ -1360,7 +1296,7 @@
                 renderTop3();
                 renderTop10();
                 renderFullTable();
-                renderProgress(); // always update progress view
+                renderProgress();
             }
 
             // ---------- TAB SWITCHING ----------
@@ -1380,7 +1316,7 @@
                 tabRankings.classList.remove('active');
                 rankingsView.style.display = 'none';
                 progressView.style.display = 'block';
-                renderProgress(); // refresh when opened
+                renderProgress();
             });
 
             // ---------- SIDEBAR COLLAPSE ----------
