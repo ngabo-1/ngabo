@@ -12,6 +12,7 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://idbate.com">
     <style>
+        /* (styles unchanged – same as previous) */
         * {
             margin: 0;
             padding: 0;
@@ -526,7 +527,7 @@
         .edit-btn { color: #3b82f6; }
         .delete-btn { color: #ef4444; }
 
-        /* Round cards */
+        /* Round cards (now for teams) */
         .bracket-container {
             display: flex;
             flex-wrap: wrap;
@@ -558,24 +559,45 @@
             font-size: 1.2rem;
             cursor: pointer;
         }
-        .round-speakers {
+        .round-teams {
             list-style: none;
         }
-        .round-speakers li {
+        .round-teams li {
             background: white;
             border-radius: 40px;
-            padding: 0.5rem 1rem;
+            padding: 0.7rem 1rem;
             margin-bottom: 0.6rem;
+            border: 1px solid #e2e8f0;
+        }
+        .team-summary {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 1px solid #e2e8f0;
+            font-weight: 600;
         }
-        .remove-speaker-btn {
+        .team-summary .team-name {
+            color: #1e1e2e;
+        }
+        .team-members-preview {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 0.2rem;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .member-preview {
+            background: #f1f5f9;
+            padding: 0.2rem 0.6rem;
+            border-radius: 30px;
+        }
+        .remove-team-btn {
             background: none;
             border: none;
             color: #ef4444;
+            font-size: 1rem;
             cursor: pointer;
+            margin-left: 0.5rem;
         }
 
         .url-bar {
@@ -708,15 +730,15 @@
 
             <div class="main-header">
                 <h1><i class="fa-regular fa-microphone"></i> IDBATE COMPETITION</h1>
-                <div class="subtitle">Add speakers, form teams (max 3 members), and assign them to rounds</div>
+                <div class="subtitle">Add speakers, form teams (max 3 members), and assign teams to rounds</div>
             </div>
 
             <div class="tab-bar">
                 <div class="tab active" id="tabRankings">🏆 Speakers</div>
-                <div class="tab" id="tabProgress">📊 Round Assignments</div>
+                <div class="tab" id="tabProgress">📊 Round Assignments (Teams)</div>
             </div>
 
-            <!-- RANKINGS VIEW -->
+            <!-- RANKINGS VIEW (speakers) -->
             <div class="rankings-view" id="rankingsView">
                 <div class="input-section">
                     <div class="input-row">
@@ -749,9 +771,9 @@
                 <div class="table-container" id="tableContainer"></div>
             </div>
 
-            <!-- PROGRESS VIEW -->
+            <!-- PROGRESS VIEW (teams in rounds) -->
             <div class="progress-view" id="progressView">
-                <h2 style="margin-bottom:1.5rem;"><i class="fa-regular fa-diagram-project"></i> Assign speakers to rounds</h2>
+                <h2 style="margin-bottom:1.5rem;"><i class="fa-regular fa-diagram-project"></i> Assign teams to rounds</h2>
                 <div class="bracket-container" id="bracketContainer"></div>
             </div>
         </main>
@@ -791,7 +813,7 @@
         </div>
     </div>
 
-    <!-- OLD GENERIC MODAL (kept for alerts/selects) -->
+    <!-- GENERIC MODAL (for alerts/selects) -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-box" id="modalBox">
             <h3 id="modalTitle">Title</h3>
@@ -904,6 +926,7 @@
 
             let speakers = [];
             let teams = [];
+            // roundAssignments now stores arrays of TEAM IDs
             let roundAssignments = {
                 prelim1: [], prelim2: [], prelim3: [],
                 octa: [], quarter: [], semi: [], final: []
@@ -994,7 +1017,6 @@
             function showTeamModal(title, teamData = null) {
                 teamModalTitle.innerText = title;
                 if (teamData) {
-                    // editing
                     teamNameInput.value = teamData.name || '';
                     const members = teamData.members || [];
                     m1Name.value = members[0]?.name || '';
@@ -1005,7 +1027,6 @@
                     m3Points.value = members[2]?.points || 0;
                     currentTeamId = teamData.id;
                 } else {
-                    // adding
                     teamNameInput.value = '';
                     m1Name.value = ''; m1Points.value = 0;
                     m2Name.value = ''; m2Points.value = 0;
@@ -1023,7 +1044,6 @@
                     return;
                 }
 
-                // Build members array from non-empty names
                 const members = [];
                 if (m1Name.value.trim()) {
                     const pts = parseFloat(m1Points.value) || 0;
@@ -1042,14 +1062,12 @@
                 }
 
                 if (currentTeamId) {
-                    // Edit existing team
                     const team = teams.find(t => t.id === currentTeamId);
                     if (team) {
                         team.name = teamName;
                         team.members = members;
                     }
                 } else {
-                    // Add new team
                     teams.push({
                         id: Date.now() + '-' + Math.random().toString(36).substr(2,5),
                         name: teamName,
@@ -1075,14 +1093,9 @@
                 let html = '';
                 teams.forEach(team => {
                     const members = team.members || [];
-                    // ensure we have up to 3 slots
                     const slots = [];
                     for (let i = 0; i < 3; i++) {
-                        if (i < members.length) {
-                            slots.push(members[i]);
-                        } else {
-                            slots.push(null);
-                        }
+                        slots.push(i < members.length ? members[i] : null);
                     }
 
                     html += `<div class="team-card">
@@ -1126,9 +1139,15 @@
 
             window.deleteTeam = async function(teamId) {
                 if (await modalConfirm('Delete this team?', 'Confirm')) {
+                    // Remove team from all round assignments
+                    for (let round in roundAssignments) {
+                        roundAssignments[round] = roundAssignments[round].filter(id => id !== teamId);
+                    }
                     teams = teams.filter(t => t.id !== teamId);
                     saveTeams();
+                    saveRounds();
                     renderTeams();
+                    renderProgress(); // update rounds view
                 }
             };
 
@@ -1136,7 +1155,7 @@
                 showTeamModal('Add New Team');
             });
 
-            // ---------- RANKINGS VIEW ----------
+            // ---------- RANKINGS VIEW (speakers) ----------
             function renderTop3() {
                 const sorted = [...speakers].sort((a,b)=>b.points-a.points);
                 const top3 = sorted.slice(0,3);
@@ -1196,11 +1215,9 @@
 
             window.deleteSpeaker = async function(id) {
                 if (await modalConfirm('Delete this speaker?','Confirm')) {
-                    for (let round in roundAssignments) {
-                        roundAssignments[round] = roundAssignments[round].filter(sId => sId !== id);
-                    }
                     speakers = speakers.filter(s=>s.id!==id);
-                    saveSpeakers(); saveRounds(); renderAll();
+                    saveSpeakers();
+                    renderAll();
                 }
             };
 
@@ -1218,14 +1235,13 @@
             }
 
             async function resetAll() {
-                if (await modalConfirm('Delete all speakers and round assignments?','Reset')) {
+                if (await modalConfirm('Delete all speakers?','Reset')) {
                     speakers = [];
-                    roundAssignments = { prelim1: [], prelim2: [], prelim3: [], octa: [], quarter: [], semi: [], final: [] };
-                    saveSpeakers(); saveRounds(); renderAll();
+                    saveSpeakers(); renderAll();
                 }
             }
 
-            // ---------- PROGRESS VIEW (manual assignment) ----------
+            // ---------- PROGRESS VIEW (teams in rounds) ----------
             function renderProgress() {
                 const bracket = document.getElementById('bracketContainer');
                 const rounds = [
@@ -1240,19 +1256,24 @@
 
                 let html = '';
                 rounds.forEach(r => {
-                    const assignedSpeakerIds = roundAssignments[r.key] || [];
-                    const assignedSpeakers = assignedSpeakerIds.map(id => speakers.find(s => s.id === id)).filter(s => s);
+                    const assignedTeamIds = roundAssignments[r.key] || [];
+                    const assignedTeams = assignedTeamIds.map(id => teams.find(t => t.id === id)).filter(t => t);
                     html += `<div class="round-card">
-                        <h4>${r.name} <button onclick="addToRound('${r.key}')" title="Add speaker"><i class="fa-solid fa-plus"></i></button></h4>
-                        <ul class="round-speakers">`;
-                    if (assignedSpeakers.length === 0) {
-                        html += '<li style="color:#aaa; justify-content:center;">— empty —</li>';
+                        <h4>${r.name} <button onclick="addTeamToRound('${r.key}')" title="Add team"><i class="fa-solid fa-plus"></i></button></h4>
+                        <ul class="round-teams">`;
+                    if (assignedTeams.length === 0) {
+                        html += '<li style="color:#aaa; text-align:center;">— empty —</li>';
                     } else {
-                        assignedSpeakers.forEach(s => {
+                        assignedTeams.forEach(team => {
+                            const memberList = team.members.map(m => `${m.name} (${m.points.toFixed(1)})`).join(', ');
                             html += `<li>
-                                <span class="speaker-name">${escapeHtml(s.name)}</span>
-                                <span class="speaker-points">${s.points.toFixed(1)}</span>
-                                <button class="remove-speaker-btn" onclick="removeFromRound('${r.key}', '${s.id}')"><i class="fa-regular fa-trash-can"></i></button>
+                                <div class="team-summary">
+                                    <span class="team-name"><strong>${escapeHtml(team.name)}</strong></span>
+                                    <button class="remove-team-btn" onclick="removeTeamFromRound('${r.key}', '${team.id}')" title="Remove team"><i class="fa-regular fa-trash-can"></i></button>
+                                </div>
+                                <div class="team-members-preview">
+                                    ${team.members.map(m => `<span class="member-preview">${escapeHtml(m.name)} (${m.points.toFixed(1)})</span>`).join('')}
+                                </div>
                             </li>`;
                         });
                     }
@@ -1261,13 +1282,14 @@
                 bracket.innerHTML = html;
             }
 
-            window.addToRound = async function(roundKey) {
-                if (speakers.length === 0) {
-                    await modalAlert('No speakers available. Add speakers first.', 'Cannot add');
+            // Add team to round
+            window.addTeamToRound = async function(roundKey) {
+                if (teams.length === 0) {
+                    await modalAlert('No teams available. Create teams first.', 'Cannot add');
                     return;
                 }
-                const options = speakers.map(s => ({ value: s.id, label: `${s.name} (${s.points} pts)` }));
-                const selectedId = await modalSelectPrompt('Select speaker to add:', options, `Add to ${roundKey}`);
+                const options = teams.map(t => ({ value: t.id, label: `${t.name} (${t.members.length} members)` }));
+                const selectedId = await modalSelectPrompt('Select team to add:', options, `Add to ${roundKey}`);
                 if (selectedId) {
                     if (!roundAssignments[roundKey]) roundAssignments[roundKey] = [];
                     if (!roundAssignments[roundKey].includes(selectedId)) {
@@ -1275,14 +1297,15 @@
                         saveRounds();
                         renderProgress();
                     } else {
-                        await modalAlert('Speaker already in this round.', 'Duplicate');
+                        await modalAlert('Team already in this round.', 'Duplicate');
                     }
                 }
             };
 
-            window.removeFromRound = async function(roundKey, speakerId) {
-                if (await modalConfirm('Remove this speaker from the round?', 'Confirm')) {
-                    roundAssignments[roundKey] = roundAssignments[roundKey].filter(id => id !== speakerId);
+            // Remove team from round
+            window.removeTeamFromRound = async function(roundKey, teamId) {
+                if (await modalConfirm('Remove this team from the round?', 'Confirm')) {
+                    roundAssignments[roundKey] = roundAssignments[roundKey].filter(id => id !== teamId);
                     saveRounds();
                     renderProgress();
                 }
