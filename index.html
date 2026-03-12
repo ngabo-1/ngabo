@@ -3,926 +3,870 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Debate Tracker - 3 Member Teams</title>
+    <title>IDBATE · three‑member teams</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            background: #f0f2f5;
+            background: #f4f7fb;
             min-height: 100vh;
-            padding: 20px;
+            display: flex;
+            justify-content: center;
+            padding: 1.5rem;
         }
 
-        .container {
+        .app-container {
+            display: flex;
             max-width: 1400px;
-            margin: 0 auto;
+            width: 100%;
+            gap: 1.5rem;
+            transition: all 0.3s ease;
         }
 
-        /* Header */
-        .header {
-            background: white;
-            border-radius: 16px;
-            padding: 20px 24px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header h1 {
-            color: #1e293b;
-            font-size: 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .header h1 i {
-            color: #f97316;
-            font-size: 28px;
-        }
-
-        .header-badge {
-            background: #f97316;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 40px;
-            font-weight: 500;
-            font-size: 14px;
-        }
-
-        /* Main layout */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 20px;
-        }
-
-        /* Sidebar */
+        /* SIDEBAR - Original dark style with orange */
         .sidebar {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            flex: 0 0 320px;
+            background: #1e1e2e;
+            border-radius: 32px;
+            padding: 2rem 1.5rem;
+            color: #e0e0e0;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
             height: fit-content;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .sidebar.collapsed {
+            flex: 0 0 80px;
+            padding: 2rem 1rem;
+            overflow: hidden;
+        }
+
+        .sidebar.collapsed h2 span,
+        .sidebar.collapsed .podium-mini,
+        .sidebar.collapsed .stat-card-side,
+        .sidebar.collapsed .teams-section {
+            display: none;
+        }
+
+        .sidebar .toggle-btn {
+            position: absolute;
+            top: 20px;
+            right: -12px;
+            background: #f57c00;
+            color: #1e1e2e;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px solid #1e1e2e;
+            z-index: 10;
+            transition: 0.2s;
+        }
+
+        .sidebar .toggle-btn:hover {
+            background: #ff9500;
         }
 
         .sidebar h2 {
-            color: #1e293b;
-            font-size: 18px;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid #f1f5f9;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #f57c00;
+            margin-bottom: 2rem;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 0.5rem;
         }
 
         .sidebar h2 i {
-            color: #f97316;
+            font-size: 2rem;
         }
 
-        .stats-card {
-            background: #f8fafc;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 24px;
+        /* Dashboard mini podium */
+        .podium-mini {
+            background: #2d2d3a;
+            border-radius: 24px;
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+            border-left: 6px solid #f57c00;
+        }
+        .podium-mini h4 {
+            color: #f57c00;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .podium-mini-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1e1e2e;
+            border-radius: 40px;
+            padding: 0.5rem 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .podium-mini-item .rank {
+            font-weight: 800;
+            color: #f57c00;
+            width: 2rem;
+        }
+        .podium-mini-item .name {
+            flex: 1;
+            font-weight: 500;
+        }
+        .podium-mini-item .points {
+            background: #f57c00;
+            color: #1e1e2e;
+            font-weight: 700;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+        }
+
+        .stat-card-side {
+            background: #2d2d3a;
+            border-radius: 24px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            border-left: 6px solid #f57c00;
         }
 
         .stat-row {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #e2e8f0;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #40405c;
         }
-
         .stat-row:last-child {
             border-bottom: none;
         }
-
         .stat-label {
-            color: #64748b;
-            font-weight: 500;
+            color: #a0a0b0;
         }
-
         .stat-value {
-            color: #1e293b;
-            font-weight: 700;
-            font-size: 18px;
-        }
-
-        .top3-mini {
-            background: #f8fafc;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 24px;
-        }
-
-        .top3-mini h3 {
-            color: #1e293b;
-            font-size: 16px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .top3-mini-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 12px;
-            background: white;
-            border-radius: 8px;
-            margin-bottom: 6px;
-            border: 1px solid #e2e8f0;
-        }
-
-        .top3-mini-rank {
-            color: #f97316;
-            font-weight: 700;
-            width: 30px;
-        }
-
-        .top3-mini-name {
-            flex: 1;
-            font-weight: 500;
-        }
-
-        .top3-mini-points {
-            background: #f97316;
             color: white;
-            padding: 4px 8px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 1.2rem;
         }
 
-        /* Teams section */
         .teams-section {
-            margin-top: 20px;
+            margin-top: 2rem;
         }
 
         .teams-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 1rem;
         }
 
         .teams-header h3 {
-            color: #1e293b;
-            font-size: 16px;
+            color: #f57c00;
+            font-size: 1.3rem;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 0.5rem;
         }
 
-        .btn-add-team {
-            background: #f97316;
-            color: white;
+        .add-team-btn {
+            background: #f57c00;
+            color: #1e1e2e;
             border: none;
+            border-radius: 30px;
             width: 36px;
             height: 36px;
-            border-radius: 50%;
-            font-size: 18px;
-            cursor: pointer;
+            font-size: 1.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
+            font-weight: 700;
             transition: 0.2s;
         }
 
-        .btn-add-team:hover {
-            background: #ea580c;
+        .add-team-btn:hover {
+            background: #ff9500;
             transform: scale(1.05);
         }
 
+        /* Team cards with three fixed slots */
         .team-card {
-            background: #f8fafc;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 12px;
-            border: 1px solid #e2e8f0;
+            background: #2d2d3a;
+            border-radius: 28px;
+            padding: 1.2rem;
+            margin-bottom: 1.2rem;
+            border: 2px solid transparent;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            transition: 0.2s;
+        }
+        .team-card:hover {
+            border-color: #f57c00;
         }
 
         .team-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 1rem;
         }
 
         .team-name {
             font-weight: 700;
-            color: #1e293b;
-            background: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            border: 1px solid #f97316;
+            color: white;
+            font-size: 1.3rem;
+            background: #1e1e2e;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            border-left: 4px solid #f57c00;
         }
 
         .team-actions button {
             background: none;
             border: none;
-            color: #64748b;
-            font-size: 14px;
-            margin-left: 8px;
+            color: #f57c00;
+            font-size: 1.2rem;
+            margin-left: 0.5rem;
             cursor: pointer;
         }
-
         .team-actions button:hover {
-            color: #f97316;
+            color: #ff9500;
         }
 
-        .member-row {
+        .team-members {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        /* Three fixed slots */
+        .member-slot {
             display: flex;
             align-items: center;
-            gap: 8px;
-            background: white;
-            border-radius: 8px;
-            padding: 8px 12px;
-            margin-bottom: 6px;
-            border: 1px solid #e2e8f0;
+            gap: 0.5rem;
+            background: #1e1e2e;
+            border-radius: 40px;
+            padding: 0.5rem 1rem;
+            border: 1px solid #40405c;
         }
-
-        .member-number {
-            color: #f97316;
-            font-weight: 600;
-            font-size: 12px;
-            width: 24px;
+        .member-slot .slot-number {
+            color: #f57c00;
+            font-weight: 700;
+            min-width: 2rem;
+            font-size: 0.9rem;
         }
-
-        .member-name {
-            flex: 1;
+        .member-slot .name {
+            flex: 2;
             font-weight: 500;
+            color: #e0e0e0;
         }
-
-        .member-points {
-            background: #f1f5f9;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 14px;
+        .member-slot .points {
+            background: #f57c00;
+            color: #1e1e2e;
+            font-weight: 700;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            min-width: 4rem;
+            text-align: center;
         }
-
-        .member-edit {
-            color: #64748b;
+        .member-slot .edit-slot {
             background: none;
             border: none;
+            color: #f57c00;
+            font-size: 1rem;
             cursor: pointer;
         }
-
-        .member-edit:hover {
-            color: #f97316;
+        .member-slot .edit-slot:hover {
+            color: #ff9500;
         }
 
-        /* Main content */
+        /* MAIN CONTENT */
         .main-content {
+            flex: 1;
             background: white;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-radius: 32px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+            padding: 2rem;
         }
 
-        /* Tabs */
-        .tabs {
+        .main-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e1e2e;
             display: flex;
-            gap: 8px;
-            margin-bottom: 24px;
-            border-bottom: 2px solid #f1f5f9;
-            padding-bottom: 8px;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
         }
 
+        .main-header h1 i {
+            color: #f57c00;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            border-left: 4px solid #f57c00;
+            padding-left: 1rem;
+        }
+
+        .tab-bar {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
         .tab {
-            padding: 10px 24px;
+            padding: 0.6rem 1.8rem;
             border-radius: 40px;
             font-weight: 600;
             cursor: pointer;
+            transition: 0.2s;
             background: #f1f5f9;
             color: #475569;
             border: none;
-            font-size: 14px;
         }
-
         .tab.active {
-            background: #f97316;
-            color: white;
+            background: #f57c00;
+            color: #1e1e2e;
         }
-
-        .tab:hover {
+        .tab:hover:not(.active) {
             background: #e2e8f0;
         }
 
-        .tab.active:hover {
-            background: #ea580c;
-        }
+        .rankings-view { display: block; }
+        .progress-view { display: none; }
 
-        /* Speaker input form */
-        .speaker-form {
+        .input-section {
             background: #f8fafc;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 24px;
+            border-radius: 24px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid #e2e8f0;
         }
 
-        .form-row {
+        .input-row {
             display: flex;
-            gap: 12px;
             flex-wrap: wrap;
+            gap: 0.75rem;
             align-items: flex-end;
         }
 
-        .form-group {
-            flex: 1;
-            min-width: 200px;
+        .input-field {
+            flex: 2 1 200px;
         }
 
-        .form-group label {
+        .input-field label {
             display: block;
-            font-size: 12px;
+            font-size: 0.8rem;
             font-weight: 600;
-            color: #64748b;
-            margin-bottom: 4px;
             text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: #475569;
+            margin-bottom: 0.3rem;
         }
 
-        .form-group input {
+        .input-field input {
             width: 100%;
-            padding: 12px 16px;
+            padding: 0.9rem 1.2rem;
             border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 15px;
+            border-radius: 40px;
+            font-size: 1rem;
+            background: white;
         }
 
-        .form-group input:focus {
+        .input-field input:focus {
             outline: none;
-            border-color: #f97316;
+            border-color: #f57c00;
+            box-shadow: 0 0 0 3px rgba(245,124,0,0.1);
         }
 
-        .btn-submit {
-            background: #f97316;
+        .points-field { flex: 1 1 120px; }
+
+        .add-btn {
+            flex: 0 0 auto;
+            background: #f57c00;
             color: white;
             border: none;
-            padding: 12px 28px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 15px;
-            cursor: pointer;
+            border-radius: 40px;
+            padding: 0.9rem 2rem;
+            font-weight: 700;
+            font-size: 1rem;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 0.5rem;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(245,124,0,0.3);
+            height: 54px;
             white-space: nowrap;
         }
 
-        .btn-submit:hover {
-            background: #ea580c;
+        .add-btn:hover { 
+            background: #e07c00; 
+            transform: scale(1.02);
         }
 
-        /* Top sections */
-        .top-section {
+        .top3-section, .top10-section {
             background: #f8fafc;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 24px;
-        }
-
-        .top-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-
-        .top-header h3 {
-            color: #1e293b;
-            font-size: 18px;
-        }
-
-        .top-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 12px;
-        }
-
-        .top-item {
-            background: white;
-            border-radius: 12px;
-            padding: 16px;
+            border-radius: 32px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
             border: 1px solid #e2e8f0;
+        }
+
+        .top3-header, .top10-header {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 0.5rem;
+            margin-bottom: 1.2rem;
+        }
+        .top3-header h3, .top10-header h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e1e2e;
         }
 
-        .top-rank {
-            font-size: 24px;
-            font-weight: 800;
-            color: #f97316;
-            min-width: 40px;
+        .top3-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
         }
 
-        .top-info {
-            flex: 1;
+        .podium-item {
+            background: white;
+            border-radius: 30px;
+            padding: 1.2rem;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+        }
+        .podium-item.first { border-color: #f57c00; background: #fff7ed; }
+        .podium-rank { font-size: 2rem; font-weight: 800; color: #f57c00; }
+        .podium-name { font-weight: 700; font-size: 1.2rem; }
+        .podium-points { font-weight: 600; color: #64748b; }
+
+        .top10-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.8rem;
+        }
+        .top10-item {
+            background: white;
+            border-radius: 40px;
+            padding: 0.8rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            border: 1px solid #e2e8f0;
+        }
+        .top10-rank { font-weight: 800; color: #f57c00; min-width: 2rem; }
+        .top10-name { flex: 1; font-weight: 600; }
+        .top10-points {
+            background: #f1f5f9;
+            padding: 0.3rem 0.8rem;
+            border-radius: 40px;
+            font-weight: 700;
         }
 
-        .top-name {
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .top-score {
-            color: #64748b;
-            font-size: 14px;
-        }
-
-        /* Leaderboard table */
         .leaderboard-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 1rem;
         }
-
-        .leaderboard-header h2 {
-            color: #1e293b;
-            font-size: 18px;
+        .leaderboard-header h2 { 
+            font-size: 1.5rem; 
+            font-weight: 700; 
+            color: #1e1e2e;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
-
-        .btn-reset {
+        .reset-btn {
             background: none;
             border: 2px solid #e2e8f0;
             color: #64748b;
-            padding: 8px 20px;
             border-radius: 40px;
+            padding: 0.5rem 1.5rem;
             font-weight: 600;
             cursor: pointer;
+            transition: 0.2s;
         }
-
-        .btn-reset:hover {
-            border-color: #f97316;
-            color: #f97316;
+        .reset-btn:hover { 
+            border-color: #f57c00; 
+            color: #f57c00; 
+            background: #fff7ed; 
         }
 
         .table-container {
             overflow-x: auto;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            border: 1px solid #edf2f7;
         }
-
         table {
             width: 100%;
             border-collapse: collapse;
+            background: white;
         }
-
         th {
             background: #f8fafc;
-            padding: 16px;
-            text-align: left;
+            color: #334155;
             font-weight: 600;
-            color: #475569;
-            font-size: 13px;
+            font-size: 0.85rem;
+            padding: 1rem;
+            text-align: left;
             border-bottom: 2px solid #e2e8f0;
         }
-
         td {
-            padding: 16px;
-            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem;
+            border-bottom: 1px solid #edf2f7;
         }
-
-        .rank-cell {
-            font-weight: 700;
-            color: #f97316;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 12px;
-        }
-
-        .btn-edit, .btn-delete {
+        .rank-cell { font-weight: 800; color: #f57c00; }
+        .actions { display: flex; gap: 0.8rem; }
+        .edit-btn, .delete-btn {
             background: none;
             border: none;
-            font-size: 16px;
+            font-size: 1.2rem;
             cursor: pointer;
         }
-
-        .btn-edit {
-            color: #3b82f6;
-        }
-
-        .btn-delete {
-            color: #ef4444;
-        }
+        .edit-btn { color: #3b82f6; }
+        .delete-btn { color: #ef4444; }
 
         /* Round cards */
-        .rounds-grid {
+        .bracket-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 16px;
-            margin-top: 20px;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
         }
-
         .round-card {
             background: #f8fafc;
-            border-radius: 16px;
-            padding: 16px;
-            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 1.2rem;
+            border: 2px solid #e2e8f0;
         }
-
         .round-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 2px dashed #f97316;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px dashed #f57c00;
         }
-
         .round-header h4 {
-            color: #1e293b;
+            color: #f57c00;
             font-weight: 700;
+            font-size: 1.1rem;
         }
-
-        .btn-add-team-round {
+        .round-header button {
             background: none;
             border: none;
-            color: #f97316;
-            font-size: 18px;
+            color: #f57c00;
+            font-size: 1.3rem;
             cursor: pointer;
         }
-
-        .team-list {
+        .round-header button:hover {
+            color: #ff9500;
+        }
+        .round-teams {
             list-style: none;
         }
-
-        .team-list li {
+        .round-teams li {
             background: white;
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 8px;
+            border-radius: 16px;
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.6rem;
             border: 1px solid #e2e8f0;
         }
-
-        .team-list-item {
+        .team-summary {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 6px;
+            margin-bottom: 0.3rem;
         }
-
-        .team-list-name {
-            font-weight: 600;
+        .team-summary .team-name {
+            font-weight: 700;
+            color: #1e1e2e;
         }
-
-        .btn-remove-team {
+        .team-summary button {
             background: none;
             border: none;
             color: #ef4444;
             cursor: pointer;
         }
-
         .team-members-preview {
             display: flex;
-            gap: 6px;
+            gap: 0.4rem;
             flex-wrap: wrap;
-            font-size: 12px;
+            font-size: 0.75rem;
         }
-
         .member-tag {
             background: #f1f5f9;
-            padding: 2px 8px;
+            padding: 0.2rem 0.6rem;
             border-radius: 12px;
             color: #475569;
         }
 
-        /* Modal */
-        .modal {
+        /* Modal styles */
+        .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(3px);
             display: none;
-            align-items: center;
             justify-content: center;
-            z-index: 1000;
+            align-items: center;
+            z-index: 9999;
         }
-
-        .modal.active {
+        .modal-overlay.active {
             display: flex;
         }
-
-        .modal-content {
-            background: white;
-            border-radius: 24px;
-            padding: 28px;
+        .modal-box {
+            background: #1e1e2e;
+            border-radius: 32px;
+            padding: 2rem;
             max-width: 500px;
             width: 90%;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            border: 2px solid #f57c00;
+            color: #e0e0e0;
             max-height: 80vh;
             overflow-y: auto;
         }
-
-        .modal-content h3 {
-            color: #1e293b;
-            margin-bottom: 20px;
-            font-size: 22px;
+        .modal-box h3 {
+            color: #f57c00;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
         }
-
-        .modal-field {
-            margin-bottom: 16px;
-        }
-
-        .modal-field label {
+        .modal-box label {
             display: block;
-            margin-bottom: 6px;
+            margin-top: 1rem;
+            margin-bottom: 0.3rem;
             font-weight: 600;
-            color: #475569;
+            color: #f57c00;
         }
-
-        .modal-field input {
+        .modal-box input, .modal-box select {
             width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 15px;
+            padding: 0.8rem 1.2rem;
+            background: #2d2d3a;
+            border: 2px solid #40405c;
+            border-radius: 40px;
+            color: white;
+            font-size: 1rem;
         }
-
-        .modal-field input:focus {
+        .modal-box input:focus, .modal-box select:focus {
             outline: none;
-            border-color: #f97316;
+            border-color: #f57c00;
         }
-
         .modal-actions {
             display: flex;
-            gap: 12px;
+            gap: 0.8rem;
             justify-content: flex-end;
-            margin-top: 24px;
+            margin-top: 2rem;
         }
-
         .modal-btn {
-            padding: 12px 24px;
-            border-radius: 12px;
+            padding: 0.7rem 1.5rem;
+            border-radius: 40px;
             font-weight: 600;
             cursor: pointer;
             border: none;
         }
-
-        .modal-btn-primary {
-            background: #f97316;
-            color: white;
+        .modal-btn.confirm {
+            background: #f57c00;
+            color: #1e1e2e;
+        }
+        .modal-btn.cancel {
+            background: #2d2d3a;
+            color: #e0e0e0;
+            border: 1px solid #40405c;
+        }
+        .modal-btn:hover {
+            transform: scale(1.02);
         }
 
-        .modal-btn-primary:hover {
-            background: #ea580c;
-        }
-
-        .modal-btn-secondary {
-            background: #f1f5f9;
-            color: #475569;
-        }
-
-        .modal-btn-secondary:hover {
-            background: #e2e8f0;
-        }
-
-        .empty-state {
-            color: #94a3b8;
-            text-align: center;
-            padding: 40px;
-        }
-
-        @media (max-width: 900px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
+        @media (max-width: 1000px) {
+            .app-container { flex-direction: column; }
+            .sidebar { max-width: 100%; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <h1>
-                <i class="fas fa-microphone-alt"></i>
-                Debate Competition Tracker
-            </h1>
-            <div class="header-badge">
-                <i class="fas fa-users"></i> 3-Member Teams
+    <div class="app-container">
+        <!-- SIDEBAR - Dark with orange accent -->
+        <aside class="sidebar" id="sidebar">
+            <div class="toggle-btn" id="toggleSidebar">
+                <i class="fa-solid fa-chevron-left" id="toggleIcon"></i>
             </div>
-        </div>
+            <h2><i class="fa-regular fa-chart-bar"></i> <span>DASHBOARD</span></h2>
 
-        <!-- Main Dashboard -->
-        <div class="dashboard-grid">
-            <!-- Sidebar -->
-            <aside class="sidebar">
-                <h2>
-                    <i class="fas fa-chart-simple"></i>
-                    Dashboard
+            <!-- Mini Podium -->
+            <div class="podium-mini" id="miniPodium"></div>
+            
+            <!-- Stats Card -->
+            <div class="stat-card-side" id="sidebarStats"></div>
+
+            <!-- Teams Section -->
+            <div class="teams-section">
+                <div class="teams-header">
+                    <h3><i class="fa-regular fa-users"></i> <span>TEAMS</span></h3>
+                    <button class="add-team-btn" id="addTeamBtn" title="Add new team">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                </div>
+                <div id="teamsContainer"></div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <div class="main-header">
+                <h1><i class="fa-regular fa-microphone"></i> IDBATE COMPETITION</h1>
+                <div class="subtitle">Add speakers, form teams (max 3 members), and assign teams to rounds</div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tab-bar">
+                <button class="tab active" id="tabRankings">🏆 Speakers</button>
+                <button class="tab" id="tabProgress">📊 Round Assignments</button>
+            </div>
+
+            <!-- SPEAKERS VIEW -->
+            <div class="rankings-view" id="rankingsView">
+                <!-- Add Speaker Form -->
+                <div class="input-section">
+                    <div class="input-row">
+                        <div class="input-field">
+                            <label>Speaker name</label>
+                            <input type="text" id="speakerName" placeholder="e.g., Jane Doe">
+                        </div>
+                        <div class="input-field points-field">
+                            <label>Points (0-90)</label>
+                            <input type="number" id="speakerPoints" placeholder="0" min="0" max="90" step="0.1" value="0">
+                        </div>
+                        <button class="add-btn" id="addBtn">
+                            <i class="fa-solid fa-plus"></i> Add / Update
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Top 3 Speakers -->
+                <div class="top3-section">
+                    <div class="top3-header">
+                        <i class="fa-solid fa-crown" style="color:#f57c00;"></i>
+                        <h3>Top 3 speakers</h3>
+                    </div>
+                    <div class="top3-grid" id="top3Grid"></div>
+                </div>
+
+                <!-- Top 10 Speakers -->
+                <div class="top10-section">
+                    <div class="top10-header">
+                        <i class="fa-solid fa-trophy" style="color:#f57c00;"></i>
+                        <h3>Top 10 speakers</h3>
+                    </div>
+                    <div class="top10-grid" id="top10Grid"></div>
+                </div>
+
+                <!-- All Speakers Table -->
+                <div class="leaderboard-header">
+                    <h2><i class="fa-regular fa-list"></i> All speakers</h2>
+                    <button class="reset-btn" id="resetBtn">
+                        <i class="fa-regular fa-trash-can"></i> Reset all
+                    </button>
+                </div>
+                <div class="table-container" id="tableContainer"></div>
+            </div>
+
+            <!-- ROUNDS VIEW -->
+            <div class="progress-view" id="progressView">
+                <h2 style="margin-bottom:1.5rem;">
+                    <i class="fa-regular fa-diagram-project" style="color:#f57c00;"></i> 
+                    Team Round Assignments
                 </h2>
-
-                <!-- Stats -->
-                <div class="stats-card">
-                    <div class="stat-row">
-                        <span class="stat-label">Total Speakers</span>
-                        <span class="stat-value" id="totalSpeakers">0</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Total Points</span>
-                        <span class="stat-value" id="totalPoints">0</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Average</span>
-                        <span class="stat-value" id="averagePoints">0</span>
-                    </div>
-                </div>
-
-                <!-- Top 3 Mini -->
-                <div class="top3-mini">
-                    <h3>
-                        <i class="fas fa-crown" style="color: #f97316;"></i>
-                        Top 3 Speakers
-                    </h3>
-                    <div id="miniTop3"></div>
-                </div>
-
-                <!-- Teams Section -->
-                <div class="teams-section">
-                    <div class="teams-header">
-                        <h3>
-                            <i class="fas fa-people-group"></i>
-                            Teams
-                        </h3>
-                        <button class="btn-add-team" id="addTeamBtn" title="Add new team">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </div>
-                    <div id="teamsList"></div>
-                </div>
-            </aside>
-
-            <!-- Main Content -->
-            <main class="main-content">
-                <!-- Tabs -->
-                <div class="tabs">
-                    <button class="tab active" id="tabSpeakers">
-                        <i class="fas fa-user"></i> Speakers
-                    </button>
-                    <button class="tab" id="tabRounds">
-                        <i class="fas fa-diagram-project"></i> Round Assignments
-                    </button>
-                </div>
-
-                <!-- Speakers View -->
-                <div id="speakersView">
-                    <!-- Add Speaker Form -->
-                    <div class="speaker-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Speaker Name</label>
-                                <input type="text" id="speakerNameInput" placeholder="Enter name...">
-                            </div>
-                            <div class="form-group">
-                                <label>Points (0-90)</label>
-                                <input type="number" id="speakerPointsInput" min="0" max="90" step="0.1" value="0">
-                            </div>
-                            <button class="btn-submit" id="addSpeakerBtn">
-                                <i class="fas fa-plus"></i> Add / Update
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Top 3 Speakers -->
-                    <div class="top-section">
-                        <div class="top-header">
-                            <i class="fas fa-crown" style="color: #f97316; font-size: 20px;"></i>
-                            <h3>Top 3 Speakers</h3>
-                        </div>
-                        <div class="top-grid" id="top3Grid"></div>
-                    </div>
-
-                    <!-- Top 10 Speakers -->
-                    <div class="top-section">
-                        <div class="top-header">
-                            <i class="fas fa-trophy" style="color: #f97316; font-size: 20px;"></i>
-                            <h3>Top 10 Speakers</h3>
-                        </div>
-                        <div class="top-grid" id="top10Grid"></div>
-                    </div>
-
-                    <!-- All Speakers -->
-                    <div class="leaderboard-header">
-                        <h2><i class="fas fa-list"></i> All Speakers</h2>
-                        <button class="btn-reset" id="resetAllBtn">
-                            <i class="fas fa-trash-can"></i> Reset All
-                        </button>
-                    </div>
-                    <div class="table-container" id="speakersTable"></div>
-                </div>
-
-                <!-- Rounds View (hidden by default) -->
-                <div id="roundsView" style="display: none;">
-                    <h2 style="margin-bottom: 20px;">
-                        <i class="fas fa-diagram-project"></i> Team Round Assignments
-                    </h2>
-                    <div class="rounds-grid" id="roundsContainer"></div>
-                </div>
-            </main>
-        </div>
+                <div class="bracket-container" id="bracketContainer"></div>
+            </div>
+        </main>
     </div>
 
-    <!-- Team Modal -->
-    <div class="modal" id="teamModal">
-        <div class="modal-content">
+    <!-- TEAM MODAL -->
+    <div class="modal-overlay" id="teamModal">
+        <div class="modal-box">
             <h3 id="teamModalTitle">Add Team</h3>
-            <div class="modal-field">
+            <form id="teamForm">
                 <label>Team Name</label>
-                <input type="text" id="teamNameInput" placeholder="e.g., Debate Team A">
-            </div>
-            
-            <div style="margin: 20px 0 10px; color: #f97316; font-weight: 600;">
-                <i class="fas fa-user"></i> Members (up to 3)
-            </div>
-            
-            <!-- Member 1 -->
-            <div class="modal-field">
-                <label>Member 1 Name</label>
-                <input type="text" id="member1Name" placeholder="Name">
-            </div>
-            <div class="modal-field">
-                <label>Member 1 Points</label>
-                <input type="number" id="member1Points" min="0" max="90" step="0.1" value="0">
-            </div>
-            
-            <!-- Member 2 -->
-            <div class="modal-field">
-                <label>Member 2 Name</label>
-                <input type="text" id="member2Name" placeholder="Name (optional)">
-            </div>
-            <div class="modal-field">
-                <label>Member 2 Points</label>
-                <input type="number" id="member2Points" min="0" max="90" step="0.1" value="0">
-            </div>
-            
-            <!-- Member 3 -->
-            <div class="modal-field">
-                <label>Member 3 Name</label>
-                <input type="text" id="member3Name" placeholder="Name (optional)">
-            </div>
-            <div class="modal-field">
-                <label>Member 3 Points</label>
-                <input type="number" id="member3Points" min="0" max="90" step="0.1" value="0">
-            </div>
-            
-            <div class="modal-actions">
-                <button class="modal-btn modal-btn-secondary" id="cancelTeamBtn">Cancel</button>
-                <button class="modal-btn modal-btn-primary" id="saveTeamBtn">Save Team</button>
-            </div>
+                <input type="text" id="teamNameInput" placeholder="e.g., Team Phoenix" required>
+
+                <label style="margin-top:1.5rem;">Member 1 (optional)</label>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="text" id="member1Name" placeholder="Name" style="flex: 2;">
+                    <input type="number" id="member1Points" placeholder="Points" min="0" max="90" step="0.1" value="0" style="flex: 1;">
+                </div>
+
+                <label>Member 2 (optional)</label>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="text" id="member2Name" placeholder="Name" style="flex: 2;">
+                    <input type="number" id="member2Points" placeholder="Points" min="0" max="90" step="0.1" value="0" style="flex: 1;">
+                </div>
+
+                <label>Member 3 (optional)</label>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="text" id="member3Name" placeholder="Name" style="flex: 2;">
+                    <input type="number" id="member3Points" placeholder="Points" min="0" max="90" step="0.1" value="0" style="flex: 1;">
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="modal-btn cancel" id="teamModalCancel">Cancel</button>
+                    <button type="submit" class="modal-btn confirm" id="teamModalConfirm">Save Team</button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <!-- Alert Modal -->
-    <div class="modal" id="alertModal">
-        <div class="modal-content">
+    <!-- ALERT MODAL -->
+    <div class="modal-overlay" id="alertModal">
+        <div class="modal-box">
             <h3 id="alertTitle">Notice</h3>
             <p id="alertMessage" style="margin: 20px 0;"></p>
             <div class="modal-actions">
-                <button class="modal-btn modal-btn-primary" id="alertOkBtn">OK</button>
+                <button class="modal-btn confirm" id="alertOkBtn">OK</button>
             </div>
         </div>
     </div>
 
-    <!-- Confirm Modal -->
-    <div class="modal" id="confirmModal">
-        <div class="modal-content">
+    <!-- CONFIRM MODAL -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-box">
             <h3 id="confirmTitle">Confirm</h3>
             <p id="confirmMessage" style="margin: 20px 0;"></p>
             <div class="modal-actions">
-                <button class="modal-btn modal-btn-secondary" id="confirmNoBtn">Cancel</button>
-                <button class="modal-btn modal-btn-primary" id="confirmYesBtn">Yes</button>
+                <button class="modal-btn cancel" id="confirmNoBtn">Cancel</button>
+                <button class="modal-btn confirm" id="confirmYesBtn">Yes</button>
             </div>
         </div>
     </div>
 
-    <!-- Select Team Modal -->
-    <div class="modal" id="selectTeamModal">
-        <div class="modal-content">
+    <!-- SELECT TEAM MODAL -->
+    <div class="modal-overlay" id="selectTeamModal">
+        <div class="modal-box">
             <h3 id="selectTeamTitle">Select Team</h3>
             <p id="selectTeamMessage" style="margin: 10px 0;"></p>
-            <div class="modal-field">
-                <select id="teamSelect" style="width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #e2e8f0;"></select>
-            </div>
+            <select id="teamSelect" style="width: 100%; margin: 15px 0;"></select>
             <div class="modal-actions">
-                <button class="modal-btn modal-btn-secondary" id="selectTeamCancelBtn">Cancel</button>
-                <button class="modal-btn modal-btn-primary" id="selectTeamConfirmBtn">Select</button>
+                <button class="modal-btn cancel" id="selectTeamCancelBtn">Cancel</button>
+                <button class="modal-btn confirm" id="selectTeamConfirmBtn">Select</button>
             </div>
         </div>
     </div>
@@ -939,13 +883,13 @@
         // Load from localStorage
         function loadData() {
             try {
-                const savedSpeakers = localStorage.getItem('speakers');
+                const savedSpeakers = localStorage.getItem('idbate_speakers');
                 if (savedSpeakers) speakers = JSON.parse(savedSpeakers);
                 
-                const savedTeams = localStorage.getItem('teams');
+                const savedTeams = localStorage.getItem('idbate_teams');
                 if (savedTeams) teams = JSON.parse(savedTeams);
                 
-                const savedRounds = localStorage.getItem('rounds');
+                const savedRounds = localStorage.getItem('idbate_rounds');
                 if (savedRounds) roundAssignments = JSON.parse(savedRounds);
             } catch (e) {
                 console.error('Error loading data:', e);
@@ -954,9 +898,9 @@
         loadData();
 
         // Save functions
-        function saveSpeakers() { localStorage.setItem('speakers', JSON.stringify(speakers)); }
-        function saveTeams() { localStorage.setItem('teams', JSON.stringify(teams)); }
-        function saveRounds() { localStorage.setItem('rounds', JSON.stringify(roundAssignments)); }
+        function saveSpeakers() { localStorage.setItem('idbate_speakers', JSON.stringify(speakers)); }
+        function saveTeams() { localStorage.setItem('idbate_teams', JSON.stringify(teams)); }
+        function saveRounds() { localStorage.setItem('idbate_rounds', JSON.stringify(roundAssignments)); }
 
         // Modal functions
         function showAlert(message, title = 'Notice') {
@@ -994,7 +938,7 @@
             });
         }
 
-        function showTeamSelect(options, message = 'Select a team:', title = 'Add to Round') {
+        function showTeamSelect(options, message, title) {
             return new Promise(resolve => {
                 document.getElementById('selectTeamTitle').textContent = title;
                 document.getElementById('selectTeamMessage').textContent = message;
@@ -1030,150 +974,167 @@
             });
         }
 
-        // Close modals
+        // Close alert modal
         document.getElementById('alertOkBtn').addEventListener('click', hideAlert);
 
-        // Render Dashboard Stats
-        function renderStats() {
+        // Escape HTML
+        function escapeHtml(unsafe) {
+            return unsafe.replace(/[&<>"]/g, m => {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                if (m === '"') return '&quot;';
+                return m;
+            });
+        }
+
+        // Render functions
+        function renderSidebarStats() {
             const total = speakers.length;
             const totalPoints = speakers.reduce((sum, s) => sum + s.points, 0);
             const avg = total ? (totalPoints / total).toFixed(1) : 0;
+            const max = speakers.length ? Math.max(...speakers.map(s => s.points)) : 0;
             
-            document.getElementById('totalSpeakers').textContent = total;
-            document.getElementById('totalPoints').textContent = totalPoints.toFixed(1);
-            document.getElementById('averagePoints').textContent = avg;
+            document.getElementById('sidebarStats').innerHTML = `
+                <div class="stat-row">
+                    <span class="stat-label">Speakers</span>
+                    <span class="stat-value">${total}</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Total pts</span>
+                    <span class="stat-value">${totalPoints.toFixed(1)}</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Average</span>
+                    <span class="stat-value">${avg}</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Highest</span>
+                    <span class="stat-value">${max.toFixed(1)}</span>
+                </div>
+            `;
         }
 
-        // Render Mini Top 3
-        function renderMiniTop3() {
+        function renderMiniPodium() {
             const sorted = [...speakers].sort((a, b) => b.points - a.points).slice(0, 3);
-            const container = document.getElementById('miniTop3');
+            const container = document.getElementById('miniPodium');
             
             if (sorted.length === 0) {
-                container.innerHTML = '<p style="color: #94a3b8; text-align: center;">No speakers yet</p>';
+                container.innerHTML = '<h4><i class="fa-solid fa-crown"></i> Top 3</h4><p style="color:#aaa;">No speakers</p>';
                 return;
             }
             
-            container.innerHTML = sorted.map((s, i) => `
-                <div class="top3-mini-item">
-                    <span class="top3-mini-rank">#${i + 1}</span>
-                    <span class="top3-mini-name">${escapeHtml(s.name)}</span>
-                    <span class="top3-mini-points">${s.points.toFixed(1)}</span>
-                </div>
-            `).join('');
+            container.innerHTML = '<h4><i class="fa-solid fa-crown"></i> Top 3</h4>' + 
+                sorted.map((s, i) => `
+                    <div class="podium-mini-item">
+                        <span class="rank">#${i+1}</span>
+                        <span class="name">${escapeHtml(s.name)}</span>
+                        <span class="points">${s.points.toFixed(1)}</span>
+                    </div>
+                `).join('');
         }
 
-        // Render Teams
         function renderTeams() {
-            const container = document.getElementById('teamsList');
+            const container = document.getElementById('teamsContainer');
             
             if (teams.length === 0) {
-                container.innerHTML = '<p style="color: #94a3b8; text-align: center;">No teams yet. Click + to add.</p>';
+                container.innerHTML = '<p style="color:#aaa; text-align:center;">No teams yet. Click + to add.</p>';
                 return;
             }
             
             container.innerHTML = teams.map(team => {
                 const members = team.members || [];
+                let slotsHtml = '';
+                
+                for (let i = 0; i < 3; i++) {
+                    if (i < members.length) {
+                        slotsHtml += `
+                            <div class="member-slot">
+                                <span class="slot-number">#${i+1}</span>
+                                <span class="name">${escapeHtml(members[i].name)}</span>
+                                <span class="points">${members[i].points.toFixed(1)}</span>
+                                <button class="edit-slot" onclick="editTeam('${team.id}')" title="Edit">
+                                    <i class="fa-regular fa-pen-to-square"></i>
+                                </button>
+                            </div>
+                        `;
+                    } else {
+                        slotsHtml += `
+                            <div class="member-slot" style="opacity:0.6;">
+                                <span class="slot-number">#${i+1}</span>
+                                <span class="name">— empty —</span>
+                                <span class="points">—</span>
+                                <button class="edit-slot" onclick="editTeam('${team.id}')" title="Add">
+                                    <i class="fa-regular fa-plus"></i>
+                                </button>
+                            </div>
+                        `;
+                    }
+                }
+                
                 return `
                     <div class="team-card">
                         <div class="team-header">
                             <span class="team-name">${escapeHtml(team.name)}</span>
                             <div class="team-actions">
                                 <button onclick="editTeam('${team.id}')" title="Edit team">
-                                    <i class="fas fa-edit"></i>
+                                    <i class="fa-regular fa-pen-to-square"></i>
                                 </button>
                                 <button onclick="deleteTeam('${team.id}')" title="Delete team">
-                                    <i class="fas fa-trash"></i>
+                                    <i class="fa-regular fa-trash-can"></i>
                                 </button>
                             </div>
                         </div>
                         <div class="team-members">
-                            ${renderMemberSlots(members)}
+                            ${slotsHtml}
                         </div>
                     </div>
                 `;
             }).join('');
         }
 
-        function renderMemberSlots(members) {
-            const slots = [];
-            for (let i = 0; i < 3; i++) {
-                if (i < members.length) {
-                    slots.push(`
-                        <div class="member-row">
-                            <span class="member-number">#${i + 1}</span>
-                            <span class="member-name">${escapeHtml(members[i].name)}</span>
-                            <span class="member-points">${members[i].points.toFixed(1)}</span>
-                            <button class="member-edit" onclick="editTeam('${members[i].teamId}')" title="Edit">
-                                <i class="fas fa-pen"></i>
-                            </button>
-                        </div>
-                    `);
-                } else {
-                    slots.push(`
-                        <div class="member-row" style="opacity: 0.6;">
-                            <span class="member-number">#${i + 1}</span>
-                            <span class="member-name">— Empty —</span>
-                            <span class="member-points">—</span>
-                            <button class="member-edit" onclick="editTeam('${members[i]?.teamId}')" title="Add">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
-                    `);
-                }
-            }
-            return slots.join('');
-        }
-
-        // Render Top 3 Grid
         function renderTop3() {
             const sorted = [...speakers].sort((a, b) => b.points - a.points).slice(0, 3);
             const grid = document.getElementById('top3Grid');
             
             if (sorted.length === 0) {
-                grid.innerHTML = '<p style="color: #94a3b8;">No speakers yet</p>';
+                grid.innerHTML = '<p style="color:#94a3b8;">No speakers</p>';
                 return;
             }
             
             grid.innerHTML = sorted.map((s, i) => `
-                <div class="top-item">
-                    <span class="top-rank">#${i + 1}</span>
-                    <div class="top-info">
-                        <div class="top-name">${escapeHtml(s.name)}</div>
-                        <div class="top-score">${s.points.toFixed(1)} points</div>
-                    </div>
+                <div class="podium-item ${i === 0 ? 'first' : ''}">
+                    <div class="podium-rank">#${i+1}</div>
+                    <div class="podium-name">${escapeHtml(s.name)}</div>
+                    <div class="podium-points">${s.points.toFixed(1)} pts</div>
                 </div>
             `).join('');
         }
 
-        // Render Top 10 Grid
         function renderTop10() {
             const sorted = [...speakers].sort((a, b) => b.points - a.points).slice(0, 10);
             const grid = document.getElementById('top10Grid');
             
             if (sorted.length === 0) {
-                grid.innerHTML = '<p style="color: #94a3b8;">No speakers yet</p>';
+                grid.innerHTML = '<p style="color:#94a3b8;">No speakers</p>';
                 return;
             }
             
             grid.innerHTML = sorted.map((s, i) => `
-                <div class="top-item">
-                    <span class="top-rank">#${i + 1}</span>
-                    <div class="top-info">
-                        <div class="top-name">${escapeHtml(s.name)}</div>
-                        <div class="top-score">${s.points.toFixed(1)} pts</div>
-                    </div>
+                <div class="top10-item">
+                    <span class="top10-rank">#${i+1}</span>
+                    <span class="top10-name">${escapeHtml(s.name)}</span>
+                    <span class="top10-points">${s.points.toFixed(1)}</span>
                 </div>
             `).join('');
         }
 
-        // Render Full Speakers Table
-        function renderSpeakersTable() {
+        function renderFullTable() {
             const sorted = [...speakers].sort((a, b) => b.points - a.points);
-            const container = document.getElementById('speakersTable');
+            const container = document.getElementById('tableContainer');
             
             if (sorted.length === 0) {
-                container.innerHTML = '<div class="empty-state"><i class="fas fa-microphone"></i> No speakers yet. Add one above!</div>';
+                container.innerHTML = '<div style="text-align:center; padding:40px; color:#94a3b8;"><i class="fa-regular fa-face-smile"></i> No speakers yet. Add one above!</div>';
                 return;
             }
             
@@ -1190,16 +1151,16 @@
                     <tbody>
                         ${sorted.map((s, i) => `
                             <tr>
-                                <td class="rank-cell">#${i + 1}</td>
+                                <td class="rank-cell">#${i+1}</td>
                                 <td>${escapeHtml(s.name)}</td>
                                 <td>${s.points.toFixed(1)}</td>
                                 <td>
-                                    <div class="action-buttons">
-                                        <button class="btn-edit" onclick="editSpeaker('${s.id}')" title="Edit">
-                                            <i class="fas fa-edit"></i>
+                                    <div class="actions">
+                                        <button class="edit-btn" onclick="editSpeaker('${s.id}')" title="Edit">
+                                            <i class="fa-regular fa-pen-to-square"></i>
                                         </button>
-                                        <button class="btn-delete" onclick="deleteSpeaker('${s.id}')" title="Delete">
-                                            <i class="fas fa-trash"></i>
+                                        <button class="delete-btn" onclick="deleteSpeaker('${s.id}')" title="Delete">
+                                            <i class="fa-regular fa-trash-can"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -1210,19 +1171,18 @@
             `;
         }
 
-        // Render Rounds
         function renderRounds() {
             const rounds = [
                 { key: 'prelim1', name: 'Preliminary 1' },
                 { key: 'prelim2', name: 'Preliminary 2' },
                 { key: 'prelim3', name: 'Preliminary 3' },
-                { key: 'octa', name: 'Octa-final' },
-                { key: 'quarter', name: 'Quarter-final' },
-                { key: 'semi', name: 'Semi-final' },
+                { key: 'octa', name: 'Octa‑final' },
+                { key: 'quarter', name: 'Quarter‑final' },
+                { key: 'semi', name: 'Semi‑final' },
                 { key: 'final', name: 'Final' }
             ];
             
-            const container = document.getElementById('roundsContainer');
+            const container = document.getElementById('bracketContainer');
             
             container.innerHTML = rounds.map(round => {
                 const assignedTeams = (roundAssignments[round.key] || [])
@@ -1233,19 +1193,19 @@
                     <div class="round-card">
                         <div class="round-header">
                             <h4>${round.name}</h4>
-                            <button class="btn-add-team-round" onclick="addTeamToRound('${round.key}')" title="Add team">
-                                <i class="fas fa-plus-circle"></i>
+                            <button onclick="addTeamToRound('${round.key}')" title="Add team">
+                                <i class="fa-solid fa-plus-circle"></i>
                             </button>
                         </div>
-                        <ul class="team-list">
+                        <ul class="round-teams">
                             ${assignedTeams.length === 0 ? 
-                                '<li style="color: #94a3b8; text-align: center;">No teams assigned</li>' : 
+                                '<li style="color:#94a3b8; text-align:center;">— empty —</li>' : 
                                 assignedTeams.map(team => `
                                     <li>
-                                        <div class="team-list-item">
-                                            <span class="team-list-name">${escapeHtml(team.name)}</span>
-                                            <button class="btn-remove-team" onclick="removeTeamFromRound('${round.key}', '${team.id}')" title="Remove">
-                                                <i class="fas fa-times"></i>
+                                        <div class="team-summary">
+                                            <span class="team-name">${escapeHtml(team.name)}</span>
+                                            <button onclick="removeTeamFromRound('${round.key}', '${team.id}')" title="Remove">
+                                                <i class="fa-regular fa-trash-can"></i>
                                             </button>
                                         </div>
                                         <div class="team-members-preview">
@@ -1262,19 +1222,22 @@
             }).join('');
         }
 
-        // Helper: Escape HTML
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
+        function renderAll() {
+            renderSidebarStats();
+            renderMiniPodium();
+            renderTeams();
+            renderTop3();
+            renderTop10();
+            renderFullTable();
+            renderRounds();
         }
 
-        // Speaker Functions
+        // Speaker functions
         window.editSpeaker = function(id) {
             const speaker = speakers.find(s => s.id === id);
             if (speaker) {
-                document.getElementById('speakerNameInput').value = speaker.name;
-                document.getElementById('speakerPointsInput').value = speaker.points;
+                document.getElementById('speakerName').value = speaker.name;
+                document.getElementById('speakerPoints').value = speaker.points;
             }
         };
 
@@ -1286,7 +1249,9 @@
             }
         };
 
-        // Team Functions
+        // Team functions
+        let currentTeamId = null;
+
         window.editTeam = function(id) {
             const team = teams.find(t => t.id === id);
             if (team) {
@@ -1319,7 +1284,7 @@
             }
         };
 
-        // Round Functions
+        // Round functions
         window.addTeamToRound = async function(roundKey) {
             if (teams.length === 0) {
                 showAlert('No teams available. Create teams first.');
@@ -1352,21 +1317,7 @@
             }
         };
 
-        // Render All
-        function renderAll() {
-            renderStats();
-            renderMiniTop3();
-            renderTeams();
-            renderTop3();
-            renderTop10();
-            renderSpeakersTable();
-            renderRounds();
-        }
-
-        // Team Modal
-        const teamModal = document.getElementById('teamModal');
-        let currentTeamId = null;
-
+        // Event Listeners
         document.getElementById('addTeamBtn').addEventListener('click', () => {
             currentTeamId = null;
             document.getElementById('teamModalTitle').textContent = 'Add New Team';
@@ -1377,14 +1328,16 @@
             document.getElementById('member2Points').value = 0;
             document.getElementById('member3Name').value = '';
             document.getElementById('member3Points').value = 0;
-            teamModal.classList.add('active');
+            document.getElementById('teamModal').classList.add('active');
         });
 
-        document.getElementById('cancelTeamBtn').addEventListener('click', () => {
-            teamModal.classList.remove('active');
+        document.getElementById('teamModalCancel').addEventListener('click', () => {
+            document.getElementById('teamModal').classList.remove('active');
         });
 
-        document.getElementById('saveTeamBtn').addEventListener('click', () => {
+        document.getElementById('teamForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
             const teamName = document.getElementById('teamNameInput').value.trim();
             if (!teamName) {
                 showAlert('Team name is required');
@@ -1396,7 +1349,7 @@
             if (document.getElementById('member1Name').value.trim()) {
                 const points = parseFloat(document.getElementById('member1Points').value) || 0;
                 if (points < 0 || points > 90) {
-                    showAlert('Points for member 1 must be between 0 and 90');
+                    showAlert('Points for member 1 must be 0-90');
                     return;
                 }
                 members.push({
@@ -1408,7 +1361,7 @@
             if (document.getElementById('member2Name').value.trim()) {
                 const points = parseFloat(document.getElementById('member2Points').value) || 0;
                 if (points < 0 || points > 90) {
-                    showAlert('Points for member 2 must be between 0 and 90');
+                    showAlert('Points for member 2 must be 0-90');
                     return;
                 }
                 members.push({
@@ -1420,7 +1373,7 @@
             if (document.getElementById('member3Name').value.trim()) {
                 const points = parseFloat(document.getElementById('member3Points').value) || 0;
                 if (points < 0 || points > 90) {
-                    showAlert('Points for member 3 must be between 0 and 90');
+                    showAlert('Points for member 3 must be 0-90');
                     return;
                 }
                 members.push({
@@ -1447,13 +1400,12 @@
             
             saveTeams();
             renderAll();
-            teamModal.classList.remove('active');
+            document.getElementById('teamModal').classList.remove('active');
         });
 
-        // Add/Update Speaker
-        document.getElementById('addSpeakerBtn').addEventListener('click', () => {
-            const name = document.getElementById('speakerNameInput').value.trim();
-            const points = parseFloat(document.getElementById('speakerPointsInput').value);
+        document.getElementById('addBtn').addEventListener('click', () => {
+            const name = document.getElementById('speakerName').value.trim();
+            const points = parseFloat(document.getElementById('speakerPoints').value);
             
             if (!name) {
                 showAlert('Please enter a speaker name');
@@ -1480,13 +1432,11 @@
             saveSpeakers();
             renderAll();
             
-            // Clear form
-            document.getElementById('speakerNameInput').value = '';
-            document.getElementById('speakerPointsInput').value = 0;
+            document.getElementById('speakerName').value = '';
+            document.getElementById('speakerPoints').value = 0;
         });
 
-        // Reset All
-        document.getElementById('resetAllBtn').addEventListener('click', async () => {
+        document.getElementById('resetBtn').addEventListener('click', async () => {
             if (await showConfirm('Delete all speakers?')) {
                 speakers = [];
                 saveSpeakers();
@@ -1494,25 +1444,48 @@
             }
         });
 
-        // Tab Switching
-        const speakersTab = document.getElementById('tabSpeakers');
-        const roundsTab = document.getElementById('tabRounds');
-        const speakersView = document.getElementById('speakersView');
-        const roundsView = document.getElementById('roundsView');
+        // Tab switching
+        const tabRankings = document.getElementById('tabRankings');
+        const tabProgress = document.getElementById('tabProgress');
+        const rankingsView = document.getElementById('rankingsView');
+        const progressView = document.getElementById('progressView');
 
-        speakersTab.addEventListener('click', () => {
-            speakersTab.classList.add('active');
-            roundsTab.classList.remove('active');
-            speakersView.style.display = 'block';
-            roundsView.style.display = 'none';
+        tabRankings.addEventListener('click', () => {
+            tabRankings.classList.add('active');
+            tabProgress.classList.remove('active');
+            rankingsView.style.display = 'block';
+            progressView.style.display = 'none';
         });
 
-        roundsTab.addEventListener('click', () => {
-            roundsTab.classList.add('active');
-            speakersTab.classList.remove('active');
-            speakersView.style.display = 'none';
-            roundsView.style.display = 'block';
+        tabProgress.addEventListener('click', () => {
+            tabProgress.classList.add('active');
+            tabRankings.classList.remove('active');
+            rankingsView.style.display = 'none';
+            progressView.style.display = 'block';
             renderRounds();
+        });
+
+        // Sidebar collapse
+        const sidebar = document.getElementById('sidebar');
+        const toggleIcon = document.getElementById('toggleIcon');
+        
+        document.getElementById('toggleSidebar').addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            if (sidebar.classList.contains('collapsed')) {
+                toggleIcon.classList.remove('fa-chevron-left');
+                toggleIcon.classList.add('fa-chevron-right');
+            } else {
+                toggleIcon.classList.remove('fa-chevron-right');
+                toggleIcon.classList.add('fa-chevron-left');
+            }
+        });
+
+        // Enter key for speaker input
+        document.getElementById('speakerName').addEventListener('keypress', e => {
+            if (e.key === 'Enter') document.getElementById('addBtn').click();
+        });
+        document.getElementById('speakerPoints').addEventListener('keypress', e => {
+            if (e.key === 'Enter') document.getElementById('addBtn').click();
         });
 
         // Initial render
