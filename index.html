@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IDBATE · fully linked debate manager</title>
+    <title>IDBATE · smart speaker sorting</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
@@ -13,7 +13,6 @@
         body { background: #f4f7fb; min-height: 100vh; display: flex; justify-content: center; padding: 1.5rem; }
         .app-container { display: flex; max-width: 1400px; width: 100%; gap: 1.5rem; transition: all 0.3s ease; }
 
-        /* SIDEBAR (original dark) */
         .sidebar {
             flex: 0 0 320px;
             background: #1e1e2e;
@@ -52,7 +51,6 @@
         .member-slot .points { background: #f57c00; color: #1e1e2e; font-weight: 700; padding: 0.2rem 0.8rem; border-radius: 40px; font-size: 0.85rem; min-width: 4rem; text-align: center; }
         .member-slot .edit-slot { background: none; border: none; color: #f57c00; font-size: 1rem; cursor: pointer; }
 
-        /* MAIN CONTENT */
         .main-content { flex: 1; background: white; border-radius: 32px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); padding: 2rem; }
         .main-header h1 { font-size: 2.5rem; font-weight: 700; color: #1e1e2e; display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
         .main-header h1 i { color: #f57c00; font-size: 2.5rem; }
@@ -86,7 +84,6 @@
         .edit-btn { color: #f57c00; }
         .delete-btn { color: #b91c1c; }
 
-        /* ROUNDS */
         .round-group { background: #f9fcff; border-radius: 32px; padding: 1.5rem; border: 2px solid #e2e8f0; margin-bottom: 2rem; }
         .round-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
         .round-card { background: #f8fafc; border-radius: 24px; padding: 1.2rem; border: 2px solid #e2e8f0; }
@@ -98,7 +95,6 @@
         .team-summary { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem; }
         .member-tag { background: #f1f5f9; padding: 0.2rem 0.6rem; border-radius: 12px; color: #1e293b; }
 
-        /* CLASS LEVEL (original yellow tone) */
         .class-level-view { }
         .class-level-intro { background: linear-gradient(135deg, #fff7ed 0%, #fff3e0 100%); border-radius: 24px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid #f57c00; display: flex; align-items: center; gap: 1rem; }
         .class-tabs { display: flex; gap: 0.75rem; margin-bottom: 2rem; flex-wrap: wrap; }
@@ -130,7 +126,6 @@
         .leaderboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
         .reset-btn { background: #fff0f0; color: #b91c1c; border: 1px solid #fecaca; border-radius: 40px; padding: 0.5rem 1.2rem; cursor: pointer; font-weight: 600; }
 
-        /* MODALS */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(3px); display: none; justify-content: center; align-items: center; z-index: 10000; }
         .modal-overlay.active { display: flex; }
         .modal-box { background: #1e1e2e; border-radius: 32px; padding: 2rem; max-width: 500px; width: 90%; border: 2px solid #f57c00; color: #e0e0e0; max-height: 80vh; overflow-y: auto; }
@@ -161,7 +156,7 @@
     </aside>
 
     <main class="main-content" id="main-content">
-        <div class="main-header"><h1><i class="fas fa-microphone-alt"></i> IDBATE COMPETITION</h1><div class="subtitle">Fully linked: speakers ↔ teams ↔ class levels · max 30 pts per speaker</div></div>
+        <div class="main-header"><h1><i class="fas fa-microphone-alt"></i> IDBATE COMPETITION</h1><div class="subtitle">Fully linked · speakers sorted by points then name</div></div>
         <div class="tab-bar">
             <button class="tab active" id="tabRankings">🏆 Speakers</button>
             <button class="tab" id="tabProgress">📊 Round Assignments</button>
@@ -174,8 +169,9 @@
                 <div class="input-row">
                     <div class="input-field"><label>Speaker name</label><input type="text" id="speakerName" placeholder="e.g., Jane Doe"></div>
                     <div class="input-field points-field"><label>Points (0-30)</label><input type="number" id="speakerPoints" min="0" max="30" step="0.1" value="0"></div>
-                    <button class="add-btn" id="addBtn"><i class="fas fa-plus"></i> Add / Update</button>
+                    <button class="add-btn" id="addBtn"><i class="fas fa-plus"></i> Add Speaker</button>
                 </div>
+                <p class="text-xs text-gray-500 mt-2"><i class="fas fa-info-circle"></i> Use edit pen in table to modify points or name</p>
             </div>
             <div class="top3-section"><div class="top3-grid" id="top3Grid"></div></div>
             <div class="top10-section"><div class="top10-grid" id="top10Grid"></div></div>
@@ -191,7 +187,7 @@
 
         <!-- CLASS LEVEL PANEL -->
         <div class="class-level-view" id="classLevelView" hidden>
-            <div class="class-level-intro"><i class="fas fa-graduation-cap"></i><p>Every speaker automatically appears in Senior 1. Points stay synchronised everywhere.</p></div>
+            <div class="class-level-intro"><i class="fas fa-graduation-cap"></i><p>All speakers automatically appear in Senior 1. Sorted by points then name.</p></div>
             <div class="class-summary-section" style="margin-bottom:2rem;"><h4><i class="fas fa-table-cells"></i> All Classes Overview</h4><div class="class-summary-grid" id="classSummaryGrid"></div></div>
             <div class="class-tabs" role="tablist">
                 <button class="class-tab active" data-class="S1">Senior 1 <span class="class-badge" id="badgeS1">0</span></button>
@@ -213,6 +209,7 @@
 <div class="modal-overlay" id="confirmModal"><div class="modal-box"><h3>Confirm</h3><p id="confirmMessage"></p><div class="modal-actions"><button class="modal-btn cancel" id="confirmNoBtn">Cancel</button><button class="modal-btn confirm" id="confirmYesBtn">Yes</button></div></div></div>
 <div class="modal-overlay" id="selectTeamModal"><div class="modal-box"><h3>Select Team</h3><select id="teamSelect" style="width:100%;margin:15px 0;"></select><div class="modal-actions"><button class="modal-btn cancel" id="selectTeamCancelBtn">Cancel</button><button class="modal-btn confirm" id="selectTeamConfirmBtn">Select</button></div></div></div>
 <div class="modal-overlay" id="classSpeakerModal"><div class="modal-box"><h3 id="classSpeakerModalTitle">Add Speaker to Class</h3><form id="classSpeakerForm"><label>Speaker Name</label><input type="text" id="classSpeakerName" required><label>Points (0–30)</label><input type="number" id="classSpeakerPoints" min="0" max="30" step="0.1" value="0"><input type="hidden" id="classSpeakerClass"><input type="hidden" id="classSpeakerEditId"><div class="modal-actions"><button type="button" class="modal-btn cancel" id="classSpeakerCancel">Cancel</button><button type="submit" class="modal-btn confirm">Save</button></div></form></div></div>
+<div class="modal-overlay" id="editSpeakerModal"><div class="modal-box"><h3><i class="fas fa-edit"></i> Edit Speaker</h3><form id="editSpeakerForm"><label>Speaker Name</label><input type="text" id="editSpeakerName" required><label>Points (0-30)</label><input type="number" id="editSpeakerPoints" min="0" max="30" step="0.1" value="0"><input type="hidden" id="editSpeakerId"><div class="modal-actions"><button type="button" id="editSpeakerCancel" class="modal-btn cancel">Cancel</button><button type="submit" class="modal-btn confirm">Save Changes</button></div></form></div></div>
 
 <script>
 // ======================== DATA ========================
@@ -223,7 +220,6 @@ let classMembers = { S1:[], S2:[], S4:[], S5:[] };
 const CLASS_LABELS = { S1:'Senior 1', S2:'Senior 2', S4:'Senior 4', S5:'Senior 5' };
 const CLASS_KEYS = ['S1','S2','S4','S5'];
 
-// Persistence
 function saveAll() {
     localStorage.setItem('idbate_speakers', JSON.stringify(speakers));
     localStorage.setItem('idbate_teams', JSON.stringify(teams));
@@ -241,9 +237,17 @@ function loadData() {
 }
 loadData();
 
-// ======================== GLOBAL SYNC (bidirectional) ========================
+// Helper: sort speakers by points DESC then name ASC
+function sortSpeakers(list) {
+    return [...list].sort((a, b) => {
+        if (a.points !== b.points) return b.points - a.points;
+        return a.name.localeCompare(b.name);
+    });
+}
+
+// GLOBAL SYNC (bidirectional)
 function fullSync() {
-    // 1) Ensure every team member exists as a speaker (same name, points)
+    // Team members -> speakers
     teams.forEach(team => {
         team.members.forEach(mem => {
             let existing = speakers.find(s => s.name === mem.name);
@@ -254,8 +258,7 @@ function fullSync() {
             }
         });
     });
-
-    // 2) Ensure every speaker exists in classMembers (Senior 1 by default) with correct points
+    // Speakers -> classMembers (Senior 1 by default)
     speakers.forEach(sp => {
         let found = false;
         for (let cls of CLASS_KEYS) {
@@ -269,30 +272,22 @@ function fullSync() {
             classMembers['S1'].push({ id: sp.id, name: sp.name, points: sp.points });
         }
     });
-
-    // 3) Update team members' points from speakers (in case speaker points changed)
+    // Update team members' points from speakers
     teams.forEach(team => {
         team.members.forEach(mem => {
             let sp = speakers.find(s => s.name === mem.name);
             if (sp) mem.points = sp.points;
         });
     });
-
-    // 4) Remove orphan class members that no longer exist as speakers (optional, keep for manual adds)
-    for (let cls of CLASS_KEYS) {
-        classMembers[cls] = classMembers[cls].filter(m => speakers.some(s => s.name === m.name) || true); // keep manually added
-    }
-
     saveAll();
 }
 
-// Call after any mutation
 function syncAndRender() {
     fullSync();
     renderAll();
 }
 
-// ======================== RENDER FUNCTIONS ========================
+// RENDER FUNCTIONS (all use sorted speakers)
 function renderAll() {
     renderSidebarStats();
     renderMiniPodium();
@@ -309,7 +304,7 @@ function renderSidebarStats() {
     document.getElementById('sidebarStats').innerHTML = `<div class="stat-row"><span class="stat-label">Speakers</span><span class="stat-value">${total}</span></div><div class="stat-row"><span class="stat-label">Total pts</span><span class="stat-value">${totalPts.toFixed(1)}</span></div><div class="stat-row"><span class="stat-label">Average</span><span class="stat-value">${avg}</span></div><div class="stat-row"><span class="stat-label">Highest</span><span class="stat-value">${max.toFixed?max.toFixed(1):max}</span></div>`;
 }
 function renderMiniPodium() {
-    const sorted = [...speakers].sort((a,b)=>b.points-a.points).slice(0,3);
+    const sorted = sortSpeakers(speakers).slice(0,3);
     const container = document.getElementById('miniPodium');
     if (!sorted.length) { container.innerHTML = '<h4><i class="fas fa-crown"></i> Top 3</h4><p style="color:#aaa;">No speakers</p>'; return; }
     container.innerHTML = '<h4><i class="fas fa-crown"></i> Top 3</h4>' + sorted.map((s,i)=>`<div class="podium-mini-item"><span class="rank">#${i+1}</span><span class="name">${escapeHtml(s.name)}</span><span class="points">${s.points.toFixed(1)}</span></div>`).join('');
@@ -330,22 +325,22 @@ function renderTeams() {
     }).join('');
 }
 function renderTop3() {
-    const sorted = [...speakers].sort((a,b)=>b.points-a.points).slice(0,3);
+    const sorted = sortSpeakers(speakers).slice(0,3);
     const grid = document.getElementById('top3Grid');
     if (!sorted.length) { grid.innerHTML = '<p>No speakers</p>'; return; }
     grid.innerHTML = sorted.map((s,i)=>`<div class="podium-item ${i===0?'first':''}"><div class="podium-rank">#${i+1}</div><div class="podium-name">${escapeHtml(s.name)}</div><div>${s.points.toFixed(1)} pts</div></div>`).join('');
 }
 function renderTop10() {
-    const sorted = [...speakers].sort((a,b)=>b.points-a.points).slice(0,10);
+    const sorted = sortSpeakers(speakers).slice(0,10);
     const grid = document.getElementById('top10Grid');
     if (!sorted.length) { grid.innerHTML = '<p>No speakers</p>'; return; }
     grid.innerHTML = sorted.map((s,i)=>`<div class="top10-item"><span class="top10-rank">#${i+1}</span><span class="top10-name">${escapeHtml(s.name)}</span><span class="top10-points">${s.points.toFixed(1)}</span></div>`).join('');
 }
 function renderFullTable() {
-    const sorted = [...speakers].sort((a,b)=>b.points-a.points);
+    const sorted = sortSpeakers(speakers);
     const container = document.getElementById('tableContainer');
     if (!sorted.length) { container.innerHTML = '<div style="text-align:center;padding:40px;color:#94a3b8;"><i class="fas fa-smile-wink"></i> No speakers yet.</div>'; return; }
-    container.innerHTML = `<table><thead><tr><th>Rank</th><th>Speaker</th><th>Points</th><th>Actions</th></tr></thead><tbody>${sorted.map((s,i)=>`<tr><td class="rank-cell">#${i+1}</td><td>${escapeHtml(s.name)}</td><td>${s.points.toFixed(1)}</td><td><button class="edit-btn" onclick="editSpeaker('${s.id}')"><i class="fas fa-edit"></i></button><button class="delete-btn" onclick="deleteSpeaker('${s.id}')"><i class="fas fa-trash"></i></button></td></tr>`).join('')}</tbody></table>`;
+    container.innerHTML = `<table><thead><tr><th>Rank</th><th>Speaker</th><th>Points</th><th>Actions</th></tr></thead><tbody>${sorted.map((s,i)=>`<tr><td class="rank-cell">#${i+1}</td><td>${escapeHtml(s.name)}</td><td>${s.points.toFixed(1)}</td><td><button class="edit-btn" onclick="openEditSpeakerModal('${s.id}')"><i class="fas fa-edit"></i></button><button class="delete-btn" onclick="deleteSpeaker('${s.id}')"><i class="fas fa-trash"></i></button></td></tr>`).join('')}</tbody></table>`;
 }
 function renderRounds() {
     const prelimRounds = [{ key:'prelim1', sub:'Round one' },{ key:'prelim2', sub:'Round two' },{ key:'prelim3', sub:'Round three' }];
@@ -357,11 +352,14 @@ function renderRounds() {
     document.getElementById('bracketContainer').innerHTML = `<section class="round-group"><h3 class="group-title"><i class="fas fa-calendar-alt"></i> Preliminary round</h3><div class="round-grid">${prelimRounds.map(p=>buildRoundCard(p.key, p.sub)).join('')}</div></section><section class="round-group"><h3 class="group-title"><i class="fas fa-trophy"></i> Knockout rounds</h3><div class="round-grid">${knockout.map(r=>buildRoundCard(r.key, r.name)).join('')}</div></section>`;
 }
 
-// CLASS LEVEL (fully synced)
+// CLASS LEVEL (sorted by points within each class)
 function renderClassPanel(classKey) {
     const panel = document.getElementById(`cp${classKey}`);
     const members = classMembers[classKey] || [];
-    const sorted = [...members].sort((a,b)=>b.points-a.points);
+    const sorted = [...members].sort((a,b) => {
+        if (a.points !== b.points) return b.points - a.points;
+        return a.name.localeCompare(b.name);
+    });
     const label = CLASS_LABELS[classKey];
     const total = members.length;
     const totalPts = members.reduce((s,m)=>s+m.points,0);
@@ -388,11 +386,41 @@ function switchToClass(classKey) {
     document.querySelectorAll('.class-panel').forEach(panel => panel.classList.toggle('active', panel.dataset.class === classKey));
 }
 
-// ======================== CRUD OPERATIONS (with sync) ========================
-window.editSpeaker = function(id) {
-    const s = speakers.find(s=>s.id===id);
-    if(s) { document.getElementById('speakerName').value=s.name; document.getElementById('speakerPoints').value=s.points; }
-};
+// ======================== CRUD with modal edit ========================
+function openEditSpeakerModal(id) {
+    const speaker = speakers.find(s => s.id === id);
+    if (!speaker) return;
+    document.getElementById('editSpeakerId').value = speaker.id;
+    document.getElementById('editSpeakerName').value = speaker.name;
+    document.getElementById('editSpeakerPoints').value = speaker.points;
+    document.getElementById('editSpeakerModal').classList.add('active');
+}
+
+document.getElementById('editSpeakerForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const id = document.getElementById('editSpeakerId').value;
+    const newName = document.getElementById('editSpeakerName').value.trim();
+    let newPoints = parseFloat(document.getElementById('editSpeakerPoints').value);
+    if (!newName) { showAlert('Speaker name required'); return; }
+    if (isNaN(newPoints) || newPoints < 0 || newPoints > 30) { showAlert('Points must be 0-30'); return; }
+    const speaker = speakers.find(s => s.id === id);
+    if (speaker) {
+        speaker.name = newName;
+        speaker.points = newPoints;
+        // Also update in teams and classMembers
+        teams.forEach(team => {
+            team.members.forEach(m => { if (m.id === id) { m.name = newName; m.points = newPoints; } });
+        });
+        for (let cls of CLASS_KEYS) {
+            const idx = classMembers[cls].findIndex(m => m.id === id);
+            if (idx !== -1) { classMembers[cls][idx].name = newName; classMembers[cls][idx].points = newPoints; }
+        }
+        syncAndRender();
+    }
+    document.getElementById('editSpeakerModal').classList.remove('active');
+});
+document.getElementById('editSpeakerCancel').addEventListener('click', () => document.getElementById('editSpeakerModal').classList.remove('active'));
+
 window.deleteSpeaker = async function(id) {
     if (await showConfirm('Delete this speaker? It will be removed from all teams and classes.')) {
         speakers = speakers.filter(s=>s.id!==id);
@@ -441,7 +469,6 @@ window.removeTeamFromRound = async function(roundKey, teamId) {
     }
 };
 
-// Class level manual add/update (syncs to speakers)
 window.addClassMember = function(classKey) {
     const name = document.getElementById(`clName_${classKey}`).value.trim();
     let pts = parseFloat(document.getElementById(`clPts_${classKey}`).value);
@@ -460,22 +487,15 @@ window.addClassMember = function(classKey) {
 window.editClassMember = function(classKey, id) {
     const m = classMembers[classKey]?.find(m => m.id === id);
     if (!m) return;
-    document.getElementById('classSpeakerName').value = m.name;
-    document.getElementById('classSpeakerPoints').value = m.points;
-    document.getElementById('classSpeakerClass').value = classKey;
-    document.getElementById('classSpeakerEditId').value = id;
-    document.getElementById('classSpeakerModalTitle').textContent = `Edit Speaker — ${CLASS_LABELS[classKey]}`;
-    document.getElementById('classSpeakerModal').classList.add('active');
+    openEditSpeakerModal(m.id);
 };
 window.deleteClassMember = async function(classKey, id) {
     if (await showConfirm('Remove this speaker from the class?')) {
         classMembers[classKey] = classMembers[classKey].filter(m => m.id !== id);
-        // Also remove from speakers? Optional: keep speaker.
         syncAndRender();
     }
 };
 
-// Team form submit (with sync)
 document.getElementById('teamForm').addEventListener('submit', e => {
     e.preventDefault();
     const teamName = document.getElementById('teamNameInput').value.trim();
@@ -499,15 +519,17 @@ document.getElementById('teamForm').addEventListener('submit', e => {
     document.getElementById('teamModal').classList.remove('active');
 });
 
-// Add/Update speaker (main)
 document.getElementById('addBtn').addEventListener('click', () => {
     let name = document.getElementById('speakerName').value.trim();
     let pts = parseFloat(document.getElementById('speakerPoints').value);
     if (!name) { showAlert('Enter speaker name'); return; }
     if (isNaN(pts) || pts<0 || pts>30) { showAlert('Points 0-30'); return; }
     let existing = speakers.find(s => s.name.toLowerCase() === name.toLowerCase());
-    if (existing) existing.points = pts;
-    else speakers.push({ id: Date.now()+'-'+Math.random(), name, points: pts });
+    if (existing) {
+        showAlert('Speaker already exists! Use edit pencil to modify.');
+        return;
+    }
+    speakers.push({ id: Date.now()+'-'+Math.random(), name, points: pts });
     syncAndRender();
     document.getElementById('speakerName').value = '';
     document.getElementById('speakerPoints').value = 0;
@@ -532,7 +554,6 @@ document.getElementById('addTeamBtn').addEventListener('click', () => {
 });
 document.getElementById('teamModalCancel').addEventListener('click', () => document.getElementById('teamModal').classList.remove('active'));
 
-// Class modal
 document.getElementById('classSpeakerCancel').addEventListener('click', () => document.getElementById('classSpeakerModal').classList.remove('active'));
 document.getElementById('classSpeakerForm').addEventListener('submit', e => {
     e.preventDefault();
@@ -569,12 +590,10 @@ tabP.addEventListener('click', () => activateMainTab(tabP, viewP));
 tabC.addEventListener('click', () => activateMainTab(tabC, viewC));
 document.querySelectorAll('.class-tab').forEach(btn => btn.addEventListener('click', () => switchToClass(btn.dataset.class)));
 
-// Sidebar toggle
 document.getElementById('toggleSidebar').addEventListener('click', () => {
     document.getElementById('sidebar').classList.toggle('collapsed');
 });
 
-// Helper functions
 function escapeHtml(str) { return String(str).replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
 function showAlert(msg) { document.getElementById('alertMessage').innerText = msg; document.getElementById('alertModal').classList.add('active'); }
 function hideAlert() { document.getElementById('alertModal').classList.remove('active'); }
@@ -610,7 +629,6 @@ function showTeamSelect(options, message, title) { return new Promise(resolve =>
 }); }
 document.getElementById('alertOkBtn').addEventListener('click', hideAlert);
 
-// Initial render
 syncAndRender();
 viewP.hidden = true; viewC.hidden = true; viewR.hidden = false;
 </script>
