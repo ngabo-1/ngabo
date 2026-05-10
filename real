@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>IDBATE · greyish yellow debate manager</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Iconify -->
+  <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+  <style>
+    .view-transition { transition: opacity 0.2s ease; }
+    .card-hover { transition: all 0.2s; }
+    .card-hover:hover { transform: translateY(-2px); box-shadow: 0 12px 24px -12px rgba(0,0,0,0.12); }
+    .scrollbar-thin::-webkit-scrollbar { width: 6px; }
+    .scrollbar-thin::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 8px; }
+    .scrollbar-thin::-webkit-scrollbar-thumb { background: #b68b40; border-radius: 8px; }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 font-sans antialiased">
+
+  <div class="max-w-[1600px] mx-auto px-4 py-6 md:py-8">
+    <div class="flex flex-col lg:flex-row gap-6">
+      
+      <!-- LEFT TABS (vertical) - greyish yellow theme -->
+      <aside class="lg:w-80 w-full bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-200/80 p-5 h-fit lg:sticky lg:top-6">
+        <div class="flex items-center gap-3 mb-8 border-b border-gray-200 pb-4">
+          <div class="bg-yellow-100 p-2 rounded-xl">
+            <iconify-icon icon="mdi:microphone-variant" class="text-2xl text-yellow-700"></iconify-icon>
+          </div>
+          <div>
+            <h1 class="text-xl font-bold text-gray-800">IDBATE</h1>
+            <p class="text-xs text-gray-500">accessible debate manager</p>
+          </div>
+        </div>
+        <nav class="space-y-2">
+          <button data-view="speakers" class="view-nav w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 bg-yellow-100 text-yellow-800 shadow-sm">
+            <iconify-icon icon="mdi:account-group" class="text-xl"></iconify-icon>
+            <span class="font-medium">Speakers & Teams</span>
+          </button>
+          <button data-view="rounds" class="view-nav w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-gray-600 hover:bg-gray-100">
+            <iconify-icon icon="mdi:format-list-bulleted" class="text-xl"></iconify-icon>
+            <span class="font-medium">Round Assignments</span>
+          </button>
+          <button data-view="classes" class="view-nav w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-gray-600 hover:bg-gray-100">
+            <iconify-icon icon="mdi:school-outline" class="text-xl"></iconify-icon>
+            <span class="font-medium">Class Level</span>
+          </button>
+        </nav>
+        <div class="mt-8 pt-6 border-t border-gray-200 text-xs text-gray-400 flex justify-between">
+          <span>IDBATE · greyish yellow</span>
+          <span>⚡ auto rounds</span>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="flex-1 bg-white rounded-2xl shadow-sm border border-gray-200/70 p-5 md:p-7 transition-all">
+        <!-- VIEW: Speakers + Teams -->
+        <div id="viewSpeakers" class="view-panel space-y-6">
+          <div class="bg-gray-50/80 rounded-xl p-5 border border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-700 flex items-center gap-2 mb-4"><iconify-icon icon="mdi:microphone-plus" class="text-yellow-700"></iconify-icon> Register speaker</h2>
+            <div class="flex flex-wrap gap-3">
+              <input type="text" id="speakerName" placeholder="Full name" class="flex-1 px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none transition">
+              <input type="number" id="speakerPoints" placeholder="Points (0-90)" step="0.1" min="0" max="90" class="w-36 px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-yellow-500">
+              <button id="addSpeakerBtn" class="bg-yellow-700 hover:bg-yellow-800 text-white px-6 py-2.5 rounded-xl font-medium flex items-center gap-2 transition shadow-sm"><iconify-icon icon="mdi:plus"></iconify-icon> Add / Update</button>
+            </div>
+          </div>
+
+          <!-- TOP 3 & TOP 10 with yellowish tint -->
+          <div class="grid md:grid-cols-2 gap-5">
+            <div class="bg-yellow-50/40 rounded-xl p-4 border border-yellow-200">
+              <div class="flex items-center gap-2 text-yellow-800 font-semibold mb-3"><iconify-icon icon="mdi:trophy-variant" class="text-xl"></iconify-icon> Top 3 speakers</div>
+              <div id="top3Grid" class="grid grid-cols-1 sm:grid-cols-3 gap-3"></div>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
+              <div class="flex items-center gap-2 text-gray-600 font-semibold mb-3"><iconify-icon icon="mdi:medal"></iconify-icon> Top 10</div>
+              <div id="top10Grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+            </div>
+          </div>
+
+          <!-- Teams section (yellowish grey accents) -->
+          <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+            <div class="flex justify-between items-center bg-gray-50 px-5 py-3 border-b border-gray-200">
+              <h3 class="font-semibold text-gray-700 flex items-center gap-2"><iconify-icon icon="mdi:account-multiple"></iconify-icon> Debate teams</h3>
+              <button id="newTeamBtn" class="text-sm bg-yellow-700 hover:bg-yellow-800 text-white px-3 py-1.5 rounded-lg flex items-center gap-1 transition"><iconify-icon icon="mdi:plus-circle"></iconify-icon> New team</button>
+            </div>
+            <div id="teamsContainer" class="p-5 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"></div>
+          </div>
+
+          <!-- All speakers table -->
+          <div class="bg-white rounded-xl border border-gray-200">
+            <div class="flex justify-between items-center p-4 border-b border-gray-100">
+              <span class="font-semibold text-gray-700 flex items-center gap-2"><iconify-icon icon="mdi:table-large"></iconify-icon> All speakers</span>
+              <button id="resetAllSpeakers" class="text-red-500 hover:text-red-700 text-sm flex items-center gap-1"><iconify-icon icon="mdi:refresh"></iconify-icon> Reset speakers</button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm" id="speakersTable">
+                <thead class="bg-gray-50 text-gray-600"><tr><th class="p-3 text-left">Rank</th><th class="p-3 text-left">Speaker</th><th class="p-3 text-left">Points</th><th class="p-3 text-left">Actions</th></tr></thead>
+                <tbody id="speakersTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW: Rounds assignments (greyish yellow) -->
+        <div id="viewRounds" class="view-panel hidden space-y-6">
+          <div class="bg-gray-50/70 rounded-xl p-5 border border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2"><iconify-icon icon="mdi:calendar-week" class="text-yellow-700"></iconify-icon> Tournament brackets</h2>
+            <p class="text-sm text-gray-500 mt-1">Teams automatically advance based on wins → total speaker points.</p>
+          </div>
+          <div id="roundsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+        </div>
+
+        <!-- VIEW: Class Level (yellowish gray) -->
+        <div id="viewClasses" class="view-panel hidden space-y-6">
+          <div class="bg-yellow-50/60 rounded-xl p-5 border border-yellow-200">
+            <div class="flex items-center gap-3"><iconify-icon icon="mdi:school" class="text-2xl text-yellow-700"></iconify-icon><div><h2 class="font-bold text-yellow-800">Class levels</h2><p class="text-xs text-yellow-700/80">Speakers from teams are automatically synced.</p></div></div>
+          </div>
+          <div class="flex flex-wrap gap-2 border-b border-gray-200 pb-2" id="classTabsContainer"></div>
+          <div id="classPanelsContainer"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- MODAL for team -->
+  <div id="teamModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden transition-all">
+    <div class="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl border-t-4 border-yellow-600">
+      <h3 class="text-xl font-bold flex items-center gap-2 mb-4"><iconify-icon icon="mdi:account-plus"></iconify-icon> Team</h3>
+      <form id="teamForm">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Team name</label>
+        <input type="text" id="teamNameInput" class="w-full border border-gray-300 rounded-xl px-4 py-2 mb-3 focus:ring-yellow-500" required>
+        <div class="space-y-2" id="teamMembersFields"></div>
+        <div class="flex justify-end gap-3 mt-5">
+          <button type="button" id="closeTeamModal" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700">Cancel</button>
+          <button type="submit" class="px-5 py-2 bg-yellow-700 hover:bg-yellow-800 text-white rounded-lg">Save team</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Confirm & alert -->
+  <div id="confirmModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-xl max-w-sm w-full p-5"><p id="confirmMsg" class="py-2"></p><div class="flex justify-end gap-3 mt-4"><button id="confirmNo" class="px-4 py-1.5 border rounded-lg">Cancel</button><button id="confirmYes" class="px-4 py-1.5 bg-yellow-700 text-white rounded-lg">Yes</button></div></div>
+  </div>
+  <div id="alertModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 hidden"><div class="bg-white rounded-xl max-w-sm p-5"><p id="alertMsg"></p><button id="alertClose" class="mt-3 bg-yellow-700 text-white px-4 py-1.5 rounded-lg">OK</button></div></div>
+
+  <script>
+    // ---------- DATA ----------
+    let speakers = [];
+    let teams = [];
+    let roundAssignments = { prelim1:[], prelim2:[], prelim3:[], octa:[], quarter:[], semi:[], final:[] };
+    let classMembers = { S1:[], S2:[], S4:[], S5:[] };
+    const CLASS_IDS = ['S1','S2','S4','S5'];
+    const CLASS_LABELS = { S1:'Senior 1', S2:'Senior 2', S4:'Senior 4', S5:'Senior 5' };
+
+    function persistAll() {
+      localStorage.setItem('idbate_speakers', JSON.stringify(speakers));
+      localStorage.setItem('idbate_teams', JSON.stringify(teams));
+      localStorage.setItem('idbate_rounds', JSON.stringify(roundAssignments));
+      localStorage.setItem('idbate_class_members', JSON.stringify(classMembers));
+    }
+    function loadData() {
+      try {
+        if(localStorage.getItem('idbate_speakers')) speakers = JSON.parse(localStorage.getItem('idbate_speakers'));
+        if(localStorage.getItem('idbate_teams')) teams = JSON.parse(localStorage.getItem('idbate_teams'));
+        if(localStorage.getItem('idbate_rounds')) roundAssignments = JSON.parse(localStorage.getItem('idbate_rounds'));
+        if(localStorage.getItem('idbate_class_members')) classMembers = JSON.parse(localStorage.getItem('idbate_class_members'));
+      } catch(e) {}
+      teams.forEach(t => { if(t.wins===undefined) t.wins=0; if(t.losses===undefined) t.losses=0; });
+    }
+    loadData();
+
+    function syncFromTeams() {
+      const memberMap = new Map();
+      teams.forEach(team => {
+        (team.members || []).forEach(m => { memberMap.set(m.name, { points: m.points, id: m.id || (Date.now()+Math.random()) }); });
+      });
+      memberMap.forEach((data, name) => {
+        const existing = speakers.find(s => s.name === name);
+        if(!existing) speakers.push({ id: data.id, name, points: data.points });
+        else existing.points = data.points;
+      });
+      memberMap.forEach((data, name) => {
+        let found = false;
+        for(let c of CLASS_IDS) if(classMembers[c].some(m => m.name === name)) found = true;
+        if(!found) classMembers['S1'].push({ id: data.id, name, points: data.points });
+        else {
+          for(let c of CLASS_IDS) {
+            let mem = classMembers[c].find(m => m.name === name);
+            if(mem) mem.points = data.points;
+          }
+        }
+      });
+      persistAll();
+    }
+
+    function updateRoundsByPerformance() {
+      for(let k in roundAssignments) roundAssignments[k] = [];
+      const teamsWithScore = teams.map(t => ({
+        ...t,
+        totalPoints: (t.members || []).reduce((acc,m) => acc + (m.points||0), 0)
+      }));
+      const sorted = [...teamsWithScore].sort((a,b) => {
+        if(a.wins !== b.wins) return b.wins - a.wins;
+        return b.totalPoints - a.totalPoints;
+      });
+      const allIds = teams.map(t => t.id);
+      roundAssignments.prelim1 = [...allIds];
+      roundAssignments.prelim2 = [...allIds];
+      roundAssignments.prelim3 = [...allIds];
+      const qualified = sorted.filter(t => t.wins > 0 || t.members.length);
+      roundAssignments.octa = qualified.slice(0,8).map(t=>t.id);
+      roundAssignments.quarter = qualified.slice(0,6).map(t=>t.id);
+      roundAssignments.semi = qualified.slice(0,4).map(t=>t.id);
+      roundAssignments.final = qualified.slice(0,2).map(t=>t.id);
+      persistAll();
+      if(!document.getElementById('viewRounds').classList.contains('hidden')) renderRoundsView();
+    }
+
+    function recordWin(teamId) { const t = teams.find(tm=>tm.id===teamId); if(t){ t.wins = (t.wins||0)+1; persistAll(); syncFromTeams(); renderEverything(); updateRoundsByPerformance(); } }
+    function recordLoss(teamId) { const t = teams.find(tm=>tm.id===teamId); if(t){ t.losses = (t.losses||0)+1; persistAll(); syncFromTeams(); renderEverything(); updateRoundsByPerformance(); } }
+
+    function renderEverything() {
+      renderSpeakersTop();
+      renderTeamsUI();
+      renderSpeakersTable();
+      if(!document.getElementById('viewRounds').classList.contains('hidden')) renderRoundsView();
+      if(!document.getElementById('viewClasses').classList.contains('hidden')) renderClassView();
+    }
+
+    function renderSpeakersTop() {
+      const sorted = [...speakers].sort((a,b)=>b.points-a.points);
+      const top3 = sorted.slice(0,3);
+      const top10 = sorted.slice(0,10);
+      const top3Div = document.getElementById('top3Grid');
+      top3Div.innerHTML = top3.map((s,i)=>`<div class="bg-white rounded-xl p-3 text-center shadow-sm border ${i===0?'border-yellow-300 bg-yellow-50':'border-gray-200'}"><div class="text-2xl font-bold text-yellow-700">#${i+1}</div><div class="font-medium">${escapeHtml(s.name)}</div><div class="text-sm text-gray-500">${s.points.toFixed(1)} pts</div></div>`).join('');
+      const top10Div = document.getElementById('top10Grid');
+      top10Div.innerHTML = top10.map((s,i)=>`<div class="flex justify-between items-center bg-white p-2 rounded-lg border border-gray-100"><span class="font-mono text-yellow-700">${i+1}</span><span>${escapeHtml(s.name)}</span><span class="font-semibold">${s.points.toFixed(1)}</span></div>`).join('');
+    }
+
+    function renderTeamsUI() {
+      const container = document.getElementById('teamsContainer');
+      if(!teams.length) { container.innerHTML = `<div class="col-span-full text-center py-8 text-gray-400"><iconify-icon icon="mdi:account-group-outline" class="text-3xl"></iconify-icon><p class="mt-1">No teams yet</p></div>`; return; }
+      container.innerHTML = teams.map(t => {
+        const members = t.members || [];
+        const memberSlots = [];
+        for(let i=0;i<3;i++) {
+          const m = members[i];
+          if(m) memberSlots.push(`<div class="flex items-center justify-between bg-gray-50 p-2 rounded-lg"><span class="text-xs text-yellow-700 w-6">#${i+1}</span><span class="flex-1 text-sm">${escapeHtml(m.name)}</span><span class="text-xs font-bold bg-yellow-100 px-2 py-0.5 rounded-full">${m.points.toFixed(1)}</span></div>`);
+          else memberSlots.push(`<div class="flex items-center gap-2 text-gray-400 text-xs p-2 rounded-lg border border-dashed"><iconify-icon icon="mdi:account-plus"></iconify-icon> empty slot</div>`);
+        }
+        return `<div class="border border-gray-200 rounded-xl p-4 bg-white card-hover"><div class="flex justify-between items-start flex-wrap gap-2 border-b pb-2 mb-3"><div class="font-bold text-gray-800 flex items-center gap-1"><iconify-icon icon="mdi:team"></iconify-icon> ${escapeHtml(t.name)}</div><div class="flex gap-2"><button class="edit-team-btn text-yellow-700" data-id="${t.id}"><iconify-icon icon="mdi:pencil"></iconify-icon></button><button class="delete-team-btn text-red-400" data-id="${t.id}"><iconify-icon icon="mdi:delete"></iconify-icon></button></div></div><div class="flex gap-2 text-xs bg-gray-100 rounded-full px-3 py-1 w-fit mb-3"><span class="text-green-700 font-bold">🏆 ${t.wins||0} W</span><span class="text-red-500">📉 ${t.losses||0} L</span><button class="win-action bg-green-100 text-green-700 px-2 rounded-full" data-id="${t.id}">✅ Win</button><button class="loss-action bg-red-100 text-red-600 px-2 rounded-full" data-id="${t.id}">❌ Loss</button></div><div class="space-y-2">${memberSlots.join('')}</div></div>`;
+      }).join('');
+      document.querySelectorAll('.edit-team-btn').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); openTeamModal(btn.dataset.id); }));
+      document.querySelectorAll('.delete-team-btn').forEach(btn => btn.addEventListener('click', async (e) => { if(await confirmAction('Delete team permanently?')) { const id = btn.dataset.id; teams = teams.filter(t=>t.id!==id); for(let r in roundAssignments) roundAssignments[r] = roundAssignments[r].filter(tid=>tid!==id); syncFromTeams(); updateRoundsByPerformance(); renderEverything(); } }));
+      document.querySelectorAll('.win-action').forEach(btn => btn.addEventListener('click', (e) => { recordWin(btn.dataset.id); }));
+      document.querySelectorAll('.loss-action').forEach(btn => btn.addEventListener('click', (e) => { recordLoss(btn.dataset.id); }));
+    }
+
+    function renderSpeakersTable() {
+      const sorted = [...speakers].sort((a,b)=>b.points-a.points);
+      const tbody = document.getElementById('speakersTableBody');
+      tbody.innerHTML = sorted.map((s,i)=>`<tr class="border-b"><td class="p-3 font-mono text-yellow-700">#${i+1}</td><td class="p-3">${escapeHtml(s.name)}</td><td class="p-3 font-semibold">${s.points.toFixed(1)}</td><td class="p-3"><button class="edit-speaker text-yellow-700 mr-2" data-id="${s.id}"><iconify-icon icon="mdi:pencil"></iconify-icon></button><button class="delete-speaker text-red-400" data-id="${s.id}"><iconify-icon icon="mdi:delete"></iconify-icon></button></td></tr>`).join('');
+      document.querySelectorAll('.edit-speaker').forEach(btn => btn.addEventListener('click', (e) => { const s = speakers.find(sp=>sp.id===btn.dataset.id); if(s){ document.getElementById('speakerName').value=s.name; document.getElementById('speakerPoints').value=s.points; } }));
+      document.querySelectorAll('.delete-speaker').forEach(btn => btn.addEventListener('click', async (e) => { if(await confirmAction('Delete this speaker?')){ speakers = speakers.filter(sp=>sp.id!==btn.dataset.id); teams.forEach(t=>t.members = t.members.filter(m=>m.id!==btn.dataset.id)); syncFromTeams(); updateRoundsByPerformance(); renderEverything(); } }));
+    }
+
+    function renderRoundsView() {
+      const container = document.getElementById('roundsContainer');
+      const roundsMeta = { prelim1:'Prelim 1', prelim2:'Prelim 2', prelim3:'Prelim 3', octa:'Octa-final', quarter:'Quarter-final', semi:'Semi-final', final:'Final' };
+      container.innerHTML = Object.entries(roundsMeta).map(([key,label]) => {
+        const teamIds = roundAssignments[key] || [];
+        const teamList = teamIds.map(id => teams.find(t=>t.id===id)).filter(t=>t);
+        return `<div class="bg-gray-50 rounded-xl p-4 border border-gray-200"><div class="flex justify-between items-center border-b pb-2 mb-3"><h4 class="font-bold flex items-center gap-1"><iconify-icon icon="mdi:checkbox-marked-circle"></iconify-icon> ${label}</h4><button class="add-team-to-round text-yellow-700 text-sm" data-round="${key}"><iconify-icon icon="mdi:plus-circle"></iconify-icon> Add</button></div><div class="space-y-2">${teamList.length ? teamList.map(t=>`<div class="flex justify-between bg-white p-2 rounded-lg"><span>${escapeHtml(t.name)} (W:${t.wins||0})</span><button class="remove-round-team text-red-400" data-round="${key}" data-team="${t.id}"><iconify-icon icon="mdi:close-circle"></iconify-icon></button></div>`).join('') : '<div class="text-gray-400 text-center text-sm py-2">— no teams —</div>'}</div></div>`;
+      }).join('');
+      document.querySelectorAll('.add-team-to-round').forEach(btn => btn.addEventListener('click', (e) => { const roundKey = btn.dataset.round; showTeamSelectModal(roundKey); }));
+      document.querySelectorAll('.remove-round-team').forEach(btn => btn.addEventListener('click', async (e) => { const roundKey = btn.dataset.round; const teamId = btn.dataset.team; if(await confirmAction('Remove team from round?')){ roundAssignments[roundKey] = roundAssignments[roundKey].filter(id=>id!==teamId); persistAll(); renderRoundsView(); } }));
+    }
+
+    async function showTeamSelectModal(roundKey) {
+      if(!teams.length){ alertMessage('No teams available.'); return; }
+      const selectHtml = teams.map(t=>`<option value="${t.id}">${escapeHtml(t.name)} (${t.wins||0}W)</option>`).join('');
+      const modalDiv = document.createElement('div'); modalDiv.className='fixed inset-0 bg-black/50 flex items-center justify-center z-50'; modalDiv.innerHTML=`<div class="bg-white rounded-xl p-5 w-80"><h3 class="font-bold mb-3">Select team</h3><select id="roundTeamSelect" class="w-full border rounded-lg p-2 mb-4">${selectHtml}</select><div class="flex justify-end gap-2"><button id="cancelSelect" class="px-3 py-1 border rounded-lg">Cancel</button><button id="confirmSelect" class="px-3 py-1 bg-yellow-700 text-white rounded-lg">Add</button></div></div>`;
+      document.body.appendChild(modalDiv);
+      const sel = modalDiv.querySelector('#roundTeamSelect');
+      const confirm = () => { const tid = sel.value; if(tid && !roundAssignments[roundKey].includes(tid)) { roundAssignments[roundKey].push(tid); persistAll(); renderRoundsView(); } modalDiv.remove(); };
+      modalDiv.querySelector('#confirmSelect').onclick = confirm;
+      modalDiv.querySelector('#cancelSelect').onclick = () => modalDiv.remove();
+    }
+
+    function renderClassView() {
+      const tabsContainer = document.getElementById('classTabsContainer');
+      const panelsContainer = document.getElementById('classPanelsContainer');
+      let tabsHtml = '', panelsHtml = '';
+      CLASS_IDS.forEach(c => {
+        const members = classMembers[c] || [];
+        const sorted = [...members].sort((a,b)=>b.points-a.points);
+        tabsHtml += `<button data-class="${c}" class="class-tab-btn px-4 py-2 rounded-full text-sm font-medium transition ${c==='S1'?'bg-yellow-200 text-yellow-800':'bg-gray-100 text-gray-600'}">${CLASS_LABELS[c]} (${members.length})</button>`;
+        panelsHtml += `<div id="panel-${c}" class="class-panel-item ${c==='S1'?'block':'hidden'}"><div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">${sorted.map((m,idx)=>`<div class="bg-yellow-50/40 rounded-xl p-3 flex justify-between items-center"><div><span class="font-mono text-yellow-700 mr-2">${idx+1}</span><span>${escapeHtml(m.name)}</span><div class="text-xs text-gray-500">${m.points.toFixed(1)} pts</div></div><button data-class="${c}" data-id="${m.id}" class="del-class-member text-red-400"><iconify-icon icon="mdi:delete"></iconify-icon></button></div>`).join('') || '<div class="col-span-full text-center text-gray-400 py-4">No members — sync from teams</div>'}</div><button data-class="${c}" class="add-class-speaker mt-4 text-sm bg-white border border-yellow-300 rounded-full px-4 py-1.5 hover:bg-yellow-50 flex items-center gap-1"><iconify-icon icon="mdi:plus"></iconify-icon> Add speaker manually</button></div>`;
+      });
+      tabsContainer.innerHTML = tabsHtml;
+      panelsContainer.innerHTML = panelsHtml;
+      document.querySelectorAll('.class-tab-btn').forEach(btn => { btn.onclick = () => { const cls = btn.dataset.class; document.querySelectorAll('.class-panel-item').forEach(p=>p.classList.add('hidden')); document.getElementById(`panel-${cls}`).classList.remove('hidden'); document.querySelectorAll('.class-tab-btn').forEach(b=>b.classList.remove('bg-yellow-200','text-yellow-800','bg-gray-100','text-gray-600')); btn.classList.add('bg-yellow-200','text-yellow-800'); }; });
+      document.querySelectorAll('.del-class-member').forEach(btn => btn.addEventListener('click',async (e)=>{ const cl = btn.dataset.class; const id = btn.dataset.id; if(await confirmAction('Remove from class?')){ classMembers[cl] = classMembers[cl].filter(m=>m.id!==id); persistAll(); renderClassView(); } }));
+      document.querySelectorAll('.add-class-speaker').forEach(btn => btn.addEventListener('click', () => { const cl = btn.dataset.class; const name = prompt('Speaker name'); if(!name)return; let pts = parseFloat(prompt('Points (0-90)',0)); if(isNaN(pts)) pts=0; pts=Math.min(90,Math.max(0,pts)); classMembers[cl].push({id:Date.now()+Math.random(), name, points:pts}); persistAll(); renderClassView(); }));
+    }
+
+    function confirmAction(msg) { return new Promise(resolve => { const modal = document.getElementById('confirmModal'); document.getElementById('confirmMsg').innerText = msg; modal.classList.remove('hidden'); const yes = () => { modal.classList.add('hidden'); resolve(true); cleanup(); }; const no = () => { modal.classList.add('hidden'); resolve(false); cleanup(); }; function cleanup() { document.getElementById('confirmYes').removeEventListener('click', yes); document.getElementById('confirmNo').removeEventListener('click', no); } document.getElementById('confirmYes').addEventListener('click', yes, { once:true }); document.getElementById('confirmNo').addEventListener('click', no, { once:true }); }); }
+    function alertMessage(msg) { const modal = document.getElementById('alertModal'); document.getElementById('alertMsg').innerText = msg; modal.classList.remove('hidden'); document.getElementById('alertClose').onclick = () => modal.classList.add('hidden'); }
+
+    let editingTeamId = null;
+    function openTeamModal(teamId=null) {
+      editingTeamId = teamId;
+      const team = teamId ? teams.find(t=>t.id===teamId) : null;
+      document.getElementById('teamNameInput').value = team ? team.name : '';
+      const membersContainer = document.getElementById('teamMembersFields');
+      membersContainer.innerHTML = '';
+      for(let i=1;i<=3;i++) {
+        const member = team?.members?.[i-1] || {name:'',points:0};
+        membersContainer.innerHTML += `<div class="flex gap-2 items-center"><span class="w-6 text-sm">#${i}</span><input type="text" placeholder="Name" class="member-name border rounded-lg px-2 py-1 flex-1" value="${escapeHtml(member.name)}"><input type="number" step="0.1" placeholder="Points" class="member-points w-24 border rounded-lg px-2 py-1" value="${member.points}"></div>`;
+      }
+      document.getElementById('teamModal').classList.remove('hidden');
+    }
+    document.getElementById('newTeamBtn').onclick = () => openTeamModal(null);
+    document.getElementById('closeTeamModal').onclick = () => document.getElementById('teamModal').classList.add('hidden');
+    document.getElementById('teamForm').onsubmit = (e) => {
+      e.preventDefault();
+      const name = document.getElementById('teamNameInput').value.trim();
+      if(!name) { alertMessage('Team name required'); return; }
+      const members = [];
+      const nameInputs = document.querySelectorAll('#teamMembersFields .member-name');
+      const pointsInputs = document.querySelectorAll('#teamMembersFields .member-points');
+      for(let i=0;i<nameInputs.length;i++) {
+        const n = nameInputs[i].value.trim();
+        const p = parseFloat(pointsInputs[i].value) || 0;
+        if(n) { if(p<0||p>90) { alertMessage('Points 0-90'); return; } members.push({ name:n, points:p, id:Date.now()+'-'+Math.random() }); }
+      }
+      if(editingTeamId) {
+        const idx = teams.findIndex(t=>t.id===editingTeamId);
+        if(idx!==-1) { teams[idx].name = name; teams[idx].members = members; if(teams[idx].wins===undefined) teams[idx].wins=0; if(teams[idx].losses===undefined) teams[idx].losses=0; }
+      } else { teams.push({ id:Date.now()+Math.random(), name, members, wins:0, losses:0 }); }
+      syncFromTeams(); updateRoundsByPerformance(); renderEverything(); document.getElementById('teamModal').classList.add('hidden');
+    };
+    document.getElementById('addSpeakerBtn').onclick = () => {
+      const name = document.getElementById('speakerName').value.trim();
+      const pts = parseFloat(document.getElementById('speakerPoints').value);
+      if(!name) { alertMessage('Enter speaker name'); return; }
+      if(isNaN(pts)||pts<0||pts>90) { alertMessage('Points 0-90'); return; }
+      const existing = speakers.find(s=>s.name.toLowerCase()===name.toLowerCase());
+      if(existing) existing.points = pts;
+      else speakers.push({ id:Date.now()+Math.random(), name, points:pts });
+      syncFromTeams(); updateRoundsByPerformance(); renderEverything(); document.getElementById('speakerName').value=''; document.getElementById('speakerPoints').value='0';
+    };
+    document.getElementById('resetAllSpeakers').onclick = async () => { if(await confirmAction('Reset all speakers and teams?')){ speakers=[]; teams=[]; classMembers={S1:[],S2:[],S4:[],S5:[]}; for(let k in roundAssignments) roundAssignments[k]=[]; persistAll(); renderEverything(); } };
+
+    // VIEW SWITCH (left tabs) with greyish yellow active style
+    const views = { speakers: document.getElementById('viewSpeakers'), rounds: document.getElementById('viewRounds'), classes: document.getElementById('viewClasses') };
+    document.querySelectorAll('.view-nav').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const view = btn.dataset.view;
+        Object.values(views).forEach(v=>v.classList.add('hidden'));
+        if(view === 'speakers') views.speakers.classList.remove('hidden');
+        if(view === 'rounds') { views.rounds.classList.remove('hidden'); renderRoundsView(); }
+        if(view === 'classes') { views.classes.classList.remove('hidden'); renderClassView(); }
+        document.querySelectorAll('.view-nav').forEach(b=>b.classList.remove('bg-yellow-100','text-yellow-800','shadow-sm'));
+        btn.classList.add('bg-yellow-100','text-yellow-800','shadow-sm');
+      });
+    });
+    function escapeHtml(str) { return String(str).replace(/[&<>]/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
+    // initial render
+    syncFromTeams(); updateRoundsByPerformance(); renderEverything();
+    document.getElementById('viewSpeakers').classList.remove('hidden');
+    document.getElementById('viewRounds').classList.add('hidden');
+    document.getElementById('viewClasses').classList.add('hidden');
+  </script>
+</body>
+</html>
